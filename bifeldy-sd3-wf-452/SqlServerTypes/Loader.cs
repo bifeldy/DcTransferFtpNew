@@ -16,12 +16,12 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace DcTransferFtpNew.Utilities {
+namespace DcTransferFtpNew.SqlServerTypes {
 
     /// <summary>
     /// Utility methods related to CLR Types for SQL Server 
     /// </summary>
-    public static class SqlServerTypes {
+    public static class CLoader {
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr LoadLibrary(string libname);

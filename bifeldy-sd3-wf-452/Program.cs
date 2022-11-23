@@ -27,6 +27,7 @@ using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Logics;
 using DcTransferFtpNew.Navigations;
 using DcTransferFtpNew.Panels;
+using DcTransferFtpNew.SqlServerTypes;
 using DcTransferFtpNew.Utilities;
 
 namespace DcTransferFtpNew {
@@ -49,7 +50,7 @@ namespace DcTransferFtpNew {
                     Application.SetCompatibleTextRenderingDefault(false);
 
                     // Report Viewer
-                    SqlServerTypes.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+                    CLoader.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
 
                     // Dependency Injection
                     Assembly assembly = Assembly.GetExecutingAssembly();
