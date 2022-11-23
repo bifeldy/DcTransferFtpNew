@@ -1,0 +1,67 @@
+﻿/**
+ * 
+ * Author       :: Basilius Bias Astho Christyono
+ * Mail         :: bias@indomaret.co.id
+ * Phone        :: (+62) 889 236 6466
+ * 
+ * Department   :: IT SD 03
+ * Mail         :: bias@indomaret.co.id
+ * 
+ * Catatan      :: Template UI Navigations
+ *              :: Hanya Untuk Inherit
+ *              :: Seharusnya Tidak Untuk Didaftarkan Ke DI Container
+ * 
+ */
+
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+
+using DcTransferFtpNew.Panels;
+
+namespace DcTransferFtpNew.Abstractions {
+
+    public class CNavigations : UserControl {
+
+        protected void AddButtonToMainPanel(Control panel, List<Button> buttonList, FlowLayoutPanel flowLayoutPanel) {
+            CMainPanel mainPanel = (CMainPanel) panel;
+            foreach (Button button in buttonList) {
+                // If Antisipasi Re-Render Akibat Garbage Collector Jalan Saat Minimize -> Normal Window Trigger *_Load();
+                if (!flowLayoutPanel.Controls.ContainsKey(button.Name)) {
+                    button.BackColor = SystemColors.ControlLight;
+                    button.FlatStyle = FlatStyle.Flat;
+                    button.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+                    button.ForeColor = SystemColors.ControlText;
+                    button.Size = new Size(158, 31);
+                    button.TextAlign = ContentAlignment.MiddleCenter;
+                    button.Click += async (object sender, EventArgs e) => {
+                        mainPanel.SetIdleBusyStatus(false);
+
+                        // Re-Set Button Color
+                        foreach (Control flowLayoutPanelItem in flowLayoutPanel.Controls) {
+                            if (flowLayoutPanelItem is Button) {
+                                flowLayoutPanelItem.BackColor = SystemColors.ControlLight;
+                            }
+                        }
+                        Button buttonSender = (Button) sender;
+                        buttonSender.BackColor = Color.FromArgb(255, 207, 223);
+
+                        CLogics cls = (CLogics) CProgram.Bifeldyz.ResolveNamed(buttonSender.Name);
+                        try {
+                            await cls.Run(sender, e, this);
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+
+                        mainPanel.SetIdleBusyStatus(true);
+                    };
+                    flowLayoutPanel.Controls.Add(button);
+                }
+            }
+        }
+
+    }
+
+}
