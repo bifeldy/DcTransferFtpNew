@@ -103,8 +103,8 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         /// <summary>
-        ///     Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
-        ///     Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
+        /// Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
+        /// Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
         /// </summary>
         public async Task<int> KirimFtpLocal(string zipFileName = null) {
             DC_FTP_T ftpInfo = await GetFtpInfo("LOCAL");
@@ -121,8 +121,8 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         /// <summary>
-        ///     Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
-        ///     Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
+        /// Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
+        /// Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
         /// </summary>
         public async Task<int> KirimFtpEis(string zipFileName = null) {
             DC_FTP_T ftpInfo = await GetFtpInfo("EIS");
@@ -139,8 +139,8 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         /// <summary>
-        ///     Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
-        ///     Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
+        /// Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
+        /// Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
         /// </summary>
         public async Task<int> KirimFtpDev(string processName, string zipFileName = null, bool reportLogHo = false) {
             int fileSent = 0;
@@ -186,8 +186,8 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         /// <summary>
-        ///     Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
-        ///     Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
+        /// Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
+        /// Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
         /// </summary>
         public async Task<int> KirimFtpIrpc(string zipFileName = null) {
             DC_FTP_T ftpInfo = await GetFtpInfo("IRPC");
