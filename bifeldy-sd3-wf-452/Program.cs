@@ -31,7 +31,7 @@ using DcTransferFtpNew.Utilities;
 
 namespace DcTransferFtpNew {
 
-    static class CProgram {
+    public static class CProgram {
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -49,7 +49,7 @@ namespace DcTransferFtpNew {
                     Application.SetCompatibleTextRenderingDefault(false);
 
                     // Report Viewer
-                    SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+                    SqlServerTypes.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
 
                     // Dependency Injection
                     Assembly assembly = Assembly.GetExecutingAssembly();
