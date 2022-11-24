@@ -105,7 +105,7 @@ namespace DcTransferFtpNew.Forms {
 
         private void statusStripIpAddress_Click(object sender, EventArgs e) {
             string[] ipsMacs = _app.GetIpMacAddress()
-                .Select(d => $"{d.DESCRIPTION}\r\n{d.MAC_ADDRESS}\r\n{d.IP_V4_ADDRESS}\r\n{d.IP_V6_ADDRESS}\r\n")
+                .Select(d => $"{d.DESCRIPTION}\r\n{d.MAC_ADDRESS}\r\n{d.IP_V4_ADDRESS}\r\n{d.IP_V6_ADDRESS}\r\n\r\n")
                 .ToArray();
             string ipMac = string.Join(Environment.NewLine, ipsMacs).Replace("\r\n\r\n", "\r\n");
             MessageBox.Show(ipMac, "Network Interface Card", MessageBoxButtons.OK, MessageBoxIcon.Information);
