@@ -120,7 +120,7 @@ namespace DcTransferFtpNew.Logics {
                     else if (BerhasilKirim < TargetKirim && TargetKirim > 0) {
                         infoMessage = $"Ada Beberapa Proses {button.Text} Yang Gagal !!";
                     }
-                    else if (BerhasilKirim == TargetKirim && TargetKirim > 0) {
+                    else if (BerhasilKirim >= TargetKirim && TargetKirim > 0) {
                         infoMessage = $"{button.Text} Sukses !!";
                     }
                     else {
