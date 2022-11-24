@@ -113,9 +113,6 @@ namespace DcTransferFtpNew.Logics {
 
                     _berkas.CleanUp();
                 }
-                else {
-                    infoMessage = "Tanggal Yang Dipilih Tidak Valid";
-                }
                 if (string.IsNullOrEmpty(infoMessage)) {
                     if (BerhasilKirim == 0 || TargetKirim == 0) {
                         infoMessage = $"Ada Masalah, Belum Ada {button.Text} Yang Diproses !!";

@@ -39,19 +39,20 @@ namespace DcTransferFtpNew.Abstractions {
         public abstract Task Run(object sender, EventArgs e, Control currentControl);
 
         protected bool IsDateRangeValid(DateTime dateStart, DateTime dateEnd) {
-            return dateStart <= dateEnd;
+            return dateStart <= dateEnd ? true : throw new Exception($"Tanggal Mulai Harus Lebih Kecil Dari Tanggal Akhir");
         }
 
         protected bool IsDateRangeSameMonth(DateTime dateStart, DateTime dateEnd) {
-            return dateStart.Month == dateEnd.Month;
+            return dateStart.Month == dateEnd.Month ? true : throw new Exception($"Hanya Bisa Di (1) Bulan yang Sama");
+        }
+
+        protected bool IsDateStartEndSame(DateTime dateStart, DateTime dateEnd) {
+            return dateStart == dateEnd ? true : throw new Exception($"Hanya Bisa Di (1) Hari yang Sama");
         }
 
         protected async Task<bool> IsDateEndYesterday(DateTime dateEnd, int lastDay = 1) {
             DateTime currentDay = await _db.GetYesterdayDate(lastDay);
-            if (dateEnd <= currentDay) {
-                return true;
-            }
-            throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari!");
+            return dateEnd <= currentDay ? true : throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari!");
         }
 
     }
