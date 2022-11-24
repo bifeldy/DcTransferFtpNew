@@ -34,6 +34,7 @@ namespace DcTransferFtpNew.Handlers {
     public interface IDcFtpT {
         Task<int> KirimFtpLocal(string zipFileName = null);
         Task<int> KirimFtpEis(string zipFileName = null);
+        Task<int> KirimFtpFingerScan(string zipFileName = null);
         Task<int> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false);
         Task<int> KirimFtpIrpc(string zipFileName = null);
     }
@@ -77,6 +78,7 @@ namespace DcTransferFtpNew.Handlers {
         private async Task<DC_FTP_T> GetFtpInfo(string pga_type) {
             DC_FTP_T ftpObject = null;
             DbDataReader dbDataReader = null;
+            Exception exception = null;
             try {
                 dbDataReader = await _db.GetFtpInfo(pga_type);
                 if (dbDataReader != null) {
@@ -92,6 +94,7 @@ namespace DcTransferFtpNew.Handlers {
             }
             catch (Exception ex) {
                 _logger.WriteError(ex);
+                exception = ex;
             }
             finally {
                 if (dbDataReader != null) {
@@ -99,49 +102,43 @@ namespace DcTransferFtpNew.Handlers {
                 }
                 _db.OraPg.CloseConnection();
             }
+            if (exception != null) {
+                throw exception;
+            }
             return ftpObject;
         }
 
+        private async Task<int> KirimFtp(string pga_type, string zipFileName = null) {
+            DC_FTP_T ftpInfo = await GetFtpInfo(pga_type);
+            List<CFtpResultSendGet> ftpResultSent = await _ftp.CreateFtpConnectionAndSendFtpFiles(
+                ftpInfo.PGA_IPADDRESS,
+                int.Parse(ftpInfo.PGA_PORTNUMBER),
+                ftpInfo.PGA_USERNAME,
+                ftpInfo.PGA_PASSWORD,
+                ftpInfo.PGA_FOLDER,
+                zipFileName == null ? _berkas.TempFolderPath : _berkas.ZipFolderPath,
+                zipFileName
+            );
+            return ftpResultSent.Where(r => r.FtpStatusSendGet == FtpStatus.Success).ToArray().Length;
+        }
+
         /// <summary>
         /// Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
         /// Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
         /// </summary>
+
         public async Task<int> KirimFtpLocal(string zipFileName = null) {
-            DC_FTP_T ftpInfo = await GetFtpInfo("LOCAL");
-            List<CFtpResultSendGet> ftpResultSent = await _ftp.CreateFtpConnectionAndSendFtpFiles(
-                ftpInfo.PGA_IPADDRESS,
-                int.Parse(ftpInfo.PGA_PORTNUMBER),
-                ftpInfo.PGA_USERNAME,
-                ftpInfo.PGA_PASSWORD,
-                ftpInfo.PGA_FOLDER,
-                zipFileName == null ? _berkas.TempFolderPath : _berkas.ZipFolderPath,
-                zipFileName
-            );
-            return ftpResultSent.Where(r => r.FtpStatusSendGet == FtpStatus.Success).ToArray().Length;
+            return await KirimFtp("LOCAL", zipFileName);
         }
 
-        /// <summary>
-        /// Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
-        /// Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
-        /// </summary>
         public async Task<int> KirimFtpEis(string zipFileName = null) {
-            DC_FTP_T ftpInfo = await GetFtpInfo("EIS");
-            List<CFtpResultSendGet> ftpResultSent = await _ftp.CreateFtpConnectionAndSendFtpFiles(
-                ftpInfo.PGA_IPADDRESS,
-                int.Parse(ftpInfo.PGA_PORTNUMBER),
-                ftpInfo.PGA_USERNAME,
-                ftpInfo.PGA_PASSWORD,
-                ftpInfo.PGA_FOLDER,
-                zipFileName == null ? _berkas.TempFolderPath : _berkas.ZipFolderPath,
-                zipFileName
-            );
-            return ftpResultSent.Where(r => r.FtpStatusSendGet == FtpStatus.Success).ToArray().Length;
+            return await KirimFtp("EIS", zipFileName);
         }
 
-        /// <summary>
-        /// Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
-        /// Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
-        /// </summary>
+        public async Task<int> KirimFtpFingerScan(string zipFileName = null) {
+            return await KirimFtp("FINGER", zipFileName);
+        }
+
         public async Task<int> KirimFtpDev(string processName, string zipFileName = null, bool reportLogHo = false) {
             int fileSent = 0;
             DC_FTP_T ftpInfo = await GetFtpInfo("DEV");
@@ -150,7 +147,7 @@ namespace DcTransferFtpNew.Handlers {
             DirectoryInfo directoryInfo = new DirectoryInfo(dirPath);
             FileInfo[] fileInfos = directoryInfo.GetFiles();
             if (zipFileName != null) {
-                fileInfos = directoryInfo.GetFiles().Where(f => f.Name.Contains(zipFileName)).ToArray();
+                fileInfos = fileInfos.Where(f => f.Name.Contains(zipFileName)).ToArray();
             }
             List<FTP_FILE_LOG_CUSTOM> logs = new List<FTP_FILE_LOG_CUSTOM>();
             foreach (FileInfo fi in fileInfos) {
@@ -185,19 +182,10 @@ namespace DcTransferFtpNew.Handlers {
             return fileSent;
         }
 
-        /// <summary>
-        /// Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
-        /// Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
-        /// </summary>
         public async Task<int> KirimFtpIrpc(string zipFileName = null) {
             DC_FTP_T ftpInfo = await GetFtpInfo("IRPC");
             string dirPath = zipFileName == null ? _berkas.TempFolderPath : _berkas.ZipFolderPath;
             string remotePath = $"/u01/ftp/DC/{ftpInfo.PGA_FOLDER}/IRPC";
-            DirectoryInfo directoryInfo = new DirectoryInfo(dirPath);
-            FileInfo[] fileInfos = directoryInfo.GetFiles();
-            if (zipFileName != null) {
-                fileInfos = directoryInfo.GetFiles().Where(f => f.Name.Contains(zipFileName)).ToArray();
-            }
             FtpClient ftpClient = await _ftp.CreateFtpConnection(
                 ftpInfo.PGA_IPADDRESS,
                 int.Parse(ftpInfo.PGA_PORTNUMBER),
@@ -205,7 +193,7 @@ namespace DcTransferFtpNew.Handlers {
                 ftpInfo.PGA_PASSWORD,
                 remotePath
             );
-            List<CFtpResultSendGet> ftpResultSent = await _ftp.SendFtpFiles(ftpClient, dirPath);
+            List<CFtpResultSendGet> ftpResultSent = await _ftp.SendFtpFiles(ftpClient, dirPath, zipFileName);
             LogTrf.LogTrf logTrf = new LogTrf.LogTrf();
             foreach (CFtpResultSendGet result in ftpResultSent) {
                 try {

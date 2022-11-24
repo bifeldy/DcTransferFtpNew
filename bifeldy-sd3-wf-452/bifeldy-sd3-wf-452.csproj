@@ -106,8 +106,9 @@
     <Compile Include="Handlers\QTrfCsv_.cs" />
     <Compile Include="Logics\ProsesHarianDataHarian_.cs" />
     <Compile Include="Logics\ProsesHarianDataIcho_.cs" />
-    <Compile Include="Logics\ProsesHarianDataIrpc.cs" />
+    <Compile Include="Logics\ProsesHarianDataIrpc_.cs" />
     <Compile Include="Logics\ProsesHarianDataPldc_.cs" />
+    <Compile Include="Logics\ProsesHarianFingerScan_.cs" />
     <Compile Include="Models\DC_FTP_T.cs" />
     <Compile Include="Navigations\ProsesBulanan.cs">
       <SubType>UserControl</SubType>
