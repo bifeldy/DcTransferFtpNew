@@ -11,10 +11,11 @@
  * 
  */
 
-using Microsoft.Reporting.WinForms;
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
+
+using Microsoft.Reporting.WinForms;
 
 namespace DcTransferFtpNew.Forms {
 
