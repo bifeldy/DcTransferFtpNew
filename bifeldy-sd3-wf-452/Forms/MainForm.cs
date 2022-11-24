@@ -88,15 +88,15 @@ namespace DcTransferFtpNew.Forms {
         private void ShowCheckProgramPanel() {
 
             // Create And Show `DbSelector` Panel
-            if (!panelContainer.Controls.ContainsKey("CDbSelector")) {
-                try {
+            try {
+                if (!panelContainer.Controls.ContainsKey("CDbSelector")) {
                     panelContainer.Controls.Add(CProgram.Bifeldyz.ResolveClass<CDbSelector>());
                 }
-                catch (Exception ex) {
-                    MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                panelContainer.Controls["CDbSelector"].BringToFront();
             }
-            panelContainer.Controls["CDbSelector"].BringToFront();
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public void HideLogo() {

@@ -45,15 +45,15 @@ namespace DcTransferFtpNew.Panels {
             mainForm.Text = $"[{(_app.IsUsingPostgres ? "PG" : "ORCL")}+MSSQL] " + mainForm.Text;
 
             // Create & Show `CekProgram` Panel
-            if (!mainForm.PanelContainer.Controls.ContainsKey("CCekProgram")) {
-                try {
+            try {
+                if (!mainForm.PanelContainer.Controls.ContainsKey("CCekProgram")) {
                     mainForm.PanelContainer.Controls.Add(CProgram.Bifeldyz.ResolveClass<CCekProgram>());
                 }
-                catch (Exception ex) {
-                    MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                mainForm.PanelContainer.Controls["CCekProgram"].BringToFront();
             }
-            mainForm.PanelContainer.Controls["CCekProgram"].BringToFront();
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnOracle_Click(object sender, EventArgs e) {

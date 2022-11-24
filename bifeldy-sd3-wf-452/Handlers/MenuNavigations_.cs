@@ -68,16 +68,16 @@ namespace DcTransferFtpNew.Handlers {
                         btnNavMenu.BackColor = Color.FromArgb(255, 207, 223);
 
                         // Change `navContent`
-                        if (!mainPanel.NavContent.Controls.ContainsKey(buttonMenuItem.Name)) {
-                            try {
-                                UserControl ctrl = (UserControl) CProgram.Bifeldyz.ResolveNamed(buttonMenuItem.Name);
+                        try {
+                            if (!mainPanel.NavContent.Controls.ContainsKey(buttonMenuItem.Name)) {
+                                UserControl ctrl = (UserControl)CProgram.Bifeldyz.ResolveNamed(buttonMenuItem.Name);
                                 mainPanel.NavContent.Controls.Add(ctrl);
                             }
-                            catch (Exception ex) {
-                                MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
+                            mainPanel.NavContent.Controls[buttonMenuItem.Name].BringToFront();
                         }
-                        mainPanel.NavContent.Controls[buttonMenuItem.Name].BringToFront();
+                        catch (Exception ex) {
+                            MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
 
                         mainPanel.SetIdleBusyStatus(true);
                     };

@@ -79,15 +79,15 @@ namespace DcTransferFtpNew.Panels {
             mainForm.PanelContainer.Dock = DockStyle.Fill;
 
             // Create & Show `MainPanel`
-            if (!mainForm.PanelContainer.Controls.ContainsKey("CMainPanel")) {
-                try {
+            try {
+                if (!mainForm.PanelContainer.Controls.ContainsKey("CMainPanel")) {
                     mainForm.PanelContainer.Controls.Add(CProgram.Bifeldyz.ResolveClass<CMainPanel>());
                 }
-                catch (Exception ex) {
-                    MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                mainForm.PanelContainer.Controls["CMainPanel"].BringToFront();
             }
-            mainForm.PanelContainer.Controls["CMainPanel"].BringToFront();
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
             // Remove All Other Unused Panels
             mainForm.PanelContainer.Controls.RemoveByKey("CDbSelector");

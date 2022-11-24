@@ -86,15 +86,15 @@ namespace DcTransferFtpNew.Panels {
         private void ShowLoginPanel() {
 
             // Create & Show `Login` Panel
-            if (!mainForm.PanelContainer.Controls.ContainsKey("CLogin")) {
-                try {
+            try {
+                if (!mainForm.PanelContainer.Controls.ContainsKey("CLogin")) {
                     mainForm.PanelContainer.Controls.Add(CProgram.Bifeldyz.ResolveClass<CLogin>());
                 }
-                catch (Exception ex) {
-                    MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                mainForm.PanelContainer.Controls["CLogin"].BringToFront();
             }
-            mainForm.PanelContainer.Controls["CLogin"].BringToFront();
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
     }
