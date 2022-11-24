@@ -34,12 +34,11 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private void OnInit() {
-            mainForm = CProgram.Bifeldyz.ResolveClass<CMainForm>();
-
             Dock = DockStyle.Fill;
         }
+
         private void CDbSelector_Load(object sender, EventArgs e) {
-            //
+            mainForm = (CMainForm) Parent.Parent;
         }
 
         private void ShowCheckProgramPanel() {
@@ -47,7 +46,12 @@ namespace DcTransferFtpNew.Panels {
 
             // Create & Show `CekProgram` Panel
             if (!mainForm.PanelContainer.Controls.ContainsKey("CCekProgram")) {
-                mainForm.PanelContainer.Controls.Add(CProgram.Bifeldyz.ResolveClass<CCekProgram>());
+                try {
+                    mainForm.PanelContainer.Controls.Add(CProgram.Bifeldyz.ResolveClass<CCekProgram>());
+                }
+                catch (Exception ex) {
+                    MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             mainForm.PanelContainer.Controls["CCekProgram"].BringToFront();
         }

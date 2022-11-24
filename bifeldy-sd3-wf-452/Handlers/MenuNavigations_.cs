@@ -69,8 +69,13 @@ namespace DcTransferFtpNew.Handlers {
 
                         // Change `navContent`
                         if (!mainPanel.NavContent.Controls.ContainsKey(buttonMenuItem.Name)) {
-                            UserControl ctrl = (UserControl) CProgram.Bifeldyz.ResolveNamed(buttonMenuItem.Name);
-                            mainPanel.NavContent.Controls.Add(ctrl);
+                            try {
+                                UserControl ctrl = (UserControl) CProgram.Bifeldyz.ResolveNamed(buttonMenuItem.Name);
+                                mainPanel.NavContent.Controls.Add(ctrl);
+                            }
+                            catch (Exception ex) {
+                                MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                         mainPanel.NavContent.Controls[buttonMenuItem.Name].BringToFront();
 

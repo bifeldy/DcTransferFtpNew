@@ -52,11 +52,6 @@ namespace DcTransferFtpNew.Panels {
         public Panel NavContent => navContent;
 
         private void OnInit() {
-            mainForm = CProgram.Bifeldyz.ResolveClass<CMainForm>();
-            mainForm.FormBorderStyle = FormBorderStyle.Sizable;
-            mainForm.MaximizeBox = true;
-            mainForm.MinimizeBox = true;
-
             Dock = DockStyle.Fill;
         }
 
@@ -66,6 +61,11 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private async void CMainPanel_Load(object sender, EventArgs e) {
+            mainForm = (CMainForm) Parent.Parent;
+            mainForm.FormBorderStyle = FormBorderStyle.Sizable;
+            mainForm.MaximizeBox = true;
+            mainForm.MinimizeBox = true;
+
             appInfo.Text = _app.AppName;
             string dcKode = null;
             string namaDc = null;
@@ -74,7 +74,9 @@ namespace DcTransferFtpNew.Panels {
                 namaDc = await _db.GetNamaDc();
             });
             userInfo.Text = $".: {dcKode} - {namaDc} :: {_db.LoggedInUsername} :.";
+
             _menuNavigations.AddButtonToPanel(this);
+
             SetIdleBusyStatus(true);
         }
 

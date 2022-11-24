@@ -40,14 +40,12 @@ namespace DcTransferFtpNew.Panels {
         public Label LoadingInformation => loadingInformation;
 
         private void OnInit() {
-            mainForm = CProgram.Bifeldyz.ResolveClass<CMainForm>();
-
             loadingInformation.Text = "Sedang Mengecek Program ...";
-
             Dock = DockStyle.Fill;
         }
 
         private void CCekProgram_Load(object sender, EventArgs e) {
+            mainForm = (CMainForm) Parent.Parent;
             CheckProgram();
         }
 
@@ -89,7 +87,12 @@ namespace DcTransferFtpNew.Panels {
 
             // Create & Show `Login` Panel
             if (!mainForm.PanelContainer.Controls.ContainsKey("CLogin")) {
-                mainForm.PanelContainer.Controls.Add(CProgram.Bifeldyz.ResolveClass<CLogin>());
+                try {
+                    mainForm.PanelContainer.Controls.Add(CProgram.Bifeldyz.ResolveClass<CLogin>());
+                }
+                catch (Exception ex) {
+                    MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             mainForm.PanelContainer.Controls["CLogin"].BringToFront();
         }

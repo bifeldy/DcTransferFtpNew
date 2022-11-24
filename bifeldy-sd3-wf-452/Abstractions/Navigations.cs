@@ -47,8 +47,8 @@ namespace DcTransferFtpNew.Abstractions {
                         Button buttonSender = (Button) sender;
                         buttonSender.BackColor = Color.FromArgb(255, 207, 223);
 
-                        CLogics cls = (CLogics) CProgram.Bifeldyz.ResolveNamed(buttonSender.Name);
                         try {
+                            CLogics cls = (CLogics) CProgram.Bifeldyz.ResolveNamed(buttonSender.Name);
                             await cls.Run(sender, e, this);
                         }
                         catch (Exception ex) {

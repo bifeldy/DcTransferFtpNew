@@ -13,7 +13,6 @@
  */
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -28,7 +27,6 @@ namespace DcTransferFtpNew.Panels {
         private readonly IApp _app;
         private readonly IDb _db;
 
-        private CCekProgram cekProgram;
         private CMainForm mainForm;
 
         public CLogin(IApp app, IDb db) {
@@ -40,16 +38,13 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private void OnInit() {
-            cekProgram = CProgram.Bifeldyz.ResolveClass<CCekProgram>();
-            mainForm = CProgram.Bifeldyz.ResolveClass<CMainForm>();
-
-            cekProgram.LoadingInformation.Text = "Harap Menunggu ...";
-
             Dock = DockStyle.Fill;
         }
 
         private void CLogin_Load(object sender, EventArgs e) {
-            //
+            mainForm = (CMainForm) Parent.Parent;
+
+            ((CCekProgram) mainForm.PanelContainer.Controls["CCekProgram"]).LoadingInformation.Text = "Harap Menunggu ...";
         }
 
         private void ShowLoading(bool isShow) {
@@ -57,10 +52,10 @@ namespace DcTransferFtpNew.Panels {
             // Set State To Loading
             ToggleEnableDisableInput(!isShow);
             if (isShow) {
-                mainForm.PanelContainer.Controls.Find("CCekProgram", false).FirstOrDefault().BringToFront();
+                mainForm.PanelContainer.Controls["CCekProgram"].BringToFront();
             }
             else {
-                mainForm.PanelContainer.Controls.Find("CLogin", false).FirstOrDefault().BringToFront();
+                BringToFront();
             }
         }
 
@@ -85,7 +80,12 @@ namespace DcTransferFtpNew.Panels {
 
             // Create & Show `MainPanel`
             if (!mainForm.PanelContainer.Controls.ContainsKey("CMainPanel")) {
-                mainForm.PanelContainer.Controls.Add(CProgram.Bifeldyz.ResolveClass<CMainPanel>());
+                try {
+                    mainForm.PanelContainer.Controls.Add(CProgram.Bifeldyz.ResolveClass<CMainPanel>());
+                }
+                catch (Exception ex) {
+                    MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             mainForm.PanelContainer.Controls["CMainPanel"].BringToFront();
 

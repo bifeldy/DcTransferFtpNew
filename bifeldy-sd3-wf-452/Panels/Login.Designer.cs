@@ -119,6 +119,7 @@ namespace DcTransferFtpNew.Panels {
             this.Controls.Add(this.txtUserNameNik);
             this.Name = "CLogin";
             this.Size = new System.Drawing.Size(600, 130);
+            this.Load += new System.EventHandler(this.CLogin_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
