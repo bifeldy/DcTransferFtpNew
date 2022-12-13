@@ -16,7 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+using bifeldy_sd3_lib_452.Utilities;
+
 using DcTransferFtpNew.Abstractions;
+using DcTransferFtpNew.Handlers;
 
 namespace DcTransferFtpNew.Navigations {
 
@@ -24,7 +27,7 @@ namespace DcTransferFtpNew.Navigations {
 
         public List<Button> ButtonMenuHarianList { get; } = new List<Button>();
 
-        public CProsesHarian() {
+        public CProsesHarian(ILogger logger, IDb db) : base(logger, db) {
             InitializeComponent();
             OnInit();
         }
@@ -49,6 +52,7 @@ namespace DcTransferFtpNew.Navigations {
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianDataIcho", Text = "Data ICHO" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianDataIrpc", Text = "Data IRPC" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianFingerScan", Text = "Data FingerScan" });
+            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianTaxFull", Text = "Data Tax Full" });
         }
 
     }

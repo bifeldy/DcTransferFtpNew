@@ -16,7 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+using bifeldy_sd3_lib_452.Utilities;
+
 using DcTransferFtpNew.Abstractions;
+using DcTransferFtpNew.Handlers;
 
 namespace DcTransferFtpNew.Navigations {
 
@@ -24,7 +27,7 @@ namespace DcTransferFtpNew.Navigations {
 
         public List<Button> ButtonMenuBulananList { get; } = new List<Button>();
 
-        public CProsesBulanan() {
+        public CProsesBulanan(ILogger logger, IDb db) : base(logger, db) {
             InitializeComponent();
             OnInit();
         }

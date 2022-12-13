@@ -17,13 +17,11 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using bifeldy_sd3_lib_452.Models;
 using bifeldy_sd3_lib_452.Utilities;
 
 using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Navigations;
-using DcTransferFtpNew.Utilities;
 
 namespace DcTransferFtpNew.Logics {
 
@@ -31,7 +29,6 @@ namespace DcTransferFtpNew.Logics {
 
     public sealed class CProsesHarianFingerScan : CLogics, IProsesHarianFingerScan {
 
-        private readonly IApp _app;
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
@@ -39,14 +36,12 @@ namespace DcTransferFtpNew.Logics {
         private readonly IDcFtpT _dcFtpT;
 
         public CProsesHarianFingerScan(
-            IApp app,
             ILogger logger,
             IDb db,
             IBerkas berkas,
             IQTrfCsv q_trf_csv,
             IDcFtpT dc_ftp_t
         ) : base(db) {
-            _app = app;
             _logger = logger;
             _db = db;
             _berkas = berkas;
@@ -56,7 +51,6 @@ namespace DcTransferFtpNew.Logics {
 
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
             CProsesHarian prosesHarian = (CProsesHarian)currentControl;
-            _logger.ClearLog();
             Button button = (Button)sender;
             button.BackColor = Color.FromArgb(255, 207, 223);
             DateTime dateStart = prosesHarian.DateTimePickerHarianAwal.Value.Date;

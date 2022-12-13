@@ -18,11 +18,22 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
+using bifeldy_sd3_lib_452.Utilities;
+
+using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Panels;
 
 namespace DcTransferFtpNew.Abstractions {
 
     public class CNavigations : UserControl {
+
+        private readonly ILogger _logger;
+        private readonly IDb _db;
+
+        public CNavigations(ILogger logger, IDb db) {
+            _logger = logger;
+            _db = db;
+        }
 
         protected void AddButtonToMainPanel(Control panel, List<Button> buttonList, FlowLayoutPanel flowLayoutPanel) {
             CMainPanel mainPanel = (CMainPanel) panel;
@@ -49,9 +60,13 @@ namespace DcTransferFtpNew.Abstractions {
 
                         try {
                             CLogics cls = (CLogics) CProgram.Bifeldyz.ResolveNamed(buttonSender.Name);
+                            _logger.ClearLog();
+                            await _db.OraPg.MarkBeforeExecQueryCommitAndRollback();
                             await cls.Run(sender, e, this);
+                            _db.OraPg.MarkSuccessExecQueryAndCommit();
                         }
                         catch (Exception ex) {
+                            _db.OraPg.MarkFailExecQueryAndRollback();
                             MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
 

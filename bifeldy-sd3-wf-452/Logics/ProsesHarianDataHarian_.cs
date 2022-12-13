@@ -56,7 +56,6 @@ namespace DcTransferFtpNew.Logics {
 
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
             CProsesHarian prosesHarian = (CProsesHarian) currentControl;
-            _logger.ClearLog();
             Button button = (Button) sender;
             button.BackColor = Color.FromArgb(255, 207, 223);
             DateTime dateStart = prosesHarian.DateTimePickerHarianAwal.Value.Date;
@@ -78,9 +77,10 @@ namespace DcTransferFtpNew.Logics {
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
 
-                        CDbExecProcResult res = await _db.CALL__P_TGL("TRF_STM_BTR_EVO", xDate);
+                        string procName = "TRF_STM_BTR_EVO";
+                        CDbExecProcResult res = await _db.CALL__P_TGL(procName, xDate);
                         if (res == null || !res.STATUS) {
-                            throw new Exception("Gagal Menjalankan Procedure");
+                            throw new Exception($"Gagal Menjalankan Procedure {procName}");
                         }
 
                         targetFileName = $"STM{fileTimeBRDFormat2Harianb.Substring(3, 1)}{fileTimeBRDFormat2Hariana}{xDate:dd}.CSV";
