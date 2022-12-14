@@ -35,14 +35,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<string> GetURLWebServiceHO();
         Task<string> GetDcExt();
         Task<string> GetWinFunction();
-        Task<DataTable> GetIrpc(DateTime xDate);
-        Task<int> CekLogTtfHdr(DateTime xDate);
-        Task<string> CekRunTtfHdr(DateTime xDate);
-        Task<bool> InsertDcTtfHdrLog(DateTime xDate);
         Task<bool> UpdateDcTtfHdrLog(string columnValue, DateTime xDate);
-        Task<int> CekLogTtfHdr_status_ok(DateTime xDate);
-        Task<bool> DeleteDcTtfDtlLog(DateTime xDate);
-        Task<bool> DeleteDcTtfHdrLog(DateTime xDate);
     }
 
     public sealed class CDb : CDbHandler, IDb {
@@ -54,7 +47,7 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<DateTime> GetYesterdayDate(int lastDay) {
-            return await OraPg?.ExecScalarAsync<DateTime>(
+            return await OraPg.ExecScalarAsync<DateTime>(
                 $@"
                     SELECT
                         {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")} - :last_day
@@ -76,7 +69,7 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<string> Q_TRF_CSV__GET(string kolom, string q_filename) {
-            return await OraPg?.ExecScalarAsync<string>(
+            return await OraPg.ExecScalarAsync<string>(
                 $@"
                     SELECT {kolom} FROM Q_TRF_CSV WHERE q_filename = :q_filename
                 ",
@@ -87,7 +80,7 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<DbDataReader> GetFtpInfo(string pga_type) {
-            return await OraPg?.ExecReaderAsync(
+            return await OraPg.ExecReaderAsync(
                 $@"
                     SELECT
                         PGA_IPADDRESS,
@@ -109,142 +102,22 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<string> GetURLWebServiceHO() {
-            return await OraPg?.ExecScalarAsync<string>($@"SELECT WEB_URL FROM DC_WEBSERVICE_T WHERE WEB_TYPE = 'HO'");
+            return await OraPg.ExecScalarAsync<string>($@"SELECT WEB_URL FROM DC_WEBSERVICE_T WHERE WEB_TYPE = 'HO'");
         }
 
         public async Task<string> GetDcExt() {
-            return await OraPg?.ExecScalarAsync<string>($"SELECT SUBSTR (TBL_DC_KODE, 2, 3) AS DCEXT FROM DC_TABEL_DC_T");
+            return await OraPg.ExecScalarAsync<string>($"SELECT SUBSTR (TBL_DC_KODE, 2, 3) AS DCEXT FROM DC_TABEL_DC_T");
         }
 
         public async Task<string> GetWinFunction() {
-            return await OraPg?.ExecScalarAsync<string>($"SELECT SUBSTR(MAX(PERIODE), 3, 4) AS WINFUNCTION FROM DC_TRNH_HDR_T");
-        }
-
-        public async Task<DataTable> GetIrpc(DateTime xDate) {
-            return await OraPg.GetDataTableAsync(
-                $@"
-                    SELECT
-                        dc_kode AS kode_Dc,
-                        Tgl_Doc AS tanggal_doc,
-                        No_Doc AS nomor_doc,
-                        TYPE AS TYPE,
-                        NOSJ AS no_sj,
-                        PLU AS PLU,
-                        Qty AS qty,
-                        nilai AS Rupiah,
-                        Keterangan AS keterangan,
-                        SUPKODE
-                    FROM
-                        DC_BPBNRB_SUPROTI_T
-                    WHERE
-                        TO_CHAR(tgl_doc, 'yyyyMMdd') = TO_CHAR(:xDate, 'yyyyMMdd')
-                ",
-                new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
-                }
-            );
-        }
-
-        public async Task<int> CekLogTtfHdr(DateTime xDate) {
-            return await OraPg?.ExecScalarAsync<int>(
-                $@"
-                    SELECT
-                        {(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(1, 0)
-                    FROM
-                        DC_TTF_HDR_LOG
-                    WHERE
-                        TBL_DC_KODE = :KodeDc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
-                ",
-                new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
-                }
-            );
-        }
-
-        public async Task<string> CekRunTtfHdr(DateTime xDate) {
-            return await OraPg?.ExecScalarAsync<string>(
-                $@"
-                    SELECT
-                        {(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(STATUS_RUN, '0')
-                    FROM
-                        DC_TTF_HDR_LOG
-                    WHERE
-                        TBL_DC_KODE = :KodeDc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
-                ",
-                new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
-                }
-            );
-        }
-
-        public async Task<bool> InsertDcTtfHdrLog(DateTime xDate) {
-            return await OraPg?.ExecQueryAsync(
-                $@"
-                    INSERT INTO dc_ttf_hdr_log (tbl_dc_kode, tgl_proses, tgl_doc, status_run)
-                    VALUES (:KodeDc, {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")}, :xDate, '1')
-                ",
-                new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
-                }
-            );
+            return await OraPg.ExecScalarAsync<string>($"SELECT SUBSTR(MAX(PERIODE), 3, 4) AS WINFUNCTION FROM DC_TRNH_HDR_T");
         }
 
         public async Task<bool> UpdateDcTtfHdrLog(string columnValue, DateTime xDate) {
-            return await OraPg?.ExecQueryAsync(
+            return await OraPg.ExecQueryAsync(
                 $@"
                     UPDATE dc_ttf_hdr_log
                     SET {columnValue}
-                    WHERE
-                        TBL_DC_KODE = :KodeDc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
-                ",
-                new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
-                }
-            );
-        }
-
-        public async Task<int> CekLogTtfHdr_status_ok(DateTime xDate) {
-            return await OraPg?.ExecScalarAsync<int>(
-                $@"
-                    SELECT 1 FROM DC_TTF_HDR_LOG
-                    WHERE
-                        TBL_DC_KODE = :KodeDc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
-                        AND status_tax = 'OK'
-                ",
-                new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
-                }
-            );
-        }
-
-        public async Task<bool> DeleteDcTtfDtlLog(DateTime xDate) {
-            return await OraPg?.ExecQueryAsync(
-                $@"
-                    DELETE FROM dc_ttf_dtl_log
-                    WHERE
-                        TBL_DC_KODE = :KodeDc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
-                ",
-                new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
-                }
-            );
-        }
-
-        public async Task<bool> DeleteDcTtfHdrLog(DateTime xDate) {
-            return await OraPg?.ExecQueryAsync(
-                $@"
-                    DELETE FROM dc_ttf_hdr_log
                     WHERE
                         TBL_DC_KODE = :KodeDc
                         AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')

@@ -68,7 +68,16 @@ namespace DcTransferFtpNew.Logics {
 
         private async Task FullCreate(Button button, DateTime xDate, string TaxTempFullFolderPath) {
 
-            await _db.InsertDcTtfHdrLog(xDate);
+            await _db.OraPg.ExecQueryAsync(
+                $@"
+                    INSERT INTO dc_ttf_hdr_log (tbl_dc_kode, tgl_proses, tgl_doc, status_run)
+                    VALUES (:KodeDc, {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")}, :xDate, '1')
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await _db.GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                }
+            );
             await _db.UpdateDcTtfHdrLog($"start_tax = {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}", xDate);
 
             try {
@@ -139,7 +148,20 @@ namespace DcTransferFtpNew.Logics {
             //     TargetKirim++;
             // }
 
-            if (await _db.CekLogTtfHdr_status_ok(xDate) == 1) {
+            int statusOk = await _db.OraPg.ExecScalarAsync<int>(
+                $@"
+                    SELECT 1 FROM DC_TTF_HDR_LOG
+                    WHERE
+                        TBL_DC_KODE = :KodeDc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                        AND status_tax = 'OK'
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await _db.GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                }
+            );
+            if (statusOk == 1) {
                 await _db.UpdateDcTtfHdrLog($"start_BPB = {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}", xDate);
 
                 try {
@@ -386,7 +408,21 @@ namespace DcTransferFtpNew.Logics {
 
                         targetFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}.ZIP";
 
-                        int cekLog = await _db.CekLogTtfHdr(xDate);
+                        int cekLog = await _db.OraPg.ExecScalarAsync<int>(
+                            $@"
+                                SELECT
+                                    {(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(1, 0)
+                                FROM
+                                    DC_TTF_HDR_LOG
+                                WHERE
+                                    TBL_DC_KODE = :KodeDc
+                                    AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                            ",
+                            new List<CDbQueryParamBind> {
+                                new CDbQueryParamBind { NAME = "KodeDc", VALUE = await _db.GetKodeDc() },
+                                new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                            }
+                        );
                         if (cekLog == 0) {
 
                             await FullCreate(button, xDate, TaxTempFullFolderPath);
@@ -395,8 +431,22 @@ namespace DcTransferFtpNew.Logics {
 
                         }
                         else {
-                            string cekRun = await _db.CekRunTtfHdr(xDate);
                             string dialogTitle = "Proses Manual Full Re-create TAX-TTF";
+                            string cekRun = await _db.OraPg.ExecScalarAsync<string>(
+                                $@"
+                                    SELECT
+                                        {(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(STATUS_RUN, '0')
+                                    FROM
+                                        DC_TTF_HDR_LOG
+                                    WHERE
+                                        TBL_DC_KODE = :KodeDc
+                                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                                ",
+                                new List<CDbQueryParamBind> {
+                                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await _db.GetKodeDc() },
+                                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                                }
+                            );
 
                             if (string.IsNullOrEmpty(cekRun) || cekRun == "0") {
                                 DialogResult dialogResult = MessageBox.Show(
@@ -407,8 +457,31 @@ namespace DcTransferFtpNew.Logics {
                                     MessageBoxDefaultButton.Button2
                                 );
                                 if (dialogResult == DialogResult.Yes) {
-                                    await _db.DeleteDcTtfDtlLog(xDate);
-                                    await _db.DeleteDcTtfHdrLog(xDate);
+                                    await _db.OraPg.ExecQueryAsync(
+                                        $@"
+                                            DELETE FROM dc_ttf_dtl_log
+                                            WHERE
+                                                TBL_DC_KODE = :KodeDc
+                                                AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                                        ",
+                                        new List<CDbQueryParamBind> {
+                                            new CDbQueryParamBind { NAME = "KodeDc", VALUE = await _db.GetKodeDc() },
+                                            new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                                        }
+                                    );
+
+                                    await _db.OraPg.ExecQueryAsync(
+                                        $@"
+                                            DELETE FROM dc_ttf_hdr_log
+                                            WHERE
+                                                TBL_DC_KODE = :KodeDc
+                                                AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                                        ",
+                                        new List<CDbQueryParamBind> {
+                                            new CDbQueryParamBind { NAME = "KodeDc", VALUE = await _db.GetKodeDc() },
+                                            new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                                        }
+                                    );
 
                                     await FullCreate(button, xDate, TaxTempFullFolderPath);
                                     await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
