@@ -390,8 +390,8 @@ namespace DcTransferFtpNew.Logics {
                         if (cekLog == 0) {
 
                             await FullCreate(button, xDate, TaxTempFullFolderPath);
-                            await FromZip($"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}.ZIP", xDate, TaxTempFullFolderPath);
-                            await FromTransfer($"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}.ZIP", button, xDate);
+                            await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
+                            await FromTransfer(targetFileName, button, xDate);
 
                         }
                         else {
@@ -411,8 +411,8 @@ namespace DcTransferFtpNew.Logics {
                                     await _db.DeleteDcTtfHdrLog(xDate);
 
                                     await FullCreate(button, xDate, TaxTempFullFolderPath);
-                                    await FromZip($"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}.ZIP", xDate, TaxTempFullFolderPath);
-                                    await FromTransfer($"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}.ZIP", button, xDate);
+                                    await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
+                                    await FromTransfer(targetFileName, button, xDate);
                                 }
                             }
                             else {
