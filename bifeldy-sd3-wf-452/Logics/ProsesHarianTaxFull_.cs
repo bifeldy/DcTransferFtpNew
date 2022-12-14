@@ -74,7 +74,7 @@ namespace DcTransferFtpNew.Logics {
             try {
                 string procName1 = "CREATE_TAXTEMP1_EVO";
                 CDbExecProcResult res1 = await _db.CALL__P_TGL(procName1, xDate);
-                if (res1 == null || !res1.STATUS) {
+                if (!res1.STATUS) {
                     throw new Exception($"Gagal Menjalankan Procedure {procName1}");
                 }
 
@@ -84,42 +84,47 @@ namespace DcTransferFtpNew.Logics {
 
                 if (string.IsNullOrEmpty(seperator) || string.IsNullOrEmpty(queryForCSV) || string.IsNullOrEmpty(filename)) {
                     string status_error = "Data CSV (Separator / Query / Nama File) Tidak Lengkap!";
-                    MessageBox.Show(status_error, "Q_TRF_CSV", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(status_error, $"{button.Text} :: Q_TRF_CSV", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
                     await _db.UpdateDcTtfHdrLog($"status_tax = '{status_error}'", xDate);
                 }
                 else {
                     await _db.UpdateDcTtfHdrLog($"FILE_TAX = '{filename}'", xDate);
-                    (DataTable dtQueryRes, Exception dtQueryEx) = await _db.OraPg.GetDataTableAsync(queryForCSV);
-                    if (dtQueryEx == null) {
-                        MessageBox.Show(dtQueryEx.Message, "dtQueryEx", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        await _db.UpdateDcTtfHdrLog($"status_tax = '{dtQueryEx.Message}'", xDate);
-                    }
-                    else if (dtQueryRes.Rows.Count <= 0) {
-                        await _db.UpdateDcTtfHdrLog($"status_tax = 'Data Kosong'", xDate);
-                    }
-                    else {
-                        if (_berkas.DataTable2CSV(dtQueryRes, filename, seperator, TaxTempFullFolderPath)) {
+
+                    try {
+                        DataTable dtQueryRes = await _db.OraPg.GetDataTableAsync(queryForCSV);
+
+                        if (dtQueryRes.Rows.Count > 0) {
                             await _db.UpdateDcTtfHdrLog($"status_tax = 'OK'", xDate);
-                            // _berkas.ListFileForZip.Add(targetFileName);
+                        }
+                        else {
+                            await _db.UpdateDcTtfHdrLog($"status_tax = 'Data Kosong'", xDate);
+                        }
+
+                        if (_berkas.DataTable2CSV(dtQueryRes, filename, seperator, TaxTempFullFolderPath)) {
+                            // _berkas.ListFileForZip.Add(filename);
                             // TargetKirim++;
                         }
+                    }
+                    catch (Exception e) {
+                        MessageBox.Show(e.Message, $"{button.Text} :: TAX2", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        await _db.UpdateDcTtfHdrLog($"status_tax = '{e.Message}'", xDate);
                     }
                 }
             }
             catch (Exception ex) {
                 await _db.UpdateDcTtfHdrLog($"status_tax = '{ex.Message}'", xDate);
-                throw ex;
             }
 
             await _db.UpdateDcTtfHdrLog($"stop_tax = {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}", xDate);
 
-            (bool success1, bool addQueue1) = await _qTrfCsv.CreateCSVFile("", "SUMTAX", TaxTempFullFolderPath);
-            // if (success1 && addQueue1) {
+            (bool success1, bool addedQueue1) = await _qTrfCsv.CreateCSVFile("", "SUMTAX", TaxTempFullFolderPath);
+            // if (success1 && addedQueue1) {
             //     TargetKirim++;
             // }
 
-            (bool success2, bool addQueue2) = await _qTrfCsv.CreateCSVFile("", "REKTAX", TaxTempFullFolderPath);
-            // if (success2 && addQueue2) {
+            (bool success2, bool addedQueue2) = await _qTrfCsv.CreateCSVFile("", "REKTAX", TaxTempFullFolderPath);
+            // if (success2 && addedQueue2) {
             //     TargetKirim++;
             // }
 
@@ -129,150 +134,166 @@ namespace DcTransferFtpNew.Logics {
                 throw new Exception($"Gagal Menjalankan Procedure {procName2}");
             }
 
-            (bool success3, bool addQueue3) = await _qTrfCsv.CreateCSVFile("", "BAKP", TaxTempFullFolderPath);
-            // if (success3 && addQueue3) {
+            (bool success3, bool addedQueue3) = await _qTrfCsv.CreateCSVFile("", "BAKP", TaxTempFullFolderPath);
+            // if (success3 && addedQueue3) {
             //     TargetKirim++;
             // }
 
             if (await _db.CekLogTtfHdr_status_ok(xDate) == 1) {
                 await _db.UpdateDcTtfHdrLog($"start_BPB = {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}", xDate);
 
-                string queryTaxBPB = await _db.Q_TRF_CSV__GET("q_query", "TAXBPB");
-                (DataTable dtTaxBPB, Exception exTaxBPB) = await _db.OraPg.GetDataTableAsync(queryTaxBPB);
-                if (exTaxBPB != null) {
-                    await _db.UpdateDcTtfHdrLog($"STATUS_BPB = '{exTaxBPB.Message}', STOP_BPB = {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}", xDate);
-                    throw exTaxBPB;
-                }
+                try {
+                    string queryTaxBPB = await _db.Q_TRF_CSV__GET("q_query", "TAXBPB");
+                    DataTable dtTaxBPB = await _db.OraPg.GetDataTableAsync(queryTaxBPB);
 
-                await _db.UpdateDcTtfHdrLog($"JML_BPB_TAX = {dtTaxBPB.Rows.Count}", xDate);
+                    await _db.UpdateDcTtfHdrLog($"JML_BPB_TAX = {dtTaxBPB.Rows.Count}", xDate);
 
-                int countBPBok = 0;
-                int countBPBfail = 0;
-                for (int idxTaxBPB = 0; idxTaxBPB < dtTaxBPB.Rows.Count; idxTaxBPB++) {
-                    DataRow drTaxBPB = dtTaxBPB.Rows[idxTaxBPB];
-                    (string filePathBlobRowTaxBPB, Exception exRowTaxBPB) = await _db.OraPg.RetrieveBlob(
-                        TaxTempFullFolderPath,
-                        drTaxBPB["FILE_NAME"].ToString(),
-                        $@"
-                            SELECT a.HDR_DOC_BLOB
-                            FROM dc_header_blob_t a, dc_header_transaksi_t b
-                            WHERE
-                                a.hdr_hdr_id = b.hdr_hdr_id
-                                AND b.HDR_TYPE_TRANS = 'BPB SUPPLIER'
-                                AND b.HDR_NO_DOC = :no_doc
-                                AND TO_CHAR(b.HDR_TGL_DOC, 'MM/dd/yyyy') = :tgl_doc
-                                AND a.HDR_DOC_BLOB IS NOT NULL
-                        ",
-                        new List<CDbQueryParamBind>() {
-                            new CDbQueryParamBind { NAME = "no_doc", VALUE = drTaxBPB["DOCNO"].ToString() },
-                            new CDbQueryParamBind { NAME = "tgl_doc", VALUE = drTaxBPB["TANGGAL1"].ToString() }
+                    int countBPBok = 0;
+                    int countBPBfail = 0;
+                    for (int idxTaxBPB = 0; idxTaxBPB < dtTaxBPB.Rows.Count; idxTaxBPB++) {
+                        DataRow drTaxBPB = dtTaxBPB.Rows[idxTaxBPB];
+                        string statusBlobTaxBPB = null;
+
+                        try {
+                            string filePathBlobRowTaxBPB = await _db.OraPg.RetrieveBlob(
+                                TaxTempFullFolderPath,
+                                drTaxBPB["FILE_NAME"].ToString(),
+                                $@"
+                                    SELECT a.HDR_DOC_BLOB
+                                    FROM dc_header_blob_t a, dc_header_transaksi_t b
+                                    WHERE
+                                        a.hdr_hdr_id = b.hdr_hdr_id
+                                        AND b.HDR_TYPE_TRANS = 'BPB SUPPLIER'
+                                        AND b.HDR_NO_DOC = :no_doc
+                                        AND TO_CHAR(b.HDR_TGL_DOC, 'MM/dd/yyyy') = :tgl_doc
+                                        AND a.HDR_DOC_BLOB IS NOT NULL
+                                ",
+                                new List<CDbQueryParamBind>() {
+                                    new CDbQueryParamBind { NAME = "no_doc", VALUE = drTaxBPB["DOCNO"].ToString() },
+                                    new CDbQueryParamBind { NAME = "tgl_doc", VALUE = drTaxBPB["TANGGAL1"].ToString() }
+                                }
+                            );
+
+                            countBPBok++;
+                            statusBlobTaxBPB = "OK";
+                            // TargetKirim++;
+                            // _berkas.ListFileForZip.Add(drTaxBPB["FILE_NAME"].ToString());
                         }
-                    );
-                    string statusBlobTaxBPB = null;
-                    if (exRowTaxBPB != null || filePathBlobRowTaxBPB == null) {
-                        countBPBfail++;
-                        statusBlobTaxBPB = exRowTaxBPB.Message;
-                        MessageBox.Show(exRowTaxBPB.Message, button.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    else {
-                        countBPBok++;
-                        statusBlobTaxBPB = "OK";
-                        // TargetKirim++;
-                        // _berkas.ListFileForZip.Add(drTaxBPB["FILE_NAME"].ToString());
-                    }
-                    (bool insDcTtfDtlLog, Exception exDcTtfDtlLog) = await _db.OraPg.ExecQueryAsync(
-                        $@"
-                            INSERT INTO dc_ttf_dtl_log (tbl_dc_kode, tgl_proses, no_doc, tgl_doc, type_trans, tgl_create, supkode, status)
-                            VALUES(:kode_dc, {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")}, :no_doc, to_date(:tgl_doc, 'mm/dd/yyyy'), 'BPB SUPPLIER', {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}, :sup_kode, '{statusBlobTaxBPB}')
-                        ",
-                        new List<CDbQueryParamBind>() {
+                        catch (Exception e) {
+                            countBPBfail++;
+                            statusBlobTaxBPB = e.Message;
+                            MessageBox.Show(e.Message, $"{button.Text} :: BPB", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+
+                        await _db.OraPg.ExecQueryAsync(
+                            $@"
+                                INSERT INTO dc_ttf_dtl_log (tbl_dc_kode, tgl_proses, no_doc, tgl_doc, type_trans, tgl_create, supkode, status)
+                                VALUES(:kode_dc, {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")}, :no_doc, to_date(:tgl_doc, 'mm/dd/yyyy'), 'BPB SUPPLIER', {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}, :sup_kode, '{statusBlobTaxBPB}')
+                            ",
+                            new List<CDbQueryParamBind>() {
                             new CDbQueryParamBind { NAME = "kode_dc", VALUE = await _db.GetKodeDc() },
                             new CDbQueryParamBind { NAME = "no_doc", VALUE = drTaxBPB["DOCNO"].ToString() },
                             new CDbQueryParamBind { NAME = "tgl_doc", VALUE = drTaxBPB["TANGGAL1"].ToString() },
                             new CDbQueryParamBind { NAME = "sup_kode", VALUE = drTaxBPB["SUPCO"].ToString() }
-                        }
-                    );
-                    if (exDcTtfDtlLog != null && !insDcTtfDtlLog) {
-                        throw exDcTtfDtlLog;
+                            }
+                        );
                     }
+
+                    // TargetKirim += (countBPBok + countBPBfail);
+                    string statusTaxBPB = "NOT COMPLETED";
+                    if (countBPBok + countBPBfail == dtTaxBPB.Rows.Count) {
+                        statusTaxBPB = "COMPLETED";
+                    }
+
+                    await _db.UpdateDcTtfHdrLog($@"
+                        JML_BPB_OK = {countBPBok},
+                        JML_BPB_FAIL = {countBPBfail},
+                        STATUS_BPB = '{statusTaxBPB}'
+                    ", xDate);
+                }
+                catch (Exception ex) {
+                    await _db.UpdateDcTtfHdrLog($"STATUS_BPB = '{ex.Message}'", xDate);
                 }
 
-                // TargetKirim += (countBPBok + countBPBfail);
                 await _db.UpdateDcTtfHdrLog($@"
-                    JML_BPB_OK = {countBPBok},
-                    JML_BPB_FAIL = {countBPBfail},
-                    STATUS_BPB = 'COMPLETED',
                     stOP_BPB = {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")},
                     stART_NRB = {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}
                 ", xDate);
 
-                string queryTaxNRB = await _db.Q_TRF_CSV__GET("q_query", "TAXNRB");
-                (DataTable dtTaxNRB, Exception exTaxNRB) = await _db.OraPg.GetDataTableAsync(queryTaxNRB);
-                if (exTaxNRB != null) {
-                    await _db.UpdateDcTtfHdrLog($"STATUS_NRB = '{exTaxNRB.Message}', STOP_NRB = {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}", xDate);
-                    throw exTaxNRB;
+                try {
+                    string queryTaxNRB = await _db.Q_TRF_CSV__GET("q_query", "TAXNRB");
+                    DataTable dtTaxNRB = await _db.OraPg.GetDataTableAsync(queryTaxNRB);
+
+                    await _db.UpdateDcTtfHdrLog($"JML_NRB_TAX = {dtTaxNRB.Rows.Count}", xDate);
+
+                    int countNRBok = 0;
+                    int countNRBfail = 0;
+                    for (int idxTaxNRB = 0; idxTaxNRB < dtTaxNRB.Rows.Count; idxTaxNRB++) {
+                        DataRow drTaxNRB = dtTaxNRB.Rows[idxTaxNRB];
+                        string statusBlobTaxNRB = null;
+
+                        try {
+                            string filePathBlobRowTaxNRB = await _db.OraPg.RetrieveBlob(
+                                TaxTempFullFolderPath,
+                                drTaxNRB["FILE_NAME"].ToString(),
+                                $@"
+                                    SELECT a.HDR_DOC_BLOB
+                                    FROM dc_header_blob_t a, dc_header_transaksi_t b
+                                    WHERE
+                                        a.hdr_hdr_id = b.hdr_hdr_id
+                                        AND b.HDR_TYPE_TRANS = 'NRB SUPPLIER'
+                                        AND b.HDR_NO_DOC = :no_doc
+                                        AND TO_CHAR(b.HDR_TGL_DOC, 'MM/dd/yyyy') = :tgl_doc
+                                        AND a.HDR_DOC_BLOB IS NOT NULL
+                                ",
+                                new List<CDbQueryParamBind>() {
+                                    new CDbQueryParamBind { NAME = "no_doc", VALUE = drTaxNRB["DOCNO"].ToString() },
+                                    new CDbQueryParamBind { NAME = "tgl_doc", VALUE = drTaxNRB["TANGGAL1"].ToString() }
+                                }
+                            );
+
+                            countNRBok++;
+                            statusBlobTaxNRB = "OK";
+                            // TargetKirim++;
+                            // _berkas.ListFileForZip.Add(drTaxNRB["FILE_NAME"].ToString());
+                        }
+                        catch (Exception e) {
+                            countNRBfail++;
+                            statusBlobTaxNRB = e.Message;
+                            MessageBox.Show(e.Message, $"{button.Text} :: NRB", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+
+                        await _db.OraPg.ExecQueryAsync(
+                            $@"
+                                INSERT INTO dc_ttf_dtl_log (tbl_dc_kode, tgl_proses, no_doc, tgl_doc, type_trans, tgl_create, supkode, status)
+                                VALUES(:kode_dc, {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")}, :no_doc, to_date(:tgl_doc, 'mm/dd/yyyy'), 'BPB SUPPLIER', {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}, :sup_kode, '{statusBlobTaxNRB}')
+                            ",
+                            new List<CDbQueryParamBind>() {
+                                new CDbQueryParamBind { NAME = "kode_dc", VALUE = await _db.GetKodeDc() },
+                                new CDbQueryParamBind { NAME = "no_doc", VALUE = drTaxNRB["DOCNO"].ToString() },
+                                new CDbQueryParamBind { NAME = "tgl_doc", VALUE = drTaxNRB["TANGGAL1"].ToString() },
+                                new CDbQueryParamBind { NAME = "sup_kode", VALUE = drTaxNRB["SUPCO"].ToString() }
+                            }
+                        );
+                    }
+
+                    // TargetKirim += (countNRBok + countNRBfail);
+                    string statusTaxNRB = "NOT COMPLETED";
+                    if (countNRBok + countNRBfail == dtTaxNRB.Rows.Count) {
+                        statusTaxNRB = "COMPLETED";
+                    }
+
+                    await _db.UpdateDcTtfHdrLog($@"
+                        JML_NRB_OK = {countNRBok},
+                        JML_NRB_FAIL = {countNRBfail},
+                        STATUS_NRB = '{statusTaxNRB}',
+                    ", xDate);
+                }
+                catch (Exception ex) {
+                    await _db.UpdateDcTtfHdrLog($"STATUS_NRB = '{ex.Message}'", xDate);
                 }
 
-                await _db.UpdateDcTtfHdrLog($"JML_NRB_TAX = {dtTaxNRB.Rows.Count}", xDate);
-
-                int countNRBok = 0;
-                int countNRBfail = 0;
-                for (int idxTaxNRB = 0; idxTaxNRB < dtTaxNRB.Rows.Count; idxTaxNRB++) {
-                    DataRow drTaxNRB = dtTaxNRB.Rows[idxTaxNRB];
-                    (string filePathBlobRowTaxNRB, Exception exRowTaxNRB) = await _db.OraPg.RetrieveBlob(
-                        TaxTempFullFolderPath,
-                        drTaxNRB["FILE_NAME"].ToString(),
-                        $@"
-                            SELECT a.HDR_DOC_BLOB
-                            FROM dc_header_blob_t a, dc_header_transaksi_t b
-                            WHERE
-                                a.hdr_hdr_id = b.hdr_hdr_id
-                                AND b.HDR_TYPE_TRANS = 'NRB SUPPLIER'
-                                AND b.HDR_NO_DOC = :no_doc
-                                AND TO_CHAR(b.HDR_TGL_DOC, 'MM/dd/yyyy') = :tgl_doc
-                                AND a.HDR_DOC_BLOB IS NOT NULL
-                        ",
-                        new List<CDbQueryParamBind>() {
-                            new CDbQueryParamBind { NAME = "no_doc", VALUE = drTaxNRB["DOCNO"].ToString() },
-                            new CDbQueryParamBind { NAME = "tgl_doc", VALUE = drTaxNRB["TANGGAL1"].ToString() }
-                        }
-                    );
-                    string statusBlobTaxNRB;
-                    if (exRowTaxNRB != null || filePathBlobRowTaxNRB == null) {
-                        countNRBfail++;
-                        statusBlobTaxNRB = exRowTaxNRB.Message;
-                        MessageBox.Show(exRowTaxNRB.Message, button.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    else {
-                        countNRBok++;
-                        statusBlobTaxNRB = "OK";
-                        // TargetKirim++;
-                        // _berkas.ListFileForZip.Add(drTaxNRB["FILE_NAME"].ToString());
-                    }
-                    (bool insDcTtfDtlLog, Exception exDcTtfDtlLog) = await _db.OraPg.ExecQueryAsync(
-                        $@"
-                            INSERT INTO dc_ttf_dtl_log (tbl_dc_kode, tgl_proses, no_doc, tgl_doc, type_trans, tgl_create, supkode, status)
-                            VALUES(:kode_dc, {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")}, :no_doc, to_date(:tgl_doc, 'mm/dd/yyyy'), 'BPB SUPPLIER', {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}, :sup_kode, '{statusBlobTaxNRB}')
-                        ",
-                        new List<CDbQueryParamBind>() {
-                            new CDbQueryParamBind { NAME = "kode_dc", VALUE = await _db.GetKodeDc() },
-                            new CDbQueryParamBind { NAME = "no_doc", VALUE = drTaxNRB["DOCNO"].ToString() },
-                            new CDbQueryParamBind { NAME = "tgl_doc", VALUE = drTaxNRB["TANGGAL1"].ToString() },
-                            new CDbQueryParamBind { NAME = "sup_kode", VALUE = drTaxNRB["SUPCO"].ToString() }
-                        }
-                    );
-                    if (exDcTtfDtlLog != null && !insDcTtfDtlLog) {
-                        throw exDcTtfDtlLog;
-                    }
-                }
-
-                // TargetKirim += (countNRBok + countNRBfail);
-                await _db.UpdateDcTtfHdrLog($@"
-                    JML_NRB_OK = {countNRBok},
-                    JML_NRB_FAIL = {countNRBfail},
-                    STATUS_NRB = 'COMPLETED',
-                    stOP_NRB = {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}
-                ", xDate);
+                await _db.UpdateDcTtfHdrLog($@"stOP_NRB = {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}", xDate);
 
             }
         }
@@ -290,6 +311,7 @@ namespace DcTransferFtpNew.Logics {
 
         private async Task FromTransfer(string targetFileName, Button button, DateTime xDate) {
             try {
+                BerhasilKirim += await _dcFtpT.KirimFtpTaxTempFull(); // *.CSV Sebanyak :: TargetKirim
                 int terkirim = await _dcFtpT.KirimFtpTaxTempFull(targetFileName); // *.ZIP Sebanyak :: 1
                 BerhasilKirim += terkirim;
 
@@ -309,8 +331,7 @@ namespace DcTransferFtpNew.Logics {
                 TTFLOGService ws = new TTFLOGService();
                 ws.Url = _app.GetConfig("ws_dcho");
 
-                List<DCHO_TTF_HDR_LOG> listTTF = new List<DCHO_TTF_HDR_LOG>();
-                (DataTable dtRettok, Exception exRettok) = await _db.OraPg.GetDataTableAsync(
+                DataTable dtRettok = await _db.OraPg.GetDataTableAsync(
                     $@"
                         SELECT *
                         FROM DC_TTF_HDR_LOG
@@ -323,16 +344,15 @@ namespace DcTransferFtpNew.Logics {
                         new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
                     }
                 );
-                if (exRettok == null && dtRettok.Rows.Count > 0) {
-                    listTTF = _converter.ConvertDataTableToList<DCHO_TTF_HDR_LOG>(dtRettok);
-                }
+
+                List<DCHO_TTF_HDR_LOG> listTTF = _converter.ConvertDataTableToList<DCHO_TTF_HDR_LOG>(dtRettok);
                 string sTTF = _converter.ObjectToJson(listTTF);
                 byte[] byteOfData = _stream.MemStream(sTTF);
                 string tempHasil = ws.SendLogTTF(byteOfData);
             }
             catch (Exception ex2) {
                 _logger.WriteError(ex2);
-                MessageBox.Show(ex2.Message, button.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex2.Message, $"{button.Text} :: DCHO_TTF_HDR_LOG", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             await _db.UpdateDcTtfHdrLog($@"status_run = '0'", xDate);
@@ -375,12 +395,13 @@ namespace DcTransferFtpNew.Logics {
 
                         }
                         else {
-
                             string cekRun = await _db.CekRunTtfHdr(xDate);
+                            string dialogTitle = "Proses Manual Full Re-create TAX-TTF";
+
                             if (string.IsNullOrEmpty(cekRun) || cekRun == "0") {
                                 DialogResult dialogResult = MessageBox.Show(
                                     "Data sudah pernah dibuat, yakin akan menghapus data lama dan membuat dari awal?",
-                                    "Proses Manual Full Re-create TAX-TTF",
+                                    dialogTitle,
                                     MessageBoxButtons.YesNo,
                                     MessageBoxIcon.Question,
                                     MessageBoxDefaultButton.Button2
@@ -397,7 +418,7 @@ namespace DcTransferFtpNew.Logics {
                             else {
                                 MessageBox.Show(
                                     "Proses otomatis sedang berjalan, silahkan coba beberapa MENIT lagi.",
-                                    button.Text,
+                                    dialogTitle,
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Error
                                 );

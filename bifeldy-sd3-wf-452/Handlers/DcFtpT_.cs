@@ -37,7 +37,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<int> KirimFtpFingerScan(string zipFileName = null);
         Task<int> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false);
         Task<int> KirimFtpIrpc(string zipFileName = null);
-        Task<int> KirimFtpTaxTempFull(string zipFileName);
+        Task<int> KirimFtpTaxTempFull(string zipFileName = null);
     }
 
     public sealed class CDcFtpT : IDcFtpT {
@@ -101,7 +101,6 @@ namespace DcTransferFtpNew.Handlers {
                 if (dbDataReader != null) {
                     dbDataReader.Close();
                 }
-                _db.OraPg.CloseConnection();
             }
             if (exception != null) {
                 throw exception;
@@ -140,7 +139,7 @@ namespace DcTransferFtpNew.Handlers {
             return await KirimFtp("FINGER", zipFileName);
         }
 
-        public async Task<int> KirimFtpTaxTempFull(string zipFileName) {
+        public async Task<int> KirimFtpTaxTempFull(string zipFileName = null) {
             return await KirimFtp("TTF", zipFileName);
         }
 

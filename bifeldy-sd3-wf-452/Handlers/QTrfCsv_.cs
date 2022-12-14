@@ -47,12 +47,10 @@ namespace DcTransferFtpNew.Handlers {
                 if (appendTargetName != null) {
                     filename += appendTargetName;
                 }
-                (DataTable dtQuery, Exception ex) = await _db.OraPg.GetDataTableAsync(queryForCSV);
-                if (ex == null) {
-                    res = _berkas.DataTable2CSV(dtQuery, filename, seperator, outputFolderPath);
-                    if (addToQueueForZip) {
-                        _berkas.ListFileForZip.Add(filename);
-                    }
+                DataTable dtQuery = await _db.OraPg.GetDataTableAsync(queryForCSV);
+                res = _berkas.DataTable2CSV(dtQuery, filename, seperator, outputFolderPath);
+                if (addToQueueForZip) {
+                    _berkas.ListFileForZip.Add(filename);
                 }
             }
             return (res, addToQueueForZip);

@@ -54,7 +54,7 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<DateTime> GetYesterdayDate(int lastDay) {
-            (DateTime res, Exception ex) = await OraPg?.ExecScalarAsync<DateTime>(
+            return await OraPg?.ExecScalarAsync<DateTime>(
                 $@"
                     SELECT
                         {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")} - :last_day
@@ -64,21 +64,19 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "last_day", VALUE = lastDay }
                 }
             );
-            return (ex == null) ? res : throw ex;
         }
 
         public async Task<CDbExecProcResult> CALL__P_TGL(string procedureName, DateTime P_TGL) {
-            (CDbExecProcResult res, Exception ex) = await OraPg.ExecProcedureAsync(
+            return await OraPg.ExecProcedureAsync(
                 procedureName,
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "P_TGL", VALUE = P_TGL }
                 }
             );
-            return (ex == null) ? res : throw ex;
         }
 
         public async Task<string> Q_TRF_CSV__GET(string kolom, string q_filename) {
-            (string res, Exception ex) = await OraPg?.ExecScalarAsync<string>(
+            return await OraPg?.ExecScalarAsync<string>(
                 $@"
                     SELECT {kolom} FROM Q_TRF_CSV WHERE q_filename = :q_filename
                 ",
@@ -86,11 +84,10 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "q_filename", VALUE = q_filename }
                 }
             );
-            return (ex == null) ? res : throw ex;
         }
 
         public async Task<DbDataReader> GetFtpInfo(string pga_type) {
-            (DbDataReader dr, Exception ex) = await OraPg?.ExecReaderAsync(
+            return await OraPg?.ExecReaderAsync(
                 $@"
                     SELECT
                         PGA_IPADDRESS,
@@ -109,26 +106,22 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "pga_type", VALUE = pga_type }
                 }
             );
-            return (ex == null) ? dr : throw ex;
         }
 
         public async Task<string> GetURLWebServiceHO() {
-            (string res, Exception ex) = await OraPg?.ExecScalarAsync<string>($@"SELECT WEB_URL FROM DC_WEBSERVICE_T WHERE WEB_TYPE = 'HO'");
-            return (ex == null) ? res : throw ex;
+            return await OraPg?.ExecScalarAsync<string>($@"SELECT WEB_URL FROM DC_WEBSERVICE_T WHERE WEB_TYPE = 'HO'");
         }
 
         public async Task<string> GetDcExt() {
-            (string res, Exception ex) = await OraPg?.ExecScalarAsync<string>($"SELECT SUBSTR (TBL_DC_KODE, 2, 3) AS DCEXT FROM DC_TABEL_DC_T");
-            return (ex == null) ? res : throw ex;
+            return await OraPg?.ExecScalarAsync<string>($"SELECT SUBSTR (TBL_DC_KODE, 2, 3) AS DCEXT FROM DC_TABEL_DC_T");
         }
 
         public async Task<string> GetWinFunction() {
-            (string res, Exception ex) = await OraPg?.ExecScalarAsync<string>($"SELECT SUBSTR(MAX(PERIODE), 3, 4) AS WINFUNCTION FROM DC_TRNH_HDR_T");
-            return (ex == null) ? res : throw ex;
+            return await OraPg?.ExecScalarAsync<string>($"SELECT SUBSTR(MAX(PERIODE), 3, 4) AS WINFUNCTION FROM DC_TRNH_HDR_T");
         }
 
         public async Task<DataTable> GetIrpc(DateTime xDate) {
-            (DataTable res, Exception ex) = await OraPg.GetDataTableAsync(
+            return await OraPg.GetDataTableAsync(
                 $@"
                     SELECT
                         dc_kode AS kode_Dc,
@@ -150,11 +143,10 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
                 }
             );
-            return (ex == null) ? res : throw ex;
         }
 
         public async Task<int> CekLogTtfHdr(DateTime xDate) {
-            (int res, Exception ex) = await OraPg?.ExecScalarAsync<int>(
+            return await OraPg?.ExecScalarAsync<int>(
                 $@"
                     SELECT
                         {(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(1, 0)
@@ -169,11 +161,10 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
                 }
             );
-            return (ex == null) ? res : throw ex;
         }
 
         public async Task<string> CekRunTtfHdr(DateTime xDate) {
-            (string res, Exception ex) = await OraPg?.ExecScalarAsync<string>(
+            return await OraPg?.ExecScalarAsync<string>(
                 $@"
                     SELECT
                         {(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(STATUS_RUN, '0')
@@ -188,11 +179,10 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
                 }
             );
-            return (ex == null) ? res : throw ex;
         }
 
         public async Task<bool> InsertDcTtfHdrLog(DateTime xDate) {
-            (bool res, Exception ex) = await OraPg?.ExecQueryAsync(
+            return await OraPg?.ExecQueryAsync(
                 $@"
                     INSERT INTO dc_ttf_hdr_log (tbl_dc_kode, tgl_proses, tgl_doc, status_run)
                     VALUES (:KodeDc, {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")}, :xDate, '1')
@@ -202,11 +192,10 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
                 }
             );
-            return (ex == null) ? res : throw ex;
         }
 
         public async Task<bool> UpdateDcTtfHdrLog(string columnValue, DateTime xDate) {
-            (bool res, Exception ex) = await OraPg?.ExecQueryAsync(
+            return await OraPg?.ExecQueryAsync(
                 $@"
                     UPDATE dc_ttf_hdr_log
                     SET {columnValue}
@@ -219,11 +208,10 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
                 }
             );
-            return (ex == null) ? res : throw ex;
         }
 
         public async Task<int> CekLogTtfHdr_status_ok(DateTime xDate) {
-            (int res, Exception ex) = await OraPg?.ExecScalarAsync<int>(
+            return await OraPg?.ExecScalarAsync<int>(
                 $@"
                     SELECT 1 FROM DC_TTF_HDR_LOG
                     WHERE
@@ -236,11 +224,10 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
                 }
             );
-            return (ex == null) ? res : throw ex;
         }
 
         public async Task<bool> DeleteDcTtfDtlLog(DateTime xDate) {
-            (bool res, Exception ex) = await OraPg?.ExecQueryAsync(
+            return await OraPg?.ExecQueryAsync(
                 $@"
                     DELETE FROM dc_ttf_dtl_log
                     WHERE
@@ -252,11 +239,10 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
                 }
             );
-            return (ex == null) ? res : throw ex;
         }
 
         public async Task<bool> DeleteDcTtfHdrLog(DateTime xDate) {
-            (bool res, Exception ex) = await OraPg?.ExecQueryAsync(
+            return await OraPg?.ExecQueryAsync(
                 $@"
                     DELETE FROM dc_ttf_hdr_log
                     WHERE
@@ -268,7 +254,6 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
                 }
             );
-            return (ex == null) ? res : throw ex;
         }
 
     }
