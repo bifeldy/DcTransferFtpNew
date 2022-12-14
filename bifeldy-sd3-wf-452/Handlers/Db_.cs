@@ -36,6 +36,13 @@ namespace DcTransferFtpNew.Handlers {
         Task<string> GetDcExt();
         Task<string> GetWinFunction();
         Task<DataTable> GetIrpc(DateTime xDate);
+        Task<int> CekLogTtfHdr(DateTime xDate);
+        Task<string> CekRunTtfHdr(DateTime xDate);
+        Task<bool> InsertDcTtfHdrLog(DateTime xDate);
+        Task<bool> UpdateDcTtfHdrLog(string columnValue, DateTime xDate);
+        Task<int> CekLogTtfHdr_status_ok(DateTime xDate);
+        Task<bool> DeleteDcTtfDtlLog(DateTime xDate);
+        Task<bool> DeleteDcTtfHdrLog(DateTime xDate);
     }
 
     public sealed class CDb : CDbHandler, IDb {
@@ -140,6 +147,124 @@ namespace DcTransferFtpNew.Handlers {
                         TO_CHAR(tgl_doc, 'yyyyMMdd') = TO_CHAR(:xDate, 'yyyyMMdd')
                 ",
                 new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                }
+            );
+            return (ex == null) ? res : throw ex;
+        }
+
+        public async Task<int> CekLogTtfHdr(DateTime xDate) {
+            (int res, Exception ex) = await OraPg?.ExecScalarAsync<int>(
+                $@"
+                    SELECT
+                        {(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(1, 0)
+                    FROM
+                        DC_TTF_HDR_LOG
+                    WHERE
+                        TBL_DC_KODE = :KodeDc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                }
+            );
+            return (ex == null) ? res : throw ex;
+        }
+
+        public async Task<string> CekRunTtfHdr(DateTime xDate) {
+            (string res, Exception ex) = await OraPg?.ExecScalarAsync<string>(
+                $@"
+                    SELECT
+                        {(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(STATUS_RUN, '0')
+                    FROM
+                        DC_TTF_HDR_LOG
+                    WHERE
+                        TBL_DC_KODE = :KodeDc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                }
+            );
+            return (ex == null) ? res : throw ex;
+        }
+
+        public async Task<bool> InsertDcTtfHdrLog(DateTime xDate) {
+            (bool res, Exception ex) = await OraPg?.ExecQueryAsync(
+                $@"
+                    INSERT INTO dc_ttf_hdr_log (tbl_dc_kode, tgl_proses, tgl_doc, status_run)
+                    VALUES (:KodeDc, {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")}, :xDate, '1')
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                }
+            );
+            return (ex == null) ? res : throw ex;
+        }
+
+        public async Task<bool> UpdateDcTtfHdrLog(string columnValue, DateTime xDate) {
+            (bool res, Exception ex) = await OraPg?.ExecQueryAsync(
+                $@"
+                    UPDATE dc_ttf_hdr_log
+                    SET {columnValue}
+                    WHERE
+                        TBL_DC_KODE = :KodeDc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                }
+            );
+            return (ex == null) ? res : throw ex;
+        }
+
+        public async Task<int> CekLogTtfHdr_status_ok(DateTime xDate) {
+            (int res, Exception ex) = await OraPg?.ExecScalarAsync<int>(
+                $@"
+                    SELECT 1 FROM DC_TTF_HDR_LOG
+                    WHERE
+                        TBL_DC_KODE = :KodeDc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                        AND status_tax = 'OK'
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                }
+            );
+            return (ex == null) ? res : throw ex;
+        }
+
+        public async Task<bool> DeleteDcTtfDtlLog(DateTime xDate) {
+            (bool res, Exception ex) = await OraPg?.ExecQueryAsync(
+                $@"
+                    DELETE FROM dc_ttf_dtl_log
+                    WHERE
+                        TBL_DC_KODE = :KodeDc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                }
+            );
+            return (ex == null) ? res : throw ex;
+        }
+
+        public async Task<bool> DeleteDcTtfHdrLog(DateTime xDate) {
+            (bool res, Exception ex) = await OraPg?.ExecQueryAsync(
+                $@"
+                    DELETE FROM dc_ttf_hdr_log
+                    WHERE
+                        TBL_DC_KODE = :KodeDc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
                     new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
                 }
             );

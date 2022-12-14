@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="Get_DSISum">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="periode" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Get_DSISumResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Get_DSISumResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Get_DSIDetail">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="periode" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Get_DSIDetailResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Get_DSIDetailResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="Get_DSISumSoapIn">
+    <wsdl:part name="parameters" element="tns:Get_DSISum" />
+  </wsdl:message>
+  <wsdl:message name="Get_DSISumSoapOut">
+    <wsdl:part name="parameters" element="tns:Get_DSISumResponse" />
+  </wsdl:message>
+  <wsdl:message name="Get_DSIDetailSoapIn">
+    <wsdl:part name="parameters" element="tns:Get_DSIDetail" />
+  </wsdl:message>
+  <wsdl:message name="Get_DSIDetailSoapOut">
+    <wsdl:part name="parameters" element="tns:Get_DSIDetailResponse" />
+  </wsdl:message>
+  <wsdl:message name="Get_DSISumHttpGetIn">
+    <wsdl:part name="periode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="Get_DSISumHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="Get_DSIDetailHttpGetIn">
+    <wsdl:part name="periode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="Get_DSIDetailHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="Get_DSISumHttpPostIn">
+    <wsdl:part name="periode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="Get_DSISumHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="Get_DSIDetailHttpPostIn">
+    <wsdl:part name="periode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="Get_DSIDetailHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:portType name="DSI_WSSoap">
+    <wsdl:operation name="Get_DSISum">
+      <wsdl:input message="tns:Get_DSISumSoapIn" />
+      <wsdl:output message="tns:Get_DSISumSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Get_DSIDetail">
+      <wsdl:input message="tns:Get_DSIDetailSoapIn" />
+      <wsdl:output message="tns:Get_DSIDetailSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="DSI_WSHttpGet">
+    <wsdl:operation name="Get_DSISum">
+      <wsdl:input message="tns:Get_DSISumHttpGetIn" />
+      <wsdl:output message="tns:Get_DSISumHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Get_DSIDetail">
+      <wsdl:input message="tns:Get_DSIDetailHttpGetIn" />
+      <wsdl:output message="tns:Get_DSIDetailHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="DSI_WSHttpPost">
+    <wsdl:operation name="Get_DSISum">
+      <wsdl:input message="tns:Get_DSISumHttpPostIn" />
+      <wsdl:output message="tns:Get_DSISumHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Get_DSIDetail">
+      <wsdl:input message="tns:Get_DSIDetailHttpPostIn" />
+      <wsdl:output message="tns:Get_DSIDetailHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DSI_WSSoap" type="tns:DSI_WSSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Get_DSISum">
+      <soap:operation soapAction="http://tempuri.org/Get_DSISum" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Get_DSIDetail">
+      <soap:operation soapAction="http://tempuri.org/Get_DSIDetail" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DSI_WSSoap12" type="tns:DSI_WSSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Get_DSISum">
+      <soap12:operation soapAction="http://tempuri.org/Get_DSISum" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Get_DSIDetail">
+      <soap12:operation soapAction="http://tempuri.org/Get_DSIDetail" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DSI_WSHttpGet" type="tns:DSI_WSHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="Get_DSISum">
+      <http:operation location="/Get_DSISum" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Get_DSIDetail">
+      <http:operation location="/Get_DSIDetail" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DSI_WSHttpPost" type="tns:DSI_WSHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="Get_DSISum">
+      <http:operation location="/Get_DSISum" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Get_DSIDetail">
+      <http:operation location="/Get_DSIDetail" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DSI_WS">
+    <wsdl:port name="DSI_WSSoap" binding="tns:DSI_WSSoap">
+      <soap:address location="http://192.168.24.125:1717/DSI_WS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="DSI_WSSoap12" binding="tns:DSI_WSSoap12">
+      <soap12:address location="http://192.168.24.125:1717/DSI_WS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="DSI_WSHttpGet" binding="tns:DSI_WSHttpGet">
+      <http:address location="http://192.168.24.125:1717/DSI_WS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="DSI_WSHttpPost" binding="tns:DSI_WSHttpPost">
+      <http:address location="http://192.168.24.125:1717/DSI_WS.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

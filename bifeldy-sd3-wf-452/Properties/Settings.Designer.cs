@@ -22,5 +22,15 @@ namespace DcTransferFtpNew.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:52242/Service.asmx")]
+        public string DcTransferFtpNew_localhost_TTFLOGService {
+            get {
+                return ((string)(this["DcTransferFtpNew_localhost_TTFLOGService"]));
+            }
+        }
     }
 }

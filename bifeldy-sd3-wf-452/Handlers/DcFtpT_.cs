@@ -37,6 +37,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<int> KirimFtpFingerScan(string zipFileName = null);
         Task<int> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false);
         Task<int> KirimFtpIrpc(string zipFileName = null);
+        Task<int> KirimFtpTaxTempFull(string zipFileName);
     }
 
     public sealed class CDcFtpT : IDcFtpT {
@@ -139,6 +140,10 @@ namespace DcTransferFtpNew.Handlers {
             return await KirimFtp("FINGER", zipFileName);
         }
 
+        public async Task<int> KirimFtpTaxTempFull(string zipFileName) {
+            return await KirimFtp("TTF", zipFileName);
+        }
+
         public async Task<int> KirimFtpDev(string processName, string zipFileName = null, bool reportLogHo = false) {
             int fileSent = 0;
             DC_FTP_T ftpInfo = await GetFtpInfo("DEV");
@@ -185,13 +190,12 @@ namespace DcTransferFtpNew.Handlers {
         public async Task<int> KirimFtpIrpc(string zipFileName = null) {
             DC_FTP_T ftpInfo = await GetFtpInfo("IRPC");
             string dirPath = zipFileName == null ? _berkas.TempFolderPath : _berkas.ZipFolderPath;
-            string remotePath = $"/u01/ftp/DC/{ftpInfo.PGA_FOLDER}/IRPC";
             FtpClient ftpClient = await _ftp.CreateFtpConnection(
                 ftpInfo.PGA_IPADDRESS,
                 int.Parse(ftpInfo.PGA_PORTNUMBER),
                 ftpInfo.PGA_USERNAME,
                 ftpInfo.PGA_PASSWORD,
-                remotePath
+                ftpInfo.PGA_FOLDER
             );
             List<CFtpResultSendGet> ftpResultSent = await _ftp.SendFtpFiles(ftpClient, dirPath, zipFileName);
             LogTrf.LogTrf logTrf = new LogTrf.LogTrf();
@@ -201,7 +205,7 @@ namespace DcTransferFtpNew.Handlers {
                         result.FileInformation.Name,
                         _app.AppName,
                         ftpInfo.PGA_IPADDRESS,
-                        remotePath,
+                        ftpInfo.PGA_FOLDER,
                         result.FileInformation.Length
                     );
                 }
