@@ -101,6 +101,7 @@ namespace DcTransferFtpNew.Handlers {
                 if (dbDataReader != null) {
                     dbDataReader.Close();
                 }
+                _db.CloseAllConnection();
             }
             if (exception != null) {
                 throw exception;

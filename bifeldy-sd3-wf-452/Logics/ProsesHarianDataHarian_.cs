@@ -61,7 +61,6 @@ namespace DcTransferFtpNew.Logics {
             DateTime dateStart = prosesHarian.DateTimePickerHarianAwal.Value.Date;
             DateTime dateEnd = prosesHarian.DateTimePickerHarianAkhir.Value.Date;
             await Task.Run(async () => {
-                string infoMessage = null;
                 if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd)) {
                     _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
                     TargetKirim = 0;
@@ -110,22 +109,8 @@ namespace DcTransferFtpNew.Logics {
 
                     _berkas.CleanUp();
                 }
-                if (string.IsNullOrEmpty(infoMessage)) {
-                    if (BerhasilKirim == 0 || TargetKirim == 0) {
-                        infoMessage = $"Ada Masalah, Belum Ada {button.Text} Yang Diproses !!";
-                    }
-                    else if (BerhasilKirim < TargetKirim && TargetKirim > 0) {
-                        infoMessage = $"Ada Beberapa Proses {button.Text} Yang Gagal !!";
-                    }
-                    else if (BerhasilKirim >= TargetKirim && TargetKirim > 0) {
-                        infoMessage = $"{button.Text} Sukses !!";
-                    }
-                    else {
-                        infoMessage = $"{button.Text} Error !!";
-                    }
-                }
-                MessageBox.Show(infoMessage, button.Text);
             });
+            CheckHasilKiriman(button.Text);
         }
 
     }

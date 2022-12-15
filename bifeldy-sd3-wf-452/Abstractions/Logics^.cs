@@ -32,6 +32,8 @@ namespace DcTransferFtpNew.Abstractions {
         protected int TargetKirim = 0;
         protected int BerhasilKirim = 0;
 
+        protected string InfoMessage = null;
+
         public CLogics(IDb db) {
             _db = db;
         }
@@ -53,6 +55,24 @@ namespace DcTransferFtpNew.Abstractions {
         protected async Task<bool> IsDateEndYesterday(DateTime dateEnd, int lastDay = 1) {
             DateTime currentDay = await _db.GetYesterdayDate(lastDay);
             return dateEnd <= currentDay ? true : throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari!");
+        }
+
+        protected void CheckHasilKiriman(string processName) {
+            if (string.IsNullOrEmpty(InfoMessage)) {
+                if (BerhasilKirim == 0 || TargetKirim == 0) {
+                    InfoMessage = $"Ada Masalah, Belum Ada {processName} Yang Diproses !!";
+                }
+                else if (BerhasilKirim < TargetKirim && TargetKirim > 0) {
+                    InfoMessage = $"Ada Beberapa Proses {processName} Yang Gagal !!";
+                }
+                else if (BerhasilKirim >= TargetKirim && TargetKirim > 0) {
+                    InfoMessage = $"{processName} Sukses !!";
+                }
+                else {
+                    InfoMessage = $"{processName} Error !!";
+                }
+            }
+            MessageBox.Show(InfoMessage, processName);
         }
 
     }

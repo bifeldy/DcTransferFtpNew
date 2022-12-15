@@ -13,7 +13,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -56,7 +55,6 @@ namespace DcTransferFtpNew.Logics {
             DateTime dateStart = prosesHarian.DateTimePickerHarianAwal.Value.Date;
             DateTime dateEnd = prosesHarian.DateTimePickerHarianAkhir.Value.Date;
             await Task.Run(async () => {
-                string infoMessage = null;
                 if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd) && await IsDateEndYesterday(dateEnd)) {
                     _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
                     TargetKirim = 0;
@@ -74,28 +72,7 @@ namespace DcTransferFtpNew.Logics {
                             throw new Exception($"Gagal Menjalankan Procedure {procName}");
                         }
 
-                        DataTable dtQuery = await _db.OraPg.GetDataTableAsync(
-                            $@"
-                                SELECT
-                                    dc_kode AS kode_Dc,
-                                    Tgl_Doc AS tanggal_doc,
-                                    No_Doc AS nomor_doc,
-                                    TYPE AS TYPE,
-                                    NOSJ AS no_sj,
-                                    PLU AS PLU,
-                                    Qty AS qty,
-                                    nilai AS Rupiah,
-                                    Keterangan AS keterangan,
-                                    SUPKODE
-                                FROM
-                                    DC_BPBNRB_SUPROTI_T
-                                WHERE
-                                    TO_CHAR(tgl_doc, 'yyyyMMdd') = TO_CHAR(:xDate, 'yyyyMMdd')
-                            ",
-                            new List<CDbQueryParamBind> {
-                                new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
-                            }
-                        );
+                        DataTable dtQuery = await _db.GetIrpc(xDate);
                         string targetFileName = $"IRPC{await _db.GetKodeDc()}{xDate:ddMMyyyyHHmm}.CSV";
                         string seperator = ",";
                         if (_berkas.DataTable2CSV(dtQuery, targetFileName, seperator)) {
@@ -111,22 +88,8 @@ namespace DcTransferFtpNew.Logics {
 
                     _berkas.CleanUp();
                 }
-                if (string.IsNullOrEmpty(infoMessage)) {
-                    if (BerhasilKirim == 0 || TargetKirim == 0) {
-                        infoMessage = $"Ada Masalah, Belum Ada {button.Text} Yang Diproses !!";
-                    }
-                    else if (BerhasilKirim < TargetKirim && TargetKirim > 0) {
-                        infoMessage = $"Ada Beberapa Proses {button.Text} Yang Gagal !!";
-                    }
-                    else if (BerhasilKirim >= TargetKirim && TargetKirim > 0) {
-                        infoMessage = $"{button.Text} Sukses !!";
-                    }
-                    else {
-                        infoMessage = $"{button.Text} Error !!";
-                    }
-                }
-                MessageBox.Show(infoMessage, button.Text);
             });
+            CheckHasilKiriman(button.Text);
         }
 
     }

@@ -61,12 +61,12 @@ namespace DcTransferFtpNew.Abstractions {
                         try {
                             CLogics cls = (CLogics) CProgram.Bifeldyz.ResolveNamed(buttonSender.Name);
                             _logger.ClearLog();
-                            await _db.OraPg.MarkBeforeCommitRollback();
+                            await _db.MarkBeforeCommitRollback();
                             await cls.Run(sender, e, this);
-                            _db.OraPg.MarkSuccessCommitAndClose();
+                            _db.MarkSuccessCommitAndClose();
                         }
                         catch (Exception ex) {
-                            _db.OraPg.MarkFailedRollbackAndClose();
+                            _db.MarkFailedRollbackAndClose();
                             MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
 
