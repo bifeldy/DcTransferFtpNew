@@ -70,7 +70,7 @@ namespace DcTransferFtpNew.Handlers {
                         // Change `navContent`
                         try {
                             if (!mainPanel.NavContent.Controls.ContainsKey(buttonMenuItem.Name)) {
-                                UserControl ctrl = (UserControl)CProgram.Bifeldyz.ResolveNamed(buttonMenuItem.Name);
+                                UserControl ctrl = (UserControl) CProgram.Bifeldyz.ResolveNamed(buttonMenuItem.Name);
                                 mainPanel.NavContent.Controls.Add(ctrl);
                             }
                             mainPanel.NavContent.Controls[buttonMenuItem.Name].BringToFront();
