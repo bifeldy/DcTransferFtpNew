@@ -51,6 +51,8 @@ namespace DcTransferFtpNew.Panels {
 
         public Panel NavContent => navContent;
 
+        public TextBox LogInfo => textBoxLogInfo;
+
         private void OnInit() {
             Dock = DockStyle.Fill;
         }
@@ -77,6 +79,8 @@ namespace DcTransferFtpNew.Panels {
 
             _menuNavigations.AddButtonToPanel(this);
 
+            _logger.SetReportLogInfoTarget(textBoxLogInfo);
+
             SetIdleBusyStatus(true);
         }
 
@@ -97,14 +101,8 @@ namespace DcTransferFtpNew.Panels {
             }
         }
 
-        private void logUpdater_Tick(object sender, EventArgs e) {
-            if (textBoxLogInfo.Text != _logger.LogInfo) {
-                textBoxLogInfo.Text = _logger.LogInfo;
-            }
-        }
-
         private void lnkLblLogClear_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            _logger.ClearLog();
+            textBoxLogInfo.Text = string.Empty;
         }
 
     }

@@ -25,7 +25,6 @@ namespace DcTransferFtpNew.Panels {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CMainPanel));
             this.chkSemuaKolom = new System.Windows.Forms.CheckBox();
             this.userInfo = new System.Windows.Forms.Label();
@@ -47,7 +46,6 @@ namespace DcTransferFtpNew.Panels {
             this.label2 = new System.Windows.Forms.Label();
             this.navContent = new System.Windows.Forms.Panel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.logUpdater = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.imgDomar)).BeginInit();
             this.navContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -224,6 +222,7 @@ namespace DcTransferFtpNew.Panels {
             this.textBoxLogInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxLogInfo.Size = new System.Drawing.Size(748, 64);
             this.textBoxLogInfo.TabIndex = 7;
+            this.textBoxLogInfo.Text = "// Belum Ada Riwayat Apapun ...";
             // 
             // label4
             // 
@@ -287,11 +286,6 @@ namespace DcTransferFtpNew.Panels {
             this.pictureBox.TabIndex = 19;
             this.pictureBox.TabStop = false;
             // 
-            // logUpdater
-            // 
-            this.logUpdater.Enabled = true;
-            this.logUpdater.Tick += new System.EventHandler(this.logUpdater_Tick);
-            // 
             // CMainPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -347,7 +341,6 @@ namespace DcTransferFtpNew.Panels {
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel navContent;
-        private System.Windows.Forms.Timer logUpdater;
         private System.Windows.Forms.PictureBox pictureBox;
     }
 
