@@ -296,13 +296,13 @@ namespace DcTransferFtpNew.Handlers {
                     FROM dc_header_blob_t a, dc_header_transaksi_t b
                     WHERE
                         a.hdr_hdr_id = b.hdr_hdr_id
-                        AND b.HDR_TYPE_TRANS = :typeTrans
+                        AND b.HDR_TYPE_TRANS = :type_trans
                         AND b.HDR_NO_DOC = :no_doc
                         AND TO_CHAR(b.HDR_TGL_DOC, 'MM/dd/yyyy') = TO_CHAR(:tgl_doc, 'MM/dd/yyyy')
                         AND a.HDR_DOC_BLOB IS NOT NULL
                 ",
                 new List<CDbQueryParamBind>() {
-                    new CDbQueryParamBind { NAME = "typeTrans", VALUE = typeTrans },
+                    new CDbQueryParamBind { NAME = "type_trans", VALUE = typeTrans },
                     new CDbQueryParamBind { NAME = "no_doc", VALUE = dataRow["DOCNO"].ToString() },
                     new CDbQueryParamBind { NAME = "tgl_doc", VALUE = DateTime.Parse(dataRow["TANGGAL1"].ToString()) }
                 }
