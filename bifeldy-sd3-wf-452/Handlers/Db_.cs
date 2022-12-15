@@ -149,10 +149,10 @@ namespace DcTransferFtpNew.Handlers {
                     FROM
                         DC_BPBNRB_SUPROTI_T
                     WHERE
-                        TO_CHAR(tgl_doc, 'yyyyMMdd') = TO_CHAR(:xDate, 'yyyyMMdd')
+                        TO_CHAR(tgl_doc, 'yyyyMMdd') = TO_CHAR(:x_date, 'yyyyMMdd')
                 ",
                 new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
                 }
             );
         }
@@ -167,12 +167,12 @@ namespace DcTransferFtpNew.Handlers {
                     FROM
                         DC_TTF_HDR_LOG
                     WHERE
-                        TBL_DC_KODE = :KodeDc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                        TBL_DC_KODE = :kode_dc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
                 ",
                 new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
                 }
             );
         }
@@ -185,12 +185,12 @@ namespace DcTransferFtpNew.Handlers {
                     FROM
                         DC_TTF_HDR_LOG
                     WHERE
-                        TBL_DC_KODE = :KodeDc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                        TBL_DC_KODE = :kode_dc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
                 ",
                 new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
                 }
             );
         }
@@ -200,12 +200,12 @@ namespace DcTransferFtpNew.Handlers {
                 $@"
                     DELETE FROM dc_ttf_dtl_log
                     WHERE
-                        TBL_DC_KODE = :KodeDc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                        TBL_DC_KODE = :kode_dc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
                 ",
                 new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
                 }
             );
         }
@@ -215,12 +215,12 @@ namespace DcTransferFtpNew.Handlers {
                 $@"
                     DELETE FROM dc_ttf_hdr_log
                     WHERE
-                        TBL_DC_KODE = :KodeDc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                        TBL_DC_KODE = :kode_dc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
                 ",
                 new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
                 }
             );
         }
@@ -229,11 +229,11 @@ namespace DcTransferFtpNew.Handlers {
             return await OraPg.ExecQueryAsync(
                 $@"
                     INSERT INTO dc_ttf_hdr_log (tbl_dc_kode, tgl_proses, tgl_doc, status_run)
-                    VALUES (:KodeDc, {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")}, :xDate, '1')
+                    VALUES (:kode_dc, {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")}, :x_date, '1')
                 ",
                 new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
                 }
             );
         }
@@ -244,12 +244,12 @@ namespace DcTransferFtpNew.Handlers {
                     UPDATE dc_ttf_hdr_log
                     SET {columnValue}
                     WHERE
-                        TBL_DC_KODE = :KodeDc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                        TBL_DC_KODE = :kode_dc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
                 ",
                 new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
                 }
             );
         }
@@ -261,11 +261,11 @@ namespace DcTransferFtpNew.Handlers {
                     FROM DC_TTF_HDR_LOG
                     WHERE
                         TBL_DC_KODE = :kode_dc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
                 ",
                 new List<CDbQueryParamBind>() {
                     new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
                 }
             );
         }
@@ -276,13 +276,13 @@ namespace DcTransferFtpNew.Handlers {
                     SELECT 1
                     FROM DC_TTF_HDR_LOG
                     WHERE
-                        TBL_DC_KODE = :KodeDc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:xDate, 'dd/MM/yyyy')
+                        TBL_DC_KODE = :kode_dc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
                         AND status_tax = 'OK'
                 ",
                 new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "KodeDc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "xDate", VALUE = xDate }
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
                 }
             );
         }
@@ -316,10 +316,10 @@ namespace DcTransferFtpNew.Handlers {
                     VALUES(:kode_dc, {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")}, :no_doc, :tgl_doc, 'BPB SUPPLIER', {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}, :sup_kode, '{status}')
                 ",
                 new List<CDbQueryParamBind>() {
-                new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
-                new CDbQueryParamBind { NAME = "no_doc", VALUE = int.Parse(dataRow["DOCNO"].ToString()) },
-                new CDbQueryParamBind { NAME = "tgl_doc", VALUE = DateTime.Parse(dataRow["TANGGAL1"].ToString()) },
-                new CDbQueryParamBind { NAME = "sup_kode", VALUE = dataRow["SUPCO"].ToString() }
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "no_doc", VALUE = int.Parse(dataRow["DOCNO"].ToString()) },
+                    new CDbQueryParamBind { NAME = "tgl_doc", VALUE = DateTime.Parse(dataRow["TANGGAL1"].ToString()) },
+                    new CDbQueryParamBind { NAME = "sup_kode", VALUE = dataRow["SUPCO"].ToString() }
                 }
             );
         }
