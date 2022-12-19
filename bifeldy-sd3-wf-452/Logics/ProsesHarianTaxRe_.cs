@@ -282,8 +282,8 @@ namespace DcTransferFtpNew.Logics {
                                         targetFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}_{countSeq}.ZIP";
 
                                         // Sama Persis Dari Yang Full
-                                        await _prosesHarianTaxFull.FromZip(targetFileName, xDate, TaxTempReFolderPath);
-                                        await _prosesHarianTaxFull.FromTransfer(targetFileName, button, xDate, TaxTempReFolderPath);
+                                        TargetKirim += await _prosesHarianTaxFull.FromZip(targetFileName, xDate, TaxTempReFolderPath);
+                                        BerhasilKirim += await _prosesHarianTaxFull.FromTransfer(targetFileName, button, xDate, TaxTempReFolderPath);
                                     }
                                     else {
                                         MessageBox.Show(
