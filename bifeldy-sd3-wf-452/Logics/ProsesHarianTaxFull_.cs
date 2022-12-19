@@ -250,10 +250,10 @@ namespace DcTransferFtpNew.Logics {
             }
         }
 
-        public async Task<int> FromZip(string fileName, DateTime xDate, string folderPath) {
-            int totalFileInZip = _berkas.ZipAllFileInFolder(fileName, folderPath);
+        public async Task<int> FromZip(string zipFileName, DateTime xDate, string folderPath) {
+            int totalFileInZip = _berkas.ZipAllFileInFolder(zipFileName, folderPath);
 
-            await _db.UpdateDcTtfHdrLog($"FILE_ZIP = {fileName}", xDate);
+            await _db.UpdateDcTtfHdrLog($"FILE_ZIP = {zipFileName}", xDate);
 
             if (Directory.Exists(folderPath)) {
                 Directory.Delete(folderPath, true);
@@ -262,12 +262,12 @@ namespace DcTransferFtpNew.Logics {
             return totalFileInZip > 0 ? 1 : 0;
         }
 
-        public async Task<int> FromTransfer(string fileName, Button button, DateTime xDate, string folderPath) {
+        public async Task<int> FromTransfer(string zipFileName, Button button, DateTime xDate, string folderPath) {
             int terkirim = 0;
 
             try {
                 terkirim += await _dcFtpT.KirimFtpTaxTemp(null, folderPath); // *.CSV Sebanyak :: TargetKirim
-                terkirim = await _dcFtpT.KirimFtpTaxTemp(fileName, folderPath); // *.ZIP Sebanyak :: 1
+                terkirim = await _dcFtpT.KirimFtpTaxTemp(zipFileName, folderPath); // *.ZIP Sebanyak :: 1
 
                 await _db.UpdateDcTtfHdrLog($@"
                     STATUS_TRF = '{(terkirim > 0 ? "OK" : "FAIL")}',
