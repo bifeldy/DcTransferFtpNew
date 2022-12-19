@@ -33,6 +33,8 @@ namespace DcTransferFtpNew.Panels {
 
         private CMainForm mainForm;
 
+        public IProgress<string> LogReporter { get; set; } = null;
+
         public CMainPanel(IApp app, ILogger logger, IDb db, IMenuNavigations menuNavigations) {
             _app = app;
             _logger = logger;
@@ -43,10 +45,6 @@ namespace DcTransferFtpNew.Panels {
             OnInit();
         }
 
-        public Label LabelStatus => lblStatus;
-
-        public ProgressBar ProgressBarStatus => prgrssBrStatus;
-
         public FlowLayoutPanel NavMenu => navMenu;
 
         public Panel NavContent => navContent;
@@ -55,11 +53,14 @@ namespace DcTransferFtpNew.Panels {
 
         private void OnInit() {
             Dock = DockStyle.Fill;
+
+            LogReporter = new Progress<string>(log => {
+                textBoxLogInfo.Text += log;
+            });
         }
 
         private void imgDomar_Click(object sender, EventArgs e) {
-            mainForm.Width = 800;
-            mainForm.Height = 600;
+            //
         }
 
         private async void CMainPanel_Load(object sender, EventArgs e) {
@@ -79,14 +80,14 @@ namespace DcTransferFtpNew.Panels {
 
             _menuNavigations.AddButtonToPanel(this);
 
-            _logger.SetReportLogInfoTarget(textBoxLogInfo);
+            _logger.SetReportInfo(LogReporter);
 
             SetIdleBusyStatus(true);
         }
 
         public void SetIdleBusyStatus(bool isIdle) {
-            LabelStatus.Text = $"Program {(isIdle ? "Idle" : "Sibuk")} ...";
-            ProgressBarStatus.Style = isIdle ? ProgressBarStyle.Continuous : ProgressBarStyle.Marquee;
+            lblStatus.Text = $"Program {(isIdle ? "Idle" : "Sibuk")} ...";
+            prgrssBrStatus.Style = isIdle ? ProgressBarStyle.Continuous : ProgressBarStyle.Marquee;
             EnableDisableControl(Controls, isIdle);
         }
 

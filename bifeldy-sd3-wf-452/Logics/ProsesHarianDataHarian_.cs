@@ -71,7 +71,7 @@ namespace DcTransferFtpNew.Logics {
                     string targetFileName = null;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
-                    _logger.WriteLog(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
+                    _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
 
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
