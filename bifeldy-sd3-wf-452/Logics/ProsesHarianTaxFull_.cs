@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,7 +26,6 @@ using DcTransferFtpNew.localhost;
 
 using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Handlers;
-using DcTransferFtpNew.Navigations;
 using DcTransferFtpNew.Utilities;
 using DcTransferFtpNew.Models;
 
@@ -298,11 +296,7 @@ namespace DcTransferFtpNew.Logics {
         }
 
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
-            CProsesHarian prosesHarian = (CProsesHarian)currentControl;
-            Button button = (Button) sender;
-            button.BackColor = Color.FromArgb(255, 207, 223);
-            DateTime dateStart = prosesHarian.DateTimePickerHarianAwal.Value.Date;
-            DateTime dateEnd = prosesHarian.DateTimePickerHarianAkhir.Value.Date;
+            PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd) && await IsDateEndYesterday(dateEnd)) {
                     string TaxTempFullFolderPath = Path.Combine(_app.AppLocation, $"TAX-{await _db.GetKodeDc()}");
@@ -369,7 +363,7 @@ namespace DcTransferFtpNew.Logics {
                     _berkas.CleanUp();
                 }
             });
-            CheckHasilKiriman(button.Text);
+            CheckHasilKiriman();
         }
 
     }

@@ -14,10 +14,12 @@
  */
 
 using System;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using DcTransferFtpNew.Handlers;
+using DcTransferFtpNew.Navigations;
 
 namespace DcTransferFtpNew.Abstractions {
 
@@ -34,11 +36,28 @@ namespace DcTransferFtpNew.Abstractions {
 
         protected string InfoMessage = null;
 
+        protected Button button;
+
+        protected DateTime dateStart = DateTime.MinValue;
+        protected DateTime dateEnd = DateTime.MinValue;
+
         public CLogics(IDb db) {
             _db = db;
         }
 
         public abstract Task Run(object sender, EventArgs e, Control currentControl);
+
+        private void SetBtnSenderSelected(object sender) {
+            button = (Button) sender;
+            button.BackColor = Color.FromArgb(255, 207, 223);
+        }
+
+        protected void PrepareHarian(object sender, EventArgs e, Control currentControl) {
+            SetBtnSenderSelected(sender);
+            CProsesHarian prosesHarian = (CProsesHarian) currentControl;
+            dateStart = prosesHarian.DateTimePickerHarianAwal.Value.Date;
+            dateEnd = prosesHarian.DateTimePickerHarianAkhir.Value.Date;
+        }
 
         protected bool IsDateRangeValid(DateTime dateStart, DateTime dateEnd) {
             return dateStart <= dateEnd ? true : throw new Exception($"Tanggal Mulai Harus Lebih Kecil Dari Tanggal Akhir");
@@ -57,22 +76,22 @@ namespace DcTransferFtpNew.Abstractions {
             return dateEnd <= currentDay ? true : throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari!");
         }
 
-        protected void CheckHasilKiriman(string processName) {
+        protected void CheckHasilKiriman() {
             if (string.IsNullOrEmpty(InfoMessage)) {
                 if (BerhasilKirim == 0 || TargetKirim == 0) {
-                    InfoMessage = $"Ada Masalah, Belum Ada {processName} Yang Diproses !!";
+                    InfoMessage = $"Ada Masalah, Belum Ada {button.Text} Yang Diproses !!";
                 }
                 else if (BerhasilKirim < TargetKirim && TargetKirim > 0) {
-                    InfoMessage = $"Ada Beberapa Proses {processName} Yang Gagal !!";
+                    InfoMessage = $"Ada Beberapa Proses {button.Text} Yang Gagal !!";
                 }
                 else if (BerhasilKirim >= TargetKirim && TargetKirim > 0) {
-                    InfoMessage = $"{processName} Sukses !!";
+                    InfoMessage = $"{button.Text} Sukses !!";
                 }
                 else {
-                    InfoMessage = $"{processName} Error !!";
+                    InfoMessage = $"{button.Text} Error !!";
                 }
             }
-            MessageBox.Show(InfoMessage, processName);
+            MessageBox.Show(InfoMessage, button.Text);
         }
 
     }

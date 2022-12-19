@@ -13,7 +13,6 @@
  */
 
 using System;
-using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -22,7 +21,6 @@ using bifeldy_sd3_lib_452.Utilities;
 
 using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Handlers;
-using DcTransferFtpNew.Navigations;
 using DcTransferFtpNew.Utilities;
 
 namespace DcTransferFtpNew.Logics {
@@ -55,11 +53,7 @@ namespace DcTransferFtpNew.Logics {
         }
 
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
-            CProsesHarian prosesHarian = (CProsesHarian)currentControl;
-            Button button = (Button) sender;
-            button.BackColor = Color.FromArgb(255, 207, 223);
-            DateTime dateStart = prosesHarian.DateTimePickerHarianAwal.Value.Date;
-            DateTime dateEnd = prosesHarian.DateTimePickerHarianAkhir.Value.Date;
+            PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd)) {
                     _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
@@ -113,7 +107,7 @@ namespace DcTransferFtpNew.Logics {
                     _berkas.CleanUp();
                 }
             });
-            CheckHasilKiriman(button.Text);
+            CheckHasilKiriman();
         }
 
     }

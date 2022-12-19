@@ -67,15 +67,15 @@ namespace DcTransferFtpNew.Logics {
         }
 
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
-            CProsesHarian prosesHarian = (CProsesHarian)currentControl;
-            Button button = (Button)sender;
-            button.BackColor = Color.FromArgb(255, 207, 223);
-            DateTime dateStart = prosesHarian.DateTimePickerHarianAwal.Value.Date;
-            DateTime dateEnd = prosesHarian.DateTimePickerHarianAkhir.Value.Date;
+            PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
-                throw new NotImplementedException("Fitur Belum Di Implementasikan ...");
+                if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd) && await IsDateEndYesterday(dateEnd)) {
+
+                    //
+                    throw new NotImplementedException("Fitur Belum Di Implementasikan ...");
+                }
             });
-            CheckHasilKiriman(button.Text);
+            CheckHasilKiriman();
         }
 
     }
