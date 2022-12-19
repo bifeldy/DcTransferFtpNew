@@ -304,7 +304,6 @@ namespace DcTransferFtpNew.Logics {
                         Directory.CreateDirectory(TaxTempFullFolderPath);
                     }
 
-                    _berkas.DeleteOldFilesInFolder(TaxTempFullFolderPath, 0);
                     TargetKirim = 0;
                     BerhasilKirim = 0;
 
@@ -316,6 +315,7 @@ namespace DcTransferFtpNew.Logics {
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
 
+                        _berkas.DeleteOldFilesInFolder(TaxTempFullFolderPath, 0);
                         targetFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}.ZIP";
 
                         int cekLog = await _db.TaxTempCekLog(xDate);
