@@ -31,7 +31,10 @@ using DcTransferFtpNew.Models;
 
 namespace DcTransferFtpNew.Logics {
 
-    public interface IProsesHarianTaxFull : ILogics { }
+    public interface IProsesHarianTaxFull : ILogics {
+        Task FromZip(string fileName, DateTime xDate, string folderPath);
+        Task FromTransfer(string fileName, Button button, DateTime xDate, string folderPath);
+    }
 
     public sealed class CProsesHarianTaxFull : CLogics, IProsesHarianTaxFull {
 
@@ -247,21 +250,21 @@ namespace DcTransferFtpNew.Logics {
             }
         }
 
-        private async Task FromZip(string targetFileName, DateTime xDate, string TaxTempFullFolderPath) {
-            int totalFileInZip = _berkas.ZipAllFileInFolder(targetFileName, TaxTempFullFolderPath);
+        public async Task FromZip(string fileName, DateTime xDate, string folderPath) {
+            int totalFileInZip = _berkas.ZipAllFileInFolder(fileName, folderPath);
             TargetKirim++;
 
-            await _db.UpdateDcTtfHdrLog($"FILE_ZIP = {targetFileName}", xDate);
+            await _db.UpdateDcTtfHdrLog($"FILE_ZIP = {fileName}", xDate);
 
-            if (Directory.Exists(TaxTempFullFolderPath)) {
-                Directory.Delete(TaxTempFullFolderPath, true);
+            if (Directory.Exists(folderPath)) {
+                Directory.Delete(folderPath, true);
             }
         }
 
-        private async Task FromTransfer(string targetFileName, Button button, DateTime xDate) {
+        public async Task FromTransfer(string fileName, Button button, DateTime xDate, string folderPath) {
             try {
-                BerhasilKirim += await _dcFtpT.KirimFtpTaxTempFull(); // *.CSV Sebanyak :: TargetKirim
-                int terkirim = await _dcFtpT.KirimFtpTaxTempFull(targetFileName); // *.ZIP Sebanyak :: 1
+                BerhasilKirim += await _dcFtpT.KirimFtpTaxTemp(); // *.CSV Sebanyak :: TargetKirim
+                int terkirim = await _dcFtpT.KirimFtpTaxTemp(fileName, folderPath); // *.ZIP Sebanyak :: 1
                 BerhasilKirim += terkirim;
 
                 await _db.UpdateDcTtfHdrLog($@"
@@ -323,7 +326,7 @@ namespace DcTransferFtpNew.Logics {
 
                             await FullCreate(button, xDate, TaxTempFullFolderPath);
                             await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
-                            await FromTransfer(targetFileName, button, xDate);
+                            await FromTransfer(targetFileName, button, xDate, TaxTempFullFolderPath);
 
                         }
                         else {
@@ -344,7 +347,7 @@ namespace DcTransferFtpNew.Logics {
 
                                     await FullCreate(button, xDate, TaxTempFullFolderPath);
                                     await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
-                                    await FromTransfer(targetFileName, button, xDate);
+                                    await FromTransfer(targetFileName, button, xDate, TaxTempFullFolderPath);
                                 }
                             }
                             else {

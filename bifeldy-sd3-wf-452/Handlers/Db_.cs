@@ -49,6 +49,13 @@ namespace DcTransferFtpNew.Handlers {
         Task<int> TaxTempStatusOk(DateTime xDate);
         Task<string> TaxTempRetrieveBlob(string path, string typeTrans, DataRow dataRow);
         Task<bool> InsertNewDcTtfDtlLog(string status, DataRow dataRow);
+        Task<bool> UpdateDcTtfDtlLog(string columnValue, DataRow dataRow, DateTime xDate);
+        Task<int> TaxTempHitungGagal(DateTime xDate);
+        Task<int> TaxTempHitungUpload(DateTime xDate);
+        Task<string> TaxTempFileTaxName(DateTime xDate);
+        Task<string> TaxTempFileZipName(DateTime xDate);
+        Task<int> TaxTempHitungUlangOk(DateTime xDate, string typeTrans);
+        Task<int> TaxTempHitungUlangFail(DateTime xDate, string typeTrans);
     }
 
     public sealed class CDb : CDbHandler, IDb {
@@ -320,6 +327,120 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "no_doc", VALUE = int.Parse(dataRow["DOCNO"].ToString()) },
                     new CDbQueryParamBind { NAME = "tgl_doc", VALUE = DateTime.Parse(dataRow["TANGGAL1"].ToString()) },
                     new CDbQueryParamBind { NAME = "sup_kode", VALUE = dataRow["SUPCO"].ToString() }
+                }
+            );
+        }
+
+        public async Task<bool> UpdateDcTtfDtlLog(string columnValue, DataRow dataRow, DateTime xDate) {
+            return await OraPg.ExecQueryAsync(
+                $@"
+                    UPDATE dc_ttf_dtl_log
+                    SET {columnValue}
+                    WHERE
+                        NO_DOC = :no_doc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                ",
+                new List<CDbQueryParamBind>() {
+                    new CDbQueryParamBind { NAME = "no_doc", VALUE = int.Parse(dataRow["DOCNO"].ToString()) },
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
+                }
+            );
+        }
+
+        public async Task<int> TaxTempHitungGagal(DateTime xDate) {
+            return await OraPg.ExecScalarAsync<int>(
+                $@"
+                    SELECT COUNT(*)
+                    FROM DC_TTF_DTL_LOG
+                    WHERE
+                        TBL_DC_KODE = :kode_dc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                        AND TYPE_TRANS IN ('BPB SUPPLIER', 'NRB SUPPLIER')
+                        AND STATUS <> 'OK'
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
+                }
+            );
+        }
+
+        public async Task<int> TaxTempHitungUpload(DateTime xDate) {
+            return await OraPg.ExecScalarAsync<int>(
+                $@"
+                    SELECT COUNT(*)
+                    FROM DC_TTF_DTL_LOG a, DC_HEADER_TRANSAKSI_T b, dc_header_blob_t c
+                    WHERE
+                        a.no_doc = b.hdr_no_doc
+                        AND a.tgl_doc = TRUNC(b.hdr_tgl_doc)
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                        AND TYPE_TRANS IN ('BPB SUPPLIER', 'NRB SUPPLIER')
+                        AND STATUS <> 'OK'
+                        AND b.hdr_hdr_id = c.hdr_hdr_id
+                        AND c.hdr_doc_blob IS NOT NULL
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
+                }
+            );
+        }
+
+        public async Task<string> TaxTempFileTaxName(DateTime xDate) {
+            return await OraPg.ExecScalarAsync<string>(
+                $@"
+                    SELECT FILE_TAX
+                    FROM DC_TTF_HDR_LOG
+                    WHERE TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
+                }
+            );
+        }
+
+        public async Task<string> TaxTempFileZipName(DateTime xDate) {
+            return await OraPg.ExecScalarAsync<string>(
+                $@"
+                    SELECT FILE_ZIP
+                    FROM DC_TTF_HDR_LOG
+                    WHERE TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
+                }
+            );
+        }
+
+        public async Task<int> TaxTempHitungUlangOk(DateTime xDate, string typeTrans) {
+            return await OraPg.ExecScalarAsync<int>(
+                $@"
+                    SELECT COUNT(*)
+                    FROM DC_TTF_DTL_LOG
+                    WHERE
+                        TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                        AND TYPE_TRANS = :type_trans
+                        AND STATUS = 'OK'
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate },
+                    new CDbQueryParamBind { NAME = "type_trans", VALUE = typeTrans }
+                }
+            );
+        }
+
+        public async Task<int> TaxTempHitungUlangFail(DateTime xDate, string typeTrans) {
+            return await OraPg.ExecScalarAsync<int>(
+                $@"
+                    SELECT COUNT(*)
+                    FROM DC_TTF_DTL_LOG
+                    WHERE
+                        TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                        AND TYPE_TRANS = :type_trans
+                        AND STATUS <> 'OK'
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate },
+                    new CDbQueryParamBind { NAME = "type_trans", VALUE = typeTrans }
                 }
             );
         }

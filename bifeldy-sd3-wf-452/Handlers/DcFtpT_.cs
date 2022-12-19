@@ -32,12 +32,12 @@ using DcTransferFtpNew.Models;
 namespace DcTransferFtpNew.Handlers {
 
     public interface IDcFtpT {
-        Task<int> KirimFtpLocal(string zipFileName = null);
-        Task<int> KirimFtpEis(string zipFileName = null);
-        Task<int> KirimFtpFingerScan(string zipFileName = null);
-        Task<int> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false);
-        Task<int> KirimFtpIrpc(string zipFileName = null);
-        Task<int> KirimFtpTaxTempFull(string zipFileName = null);
+        Task<int> KirimFtpLocal(string zipFileName = null, string folderPath = null);
+        Task<int> KirimFtpEis(string zipFileName = null, string folderPath = null);
+        Task<int> KirimFtpFingerScan(string zipFileName = null, string folderPath = null);
+        Task<int> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false, string folderPath = null);
+        Task<int> KirimFtpIrpc(string zipFileName = null, string folderPath = null);
+        Task<int> KirimFtpTaxTemp(string zipFileName = null, string folderPath = null);
     }
 
     public sealed class CDcFtpT : IDcFtpT {
@@ -109,7 +109,10 @@ namespace DcTransferFtpNew.Handlers {
             return ftpObject;
         }
 
-        private async Task<int> KirimFtp(string pga_type, string zipFileName = null) {
+        private async Task<int> KirimFtp(string pga_type, string folderPath = null, string zipFileName = null) {
+            if (folderPath == null) {
+                folderPath = _berkas.TempFolderPath;
+            }
             DC_FTP_T ftpInfo = await GetFtpInfo(pga_type);
             List<CFtpResultSendGet> ftpResultSent = await _ftp.CreateFtpConnectionAndSendFtpFiles(
                 ftpInfo.PGA_IPADDRESS,
@@ -117,7 +120,7 @@ namespace DcTransferFtpNew.Handlers {
                 ftpInfo.PGA_USERNAME,
                 ftpInfo.PGA_PASSWORD,
                 ftpInfo.PGA_FOLDER,
-                zipFileName == null ? _berkas.TempFolderPath : _berkas.ZipFolderPath,
+                zipFileName == null ? folderPath : _berkas.ZipFolderPath,
                 zipFileName
             );
             return ftpResultSent.Where(r => r.FtpStatusSendGet == FtpStatus.Success).ToArray().Length;
@@ -128,26 +131,29 @@ namespace DcTransferFtpNew.Handlers {
         /// Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
         /// </summary>
 
-        public async Task<int> KirimFtpLocal(string zipFileName = null) {
-            return await KirimFtp("LOCAL", zipFileName);
+        public async Task<int> KirimFtpLocal(string zipFileName = null, string folderPath = null) {
+            return await KirimFtp("LOCAL", folderPath, zipFileName);
         }
 
-        public async Task<int> KirimFtpEis(string zipFileName = null) {
-            return await KirimFtp("EIS", zipFileName);
+        public async Task<int> KirimFtpEis(string zipFileName = null, string folderPath = null) {
+            return await KirimFtp("EIS", folderPath, zipFileName);
         }
 
-        public async Task<int> KirimFtpFingerScan(string zipFileName = null) {
-            return await KirimFtp("FINGER", zipFileName);
+        public async Task<int> KirimFtpFingerScan(string zipFileName = null, string folderPath = null) {
+            return await KirimFtp("FINGER", folderPath, zipFileName);
         }
 
-        public async Task<int> KirimFtpTaxTempFull(string zipFileName = null) {
-            return await KirimFtp("TTF", zipFileName);
+        public async Task<int> KirimFtpTaxTemp(string zipFileName = null, string folderPath = null) {
+            return await KirimFtp("TTF", folderPath, zipFileName);
         }
 
-        public async Task<int> KirimFtpDev(string processName, string zipFileName = null, bool reportLogHo = false) {
+        public async Task<int> KirimFtpDev(string processName, string zipFileName = null, bool reportLogHo = false, string folderPath = null) {
+            if (folderPath == null) {
+                folderPath = _berkas.TempFolderPath;
+            }
             int fileSent = 0;
             DC_FTP_T ftpInfo = await GetFtpInfo("DEV");
-            string dirPath = zipFileName == null ? _berkas.TempFolderPath : _berkas.ZipFolderPath;
+            string dirPath = zipFileName == null ? folderPath : _berkas.ZipFolderPath;
             string remotePath = $"/u01/ftp/DC/{ftpInfo.PGA_FOLDER}/{await _db.GetKodeDc()}";
             DirectoryInfo directoryInfo = new DirectoryInfo(dirPath);
             FileInfo[] fileInfos = directoryInfo.GetFiles();
@@ -187,9 +193,12 @@ namespace DcTransferFtpNew.Handlers {
             return fileSent;
         }
 
-        public async Task<int> KirimFtpIrpc(string zipFileName = null) {
+        public async Task<int> KirimFtpIrpc(string zipFileName = null, string folderPath = null) {
+            if (folderPath == null) {
+                folderPath = _berkas.TempFolderPath;
+            }
             DC_FTP_T ftpInfo = await GetFtpInfo("IRPC");
-            string dirPath = zipFileName == null ? _berkas.TempFolderPath : _berkas.ZipFolderPath;
+            string dirPath = zipFileName == null ? folderPath : _berkas.ZipFolderPath;
             FtpClient ftpClient = await _ftp.CreateFtpConnection(
                 ftpInfo.PGA_IPADDRESS,
                 int.Parse(ftpInfo.PGA_PORTNUMBER),
