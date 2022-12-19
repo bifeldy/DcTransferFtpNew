@@ -266,7 +266,7 @@ namespace DcTransferFtpNew.Logics {
             int terkirim = 0;
 
             try {
-                terkirim += await _dcFtpT.KirimFtpTaxTemp(); // *.CSV Sebanyak :: TargetKirim
+                terkirim += await _dcFtpT.KirimFtpTaxTemp(null, folderPath); // *.CSV Sebanyak :: TargetKirim
                 terkirim = await _dcFtpT.KirimFtpTaxTemp(fileName, folderPath); // *.ZIP Sebanyak :: 1
 
                 await _db.UpdateDcTtfHdrLog($@"
