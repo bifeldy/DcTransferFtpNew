@@ -72,16 +72,21 @@ namespace DcTransferFtpNew.Forms {
 
         private void CMainForm_FormClosing(object sender, FormClosingEventArgs e) {
             if (e.CloseReason == CloseReason.UserClosing) {
-                lastFormWindowState = WindowState;
-                sysTrayNotifyIcon.BalloonTipIcon = ToolTipIcon.Info;
-                sysTrayNotifyIcon.BalloonTipTitle = "Aplikasi Berjalan Di Belakang Layar";
-                sysTrayNotifyIcon.BalloonTipText = "Klik Icon 2x Untuk Membuka Kembali";
-                sysTrayNotifyIcon.BalloonTipClicked += SysTray_DoubleClick;
-                sysTrayNotifyIcon.ShowBalloonTip(500);
-                WindowState = FormWindowState.Minimized;
-                ShowInTaskbar = false;
-                Hide();
-                e.Cancel = true;
+                if (!bool.Parse(_app.GetConfig("minimize_on_close"))) {
+                    SysTray_MenuExit(sender, EventArgs.Empty);
+                }
+                else {
+                    lastFormWindowState = WindowState;
+                    sysTrayNotifyIcon.BalloonTipIcon = ToolTipIcon.Info;
+                    sysTrayNotifyIcon.BalloonTipTitle = "Aplikasi Berjalan Di Belakang Layar";
+                    sysTrayNotifyIcon.BalloonTipText = "Klik Icon 2x Untuk Membuka Kembali";
+                    sysTrayNotifyIcon.BalloonTipClicked += SysTray_DoubleClick;
+                    sysTrayNotifyIcon.ShowBalloonTip(500);
+                    WindowState = FormWindowState.Minimized;
+                    ShowInTaskbar = false;
+                    Hide();
+                    e.Cancel = true;
+                }
             }
         }
 
