@@ -57,8 +57,8 @@ namespace DcTransferFtpNew.Logics {
             await Task.Run(async () => {
                 if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd)) {
                     _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-                    TargetKirim = 0;
-                    BerhasilKirim = 0;
+                    JumlahServerKirimCsv = 1;
+                    JumlahServerKirimZip = 2;
 
                     string fileTimeBRDFormat2Hariana = $"{dateStart:MM}";
                     string DBFformat = $"{dateStart:MM}";
@@ -80,26 +80,28 @@ namespace DcTransferFtpNew.Logics {
 
                         targetFileName = $"DC{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
                         if (await _qTrfCsv.CreateCSVFile("DC", targetFileName)) {
-                            TargetKirim++;
+                            TargetKirim += JumlahServerKirimCsv;
                         }
 
                         targetFileName = $"ST{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
                         if (await _qTrfCsv.CreateCSVFile("ST", targetFileName)) {
-                            TargetKirim++;
+                            TargetKirim += JumlahServerKirimCsv;
                         }
 
                         targetFileName = $"SX{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
                         if (await _qTrfCsv.CreateCSVFile("SX", targetFileName)) {
-                            TargetKirim++;
+                            TargetKirim += JumlahServerKirimCsv;
                         }
                     }
 
                     string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "DC");
-                    int totalFileInZip = _berkas.ZipListFileInFolder(zipFileName);
+                    if (_berkas.ZipListFileInFolder(zipFileName) > 0) {
+                        TargetKirim += JumlahServerKirimZip;
+                    }
 
                     BerhasilKirim += await _dcFtpT.KirimFtp("LOCAL"); // *.CSV Sebanyak :: TargetKirim
                     BerhasilKirim += await _dcFtpT.KirimFtpDev("PLDC", zipFileName, true); // *.ZIP Sebanyak :: 1
-                    BerhasilKirim += await _dcFtpT.KirimFtp("EIS", null, zipFileName); // *.ZIP Sebanyak :: 1
+                    BerhasilKirim += await _dcFtpT.KirimFtp("EIS", zipFileName: zipFileName); // *.ZIP Sebanyak :: 1
 
                     _berkas.CleanUp();
                 }

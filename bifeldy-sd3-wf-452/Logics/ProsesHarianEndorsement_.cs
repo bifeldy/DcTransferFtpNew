@@ -53,8 +53,7 @@ namespace DcTransferFtpNew.Logics {
             await Task.Run(async () => {
                 if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd)) {
                     _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-                    TargetKirim = 0;
-                    BerhasilKirim = 0;
+                    JumlahServerKirimCsv = 2;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
@@ -73,7 +72,7 @@ namespace DcTransferFtpNew.Logics {
                         }
 
                         if (await _qTrfCsv.CreateCSVFile("ENDCSV")) {
-                            TargetKirim++;
+                            TargetKirim += JumlahServerKirimCsv;
                         }
                     }
 

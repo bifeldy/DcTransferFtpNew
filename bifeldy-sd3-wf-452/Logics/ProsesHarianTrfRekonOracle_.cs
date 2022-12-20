@@ -53,8 +53,7 @@ namespace DcTransferFtpNew.Logics {
             await Task.Run(async () => {
                 if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd)) {
                     _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-                    TargetKirim = 0;
-                    BerhasilKirim = 0;
+                    JumlahServerKirimCsv = 2;
 
                     string fileTimeBRDFormat = $"{dateStart:yyyyMM}";
                     string targetFileName = null;
@@ -73,7 +72,7 @@ namespace DcTransferFtpNew.Logics {
 
                         targetFileName = $"{fileTimeBRDFormat}{xDate:dd}.CSV";
                         if (await _qTrfCsv.CreateCSVFile("RECON", targetFileName)) {
-                            TargetKirim++;
+                            TargetKirim += JumlahServerKirimCsv;
                         }
                     }
 

@@ -52,8 +52,7 @@ namespace DcTransferFtpNew.Logics {
             await Task.Run(async () => {
                 if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd) && await IsDateEndYesterday(dateEnd)) {
                     _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-                    TargetKirim = 0;
-                    BerhasilKirim = 0;
+                    JumlahServerKirimCsv = 1;
 
                     string fileTimeFingerScanFormat = $"{dateEnd:MMyyyy}";
                     string targetFileName = null;
@@ -63,7 +62,7 @@ namespace DcTransferFtpNew.Logics {
 
                     targetFileName = $"FINGER{await _db.GetKodeDc()}{fileTimeFingerScanFormat}.csv";
                     if (await _qTrfCsv.CreateCSVFile("FINGER", targetFileName)) {
-                        TargetKirim++;
+                        TargetKirim += JumlahServerKirimCsv;
                     }
 
                     // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "FINGER");

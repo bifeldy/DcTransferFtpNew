@@ -57,8 +57,8 @@ namespace DcTransferFtpNew.Logics {
             await Task.Run(async () => {
                 if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd)) {
                     _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-                    TargetKirim = 0;
-                    BerhasilKirim = 0;
+                    JumlahServerKirimCsv = 1;
+                    JumlahServerKirimZip = 1;
 
                     string fileTimeICHOFormat = $"{dateStart:MM}";
                     string targetFileName = null;
@@ -79,37 +79,39 @@ namespace DcTransferFtpNew.Logics {
 
                         targetFileName = $"PAR{fileTimeICHOFormat}{xDate:dd}G.CSV";
                         if (await _qTrfCsv.CreateCSVFile("PAR", targetFileName)) {
-                            TargetKirim++;
+                            TargetKirim += JumlahServerKirimCsv;
                         }
                     }
 
                     targetFileName = "SUPMAST.CSV";
                     if (await _qTrfCsv.CreateCSVFile("SUPMAST", targetFileName)) {
-                        TargetKirim++;
+                        TargetKirim += JumlahServerKirimCsv;
                     }
 
                     targetFileName = "HRGBELI.CSV";
                     if (await _qTrfCsv.CreateCSVFile("HRGBELI", targetFileName)) {
-                        TargetKirim++;
+                        TargetKirim += JumlahServerKirimCsv;
                     }
 
                     targetFileName = "PROTECT.CSV";
                     if (await _qTrfCsv.CreateCSVFile("PROTECT", targetFileName)) {
-                        TargetKirim++;
+                        TargetKirim += JumlahServerKirimCsv;
                     }
 
                     targetFileName = $"REG{fileTimeICHOFormat2}.CSV";
                     if (await _qTrfCsv.CreateCSVFile("REG", targetFileName)) {
-                        TargetKirim++;
+                        TargetKirim += JumlahServerKirimCsv;
                     }
 
                     targetFileName = $"TRNH{fileTimeICHOFormat2}.CSV";
                     if (await _qTrfCsv.CreateCSVFile("TRNH", targetFileName)) {
-                        TargetKirim++;
+                        TargetKirim += JumlahServerKirimCsv;
                     }
 
                     string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "TRNH");
-                    int totalFileInZip = _berkas.ZipListFileInFolder(zipFileName);
+                    if (_berkas.ZipListFileInFolder(zipFileName) > 0) {
+                        TargetKirim += JumlahServerKirimZip;
+                    }
 
                     BerhasilKirim += await _dcFtpT.KirimFtp("LOCAL"); // *.CSV Sebanyak :: TargetKirim
                     BerhasilKirim += await _dcFtpT.KirimFtpDev("ICHO", zipFileName, true); // *.ZIP Sebanyak :: 1

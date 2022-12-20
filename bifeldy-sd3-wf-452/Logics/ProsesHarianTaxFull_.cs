@@ -32,8 +32,8 @@ using DcTransferFtpNew.Models;
 namespace DcTransferFtpNew.Logics {
 
     public interface IProsesHarianTaxFull : ILogics {
-        Task<int> FromZip(string fileName, DateTime xDate, string folderPath);
-        Task<int> FromTransfer(string fileName, Button button, DateTime xDate, string folderPath);
+        Task<(int, int)> FromZip(string fileName, DateTime xDate, string folderPath);
+        Task<(int, int)> FromTransfer(string fileName, Button button, DateTime xDate, string folderPath);
     }
 
     public sealed class CProsesHarianTaxFull : CLogics, IProsesHarianTaxFull {
@@ -240,7 +240,7 @@ namespace DcTransferFtpNew.Logics {
             }
         }
 
-        public async Task<int> FromZip(string zipFileName, DateTime xDate, string folderPath) {
+        public async Task<(int, int)> FromZip(string zipFileName, DateTime xDate, string folderPath) {
             int totalFileInZip = _berkas.ZipAllFileInFolder(zipFileName, folderPath);
 
             await _db.UpdateDcTtfHdrLog($"FILE_ZIP = {zipFileName}", xDate);
@@ -249,18 +249,19 @@ namespace DcTransferFtpNew.Logics {
                 Directory.Delete(folderPath, true);
             }
 
-            return totalFileInZip > 0 ? 1 : 0;
+            return (totalFileInZip, 1);
         }
 
-        public async Task<int> FromTransfer(string zipFileName, Button button, DateTime xDate, string folderPath) {
-            int terkirim = 0;
+        public async Task<(int, int)> FromTransfer(string zipFileName, Button button, DateTime xDate, string folderPath) {
+            int csvTerkirim = 0;
+            int zipTerkirim = 0;
 
             try {
-                terkirim += await _dcFtpT.KirimFtp("TTF", folderPath); // *.CSV Sebanyak :: TargetKirim
-                terkirim = await _dcFtpT.KirimFtp("TTF", folderPath, zipFileName); // *.ZIP Sebanyak :: 1
+                csvTerkirim += await _dcFtpT.KirimFtp("TTF", folderPath); // *.CSV Sebanyak :: TargetKirim
+                zipTerkirim += await _dcFtpT.KirimFtp("TTF", folderPath, zipFileName); // *.ZIP Sebanyak :: 1
 
                 await _db.UpdateDcTtfHdrLog($@"
-                    STATUS_TRF = '{(terkirim > 0 ? "OK" : "FAIL")}',
+                    STATUS_TRF = '{((csvTerkirim + zipTerkirim) > 0 ? "OK" : "FAIL")}',
                     TGL_TRF = {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}
                 ", xDate);
             }
@@ -289,7 +290,7 @@ namespace DcTransferFtpNew.Logics {
 
             await _db.UpdateDcTtfHdrLog($@"status_run = '0'", xDate);
 
-            return terkirim;
+            return (csvTerkirim, zipTerkirim);
         }
 
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
@@ -301,9 +302,8 @@ namespace DcTransferFtpNew.Logics {
                         Directory.CreateDirectory(TaxTempFullFolderPath);
                     }
 
-                    TargetKirim = 0;
-                    BerhasilKirim = 0;
-
+                    JumlahServerKirimCsv = 1;
+                    JumlahServerKirimZip = 1;
                     string targetFileName = null;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
@@ -317,11 +317,13 @@ namespace DcTransferFtpNew.Logics {
 
                         int cekLog = await _db.TaxTempCekLog(xDate);
                         if (cekLog == 0) {
-
                             await FullCreate(button, xDate, TaxTempFullFolderPath);
-                            TargetKirim += await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
-                            BerhasilKirim += await FromTransfer(targetFileName, button, xDate, TaxTempFullFolderPath);
 
+                            (int totalFiles, int totalZips) = await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
+                            TargetKirim += (totalFiles * JumlahServerKirimCsv) + (totalZips * JumlahServerKirimZip);
+
+                            (int csvTerkirim, int zipTerkirim) = await FromTransfer(targetFileName, button, xDate, TaxTempFullFolderPath);
+                            BerhasilKirim += (csvTerkirim + zipTerkirim);
                         }
                         else {
                             string dialogTitle = "Proses Manual Full Re-create TAX-TTF";
@@ -340,8 +342,12 @@ namespace DcTransferFtpNew.Logics {
                                     await _db.TaxTempDeleteHdr(xDate);
 
                                     await FullCreate(button, xDate, TaxTempFullFolderPath);
-                                    TargetKirim += await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
-                                    BerhasilKirim += await FromTransfer(targetFileName, button, xDate, TaxTempFullFolderPath);
+
+                                    (int totalFiles, int totalZips) = await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
+                                    TargetKirim += (totalFiles * JumlahServerKirimCsv) + (totalZips * JumlahServerKirimZip);
+
+                                    (int csvTerkirim, int zipTerkirim) = await FromTransfer(targetFileName, button, xDate, TaxTempFullFolderPath);
+                                    BerhasilKirim += (csvTerkirim + zipTerkirim);
                                 }
                             }
                             else {

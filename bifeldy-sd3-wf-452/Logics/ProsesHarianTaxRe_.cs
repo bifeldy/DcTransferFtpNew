@@ -61,9 +61,8 @@ namespace DcTransferFtpNew.Logics {
                         Directory.CreateDirectory(TaxTempReFolderPath);
                     }
 
-                    TargetKirim = 0;
-                    BerhasilKirim = 0;
-
+                    JumlahServerKirimCsv = 1;
+                    JumlahServerKirimZip = 1;
                     string targetFileName = null;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
@@ -282,8 +281,11 @@ namespace DcTransferFtpNew.Logics {
                                         targetFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}_{countSeq}.ZIP";
 
                                         // Sama Persis Dari Yang Full
-                                        TargetKirim += await _prosesHarianTaxFull.FromZip(targetFileName, xDate, TaxTempReFolderPath);
-                                        BerhasilKirim += await _prosesHarianTaxFull.FromTransfer(targetFileName, button, xDate, TaxTempReFolderPath);
+                                        (int totalFiles, int totalZips) = await _prosesHarianTaxFull.FromZip(targetFileName, xDate, TaxTempReFolderPath);
+                                        TargetKirim += (totalFiles * JumlahServerKirimCsv) + (totalZips * JumlahServerKirimZip);
+
+                                        (int csvTerkirim, int zipTerkirim) = await _prosesHarianTaxFull.FromTransfer(targetFileName, button, xDate, TaxTempReFolderPath);
+                                        BerhasilKirim += (csvTerkirim + zipTerkirim);
                                     }
                                     else {
                                         MessageBox.Show(

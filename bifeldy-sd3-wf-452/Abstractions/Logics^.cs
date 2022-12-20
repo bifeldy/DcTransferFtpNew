@@ -34,6 +34,9 @@ namespace DcTransferFtpNew.Abstractions {
         protected int TargetKirim = 0;
         protected int BerhasilKirim = 0;
 
+        protected int JumlahServerKirimCsv = 0;
+        protected int JumlahServerKirimZip = 0;
+
         protected string InfoMessage = null;
 
         protected Button button;
