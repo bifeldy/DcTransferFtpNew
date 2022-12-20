@@ -13,8 +13,6 @@
  */
 
 using System;
-using System.Data;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -23,7 +21,6 @@ using bifeldy_sd3_lib_452.Utilities;
 
 using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Handlers;
-using DcTransferFtpNew.Utilities;
 
 namespace DcTransferFtpNew.Logics {
 
