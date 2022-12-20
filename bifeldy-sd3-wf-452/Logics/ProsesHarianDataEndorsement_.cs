@@ -67,6 +67,11 @@ namespace DcTransferFtpNew.Logics {
                             throw new Exception($"Gagal Menjalankan Procedure CREATE_ENDORSMENT_CSV");
                         }
 
+                        string p_msg = $"{res.PARAMETERS["P_MSG"].Value}";
+                        if (!string.IsNullOrEmpty(p_msg)) {
+                            throw new Exception(p_msg);
+                        }
+
                         (bool success1, bool addQueue1) = await _qTrfCsv.CreateCSVFile(null, "ENDCSV");
                         if (success1 && addQueue1) {
                             TargetKirim++;
