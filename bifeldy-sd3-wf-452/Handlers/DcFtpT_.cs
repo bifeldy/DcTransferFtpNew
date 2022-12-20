@@ -34,7 +34,7 @@ namespace DcTransferFtpNew.Handlers {
     public interface IDcFtpT {
         Task<int> KirimFtp(string pga_type, string folderPath = null, string zipFileName = null);
         Task<int> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false, string folderPath = null);
-        Task<int> KirimFtpIrpc(string zipFileName = null, string folderPath = null);
+        Task<int> KirimFtpWithLog(string pgaType, string zipFileName = null, string folderPath = null);
     }
 
     public sealed class CDcFtpT : IDcFtpT {
@@ -174,11 +174,11 @@ namespace DcTransferFtpNew.Handlers {
             return fileSent;
         }
 
-        public async Task<int> KirimFtpIrpc(string zipFileName = null, string folderPath = null) {
+        public async Task<int> KirimFtpWithLog(string pgaType, string zipFileName = null, string folderPath = null) {
             if (folderPath == null) {
                 folderPath = _berkas.TempFolderPath;
             }
-            DC_FTP_T ftpInfo = await GetFtpInfo("IRPC");
+            DC_FTP_T ftpInfo = await GetFtpInfo(pgaType);
             string dirPath = zipFileName == null ? folderPath : _berkas.ZipFolderPath;
             FtpClient ftpClient = await _ftp.CreateFtpConnection(
                 ftpInfo.PGA_IPADDRESS,

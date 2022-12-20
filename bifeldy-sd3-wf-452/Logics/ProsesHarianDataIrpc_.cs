@@ -78,7 +78,7 @@ namespace DcTransferFtpNew.Logics {
                     // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "IRPC");
                     // int totalFileInZip = _berkas.ZipListFileInTempFolder(zipFileName);
 
-                    BerhasilKirim += await _dcFtpT.KirimFtpIrpc(); // *.CSV Sebanyak :: TargetKirim
+                    BerhasilKirim += await _dcFtpT.KirimFtpWithLog("IRPC"); // *.CSV Sebanyak :: TargetKirim
 
                     _berkas.CleanUp();
                 }
