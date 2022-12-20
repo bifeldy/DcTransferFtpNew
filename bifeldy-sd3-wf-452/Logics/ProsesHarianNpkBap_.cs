@@ -64,9 +64,10 @@ namespace DcTransferFtpNew.Logics {
 
                     /* NPK */
 
-                    CDbExecProcResult res1 = await _db.CALL_NPK_BAP("CREATE_NPK_TEMP", $"{dateStart:MM/dd/yyyy}", $"{dateEnd:MM/dd/yyyy}");
+                    string procName1 = "CREATE_NPK_TEMP";
+                    CDbExecProcResult res1 = await _db.CALL_NPK_BAP(procName1, $"{dateStart:MM/dd/yyyy}", $"{dateEnd:MM/dd/yyyy}");
                     if (res1 == null || !res1.STATUS) {
-                        throw new Exception($"Gagal Menjalankan Procedure CREATE_ENDORSMENT_CSV");
+                        throw new Exception($"Gagal Menjalankan Procedure {procName1}");
                     }
 
                     string p_msg1 = $"{res1.PARAMETERS["V_RESULT"].Value}";
@@ -79,9 +80,10 @@ namespace DcTransferFtpNew.Logics {
 
                     /* BAP */
 
-                    CDbExecProcResult res2 = await _db.CALL_NPK_BAP("CREATE_BAP_TEMP", $"{dateStart:MM/dd/yyyy}", $"{dateEnd:MM/dd/yyyy}");
+                    string procName2 = "CREATE_BAP_TEMP";
+                    CDbExecProcResult res2 = await _db.CALL_NPK_BAP(procName2, $"{dateStart:MM/dd/yyyy}", $"{dateEnd:MM/dd/yyyy}");
                     if (res2 == null || !res2.STATUS) {
-                        throw new Exception($"Gagal Menjalankan Procedure CREATE_ENDORSMENT_CSV");
+                        throw new Exception($"Gagal Menjalankan Procedure {procName2}");
                     }
 
                     string p_msg2 = $"{res1.PARAMETERS["V_RESULT"].Value}";
