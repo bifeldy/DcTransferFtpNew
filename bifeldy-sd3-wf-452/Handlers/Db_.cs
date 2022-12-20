@@ -58,8 +58,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<int> TaxTempHitungUlangOk(DateTime xDate, string typeTrans);
         Task<int> TaxTempHitungUlangFail(DateTime xDate, string typeTrans);
         Task<CDbExecProcResult> CALL_ENDORSEMENT(DateTime P_TGL, string P_QUERY = null, string P_FILENAME = null, string P_QUERY2 = null, string P_FILENAME2 = null, string P_MSG = null);
-        Task<CDbExecProcResult> CALL_NPK(string TGLAWALPAR, string TGLAKHIRPAR, string V_RESULT = null);
-        Task<CDbExecProcResult> CALL_BAP(string TGLAWALPAR, string TGLAKHIRPAR, string V_RESULT = null);
+        Task<CDbExecProcResult> CALL_NPK_BAP(string procName, string TGLAWALPAR, string TGLAKHIRPAR, string V_RESULT = null);
     }
 
     public sealed class CDb : CDbHandler, IDb {
@@ -460,14 +459,7 @@ namespace DcTransferFtpNew.Handlers {
             );
         }
 
-        public async Task<CDbExecProcResult> CALL_ENDORSEMENT(
-            DateTime P_TGL,
-            string P_QUERY = null,
-            string P_FILENAME = null,
-            string P_QUERY2 = null,
-            string P_FILENAME2 = null,
-            string P_MSG = null
-        ) {
+        public async Task<CDbExecProcResult> CALL_ENDORSEMENT(DateTime P_TGL, string P_QUERY = null, string P_FILENAME = null, string P_QUERY2 = null, string P_FILENAME2 = null, string P_MSG = null) {
             return await OraPg.ExecProcedureAsync(
                 "CREATE_ENDORSMENT_CSV",
                 new List<CDbQueryParamBind> {
@@ -481,28 +473,9 @@ namespace DcTransferFtpNew.Handlers {
             );
         }
 
-        public async Task<CDbExecProcResult> CALL_NPK(
-            string TGLAWALPAR,
-            string TGLAKHIRPAR,
-            string V_RESULT = null
-        ) {
+        public async Task<CDbExecProcResult> CALL_NPK_BAP(string procName, string TGLAWALPAR, string TGLAKHIRPAR, string V_RESULT = null) {
             return await OraPg.ExecProcedureAsync(
-                "CREATE_NPK_TEMP",
-                new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "TGLAWALPAR", VALUE = TGLAWALPAR },
-                    new CDbQueryParamBind { NAME = "TGLAKHIRPAR", VALUE = TGLAKHIRPAR },
-                    new CDbQueryParamBind { NAME = "V_RESULT", VALUE = V_RESULT, DIRECTION = ParameterDirection.InputOutput }
-                }
-            );
-        }
-
-        public async Task<CDbExecProcResult> CALL_BAP(
-            string TGLAWALPAR,
-            string TGLAKHIRPAR,
-            string V_RESULT = null
-        ) {
-            return await OraPg.ExecProcedureAsync(
-                "CREATE_BAP_TEMP",
+                procName,
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "TGLAWALPAR", VALUE = TGLAWALPAR },
                     new CDbQueryParamBind { NAME = "TGLAKHIRPAR", VALUE = TGLAKHIRPAR },

@@ -64,7 +64,7 @@ namespace DcTransferFtpNew.Logics {
 
                     /* NPK */
 
-                    CDbExecProcResult res1 = await _db.CALL_NPK($"{dateStart:MM/dd/yyyy}", $"{dateEnd:MM/dd/yyyy}");
+                    CDbExecProcResult res1 = await _db.CALL_NPK_BAP("CREATE_NPK_TEMP", $"{dateStart:MM/dd/yyyy}", $"{dateEnd:MM/dd/yyyy}");
                     if (res1 == null || !res1.STATUS) {
                         throw new Exception($"Gagal Menjalankan Procedure CREATE_ENDORSMENT_CSV");
                     }
@@ -79,7 +79,7 @@ namespace DcTransferFtpNew.Logics {
 
                     /* BAP */
 
-                    CDbExecProcResult res2 = await _db.CALL_BAP($"{dateStart:MM/dd/yyyy}", $"{dateEnd:MM/dd/yyyy}");
+                    CDbExecProcResult res2 = await _db.CALL_NPK_BAP("CREATE_BAP_TEMP", $"{dateStart:MM/dd/yyyy}", $"{dateEnd:MM/dd/yyyy}");
                     if (res2 == null || !res2.STATUS) {
                         throw new Exception($"Gagal Menjalankan Procedure CREATE_ENDORSMENT_CSV");
                     }
