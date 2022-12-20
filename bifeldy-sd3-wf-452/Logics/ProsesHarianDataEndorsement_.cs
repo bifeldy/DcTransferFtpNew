@@ -79,6 +79,8 @@ namespace DcTransferFtpNew.Logics {
 
                     BerhasilKirim += await _dcFtpT.KirimFtp("ENDCSV"); ; // *.CSV Sebanyak :: TargetKirim
                     BerhasilKirim += await _dcFtpT.KirimFtpDev("ENDCSV"); // *.CSV Sebanyak :: TargetKirim
+
+                    _berkas.CleanUp();
                 }
             });
             CheckHasilKiriman();
