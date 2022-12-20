@@ -77,18 +77,18 @@ namespace DcTransferFtpNew.Logics {
                         }
 
                         targetFileName = $"STM{fileTimeBRDFormat2Harianb.Substring(3, 1)}{fileTimeBRDFormat2Hariana}{xDate:dd}.CSV";
-                        if (await _qTrfCsv.CreateCSVFile(targetFileName, "STM")) {
+                        if (await _qTrfCsv.CreateCSVFile("STM", targetFileName)) {
                             TargetKirim++;
                         }
 
                         targetFileName = $"HPG{fileTimeBRDFormat2Harianb.Substring(3, 1)}{fileTimeBRDFormat2Hariana}{xDate:dd}.CSV";
-                        if (await _qTrfCsv.CreateCSVFile(targetFileName, "HPG")) {
+                        if (await _qTrfCsv.CreateCSVFile("HPG", targetFileName)) {
                             TargetKirim++;
                         }
                     }
 
                     targetFileName = "PRODMAST.CSV";
-                    if (await _qTrfCsv.CreateCSVFile(targetFileName, "PRODMAST")) {
+                    if (await _qTrfCsv.CreateCSVFile("PRODMAST", targetFileName)) {
                         TargetKirim++;
                     }
 

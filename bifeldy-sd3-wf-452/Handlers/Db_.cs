@@ -32,6 +32,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<DateTime> GetYesterdayDate(int lastDay);
         Task<CDbExecProcResult> CALL__P_TGL(string procedureName, DateTime P_TGL);
         Task<string> Q_TRF_CSV__GET(string kolom, string q_filename);
+        Task<string> DC_FILE_SCHEDULER_T__GET(string kolom, string file_key);
         Task<DbDataReader> GetFtpInfo(string pga_type);
         Task<string> GetURLWebServiceHO();
         Task<string> GetDcExt();
@@ -100,6 +101,17 @@ namespace DcTransferFtpNew.Handlers {
                 ",
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "q_filename", VALUE = q_filename }
+                }
+            );
+        }
+
+        public async Task<string> DC_FILE_SCHEDULER_T__GET(string kolom, string file_key) {
+            return await OraPg.ExecScalarAsync<string>(
+                $@"
+                    SELECT {kolom} FROM DC_FILE_SCHEDULER_T WHERE file_key = :file_key
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "file_key", VALUE = file_key }
                 }
             );
         }

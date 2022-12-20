@@ -106,6 +106,7 @@
     <Compile Include="Handlers\DcFtpT_.cs" />
     <Compile Include="Handlers\MenuNavigations_.cs" />
     <Compile Include="Handlers\QTrfCsv_.cs" />
+    <Compile Include="Logics\ProsesHarianBpbProc.cs" />
     <Compile Include="Logics\ProsesHarianEndorsement_.cs" />
     <Compile Include="Logics\ProsesHarianDataHarian_.cs" />
     <Compile Include="Logics\ProsesHarianIcho_.cs" />

@@ -119,8 +119,8 @@ namespace DcTransferFtpNew.Logics {
 
             await _db.UpdateDcTtfHdrLog($"stop_tax = {(_app.IsUsingPostgres ? "NOW()" : "SYSDATE")}", xDate);
 
-            await _qTrfCsv.CreateCSVFile(null, "SUMTAX", TaxTempFullFolderPath);
-            await _qTrfCsv.CreateCSVFile(null, "REKTAX", TaxTempFullFolderPath);
+            await _qTrfCsv.CreateCSVFile("SUMTAX", outputFolderPath: TaxTempFullFolderPath);
+            await _qTrfCsv.CreateCSVFile("REKTAX", outputFolderPath: TaxTempFullFolderPath);
 
             string procName2 = "TRF_BAKP_EVO";
             CDbExecProcResult res2 = await _db.CALL__P_TGL(procName2, xDate);
@@ -128,7 +128,7 @@ namespace DcTransferFtpNew.Logics {
                 throw new Exception($"Gagal Menjalankan Procedure {procName2}");
             }
 
-            await _qTrfCsv.CreateCSVFile(null, "BAKP", TaxTempFullFolderPath);
+            await _qTrfCsv.CreateCSVFile("BAKP", outputFolderPath: TaxTempFullFolderPath);
 
             int statusOk = await _db.TaxTempStatusOk(xDate);
             if (statusOk == 1) {

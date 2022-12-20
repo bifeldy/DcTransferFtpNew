@@ -72,7 +72,7 @@ namespace DcTransferFtpNew.Logics {
                         }
 
                         targetFileName = $"{fileTimeBRDFormat}{xDate:dd}.CSV";
-                        if (await _qTrfCsv.CreateCSVFile(targetFileName, "RECON")) {
+                        if (await _qTrfCsv.CreateCSVFile("RECON", targetFileName)) {
                             TargetKirim++;
                         }
                     }

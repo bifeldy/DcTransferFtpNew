@@ -78,33 +78,33 @@ namespace DcTransferFtpNew.Logics {
                         }
 
                         targetFileName = $"PAR{fileTimeICHOFormat}{xDate:dd}G.CSV";
-                        if (await _qTrfCsv.CreateCSVFile(targetFileName, "PAR")) {
+                        if (await _qTrfCsv.CreateCSVFile("PAR", targetFileName)) {
                             TargetKirim++;
                         }
                     }
 
                     targetFileName = "SUPMAST.CSV";
-                    if (await _qTrfCsv.CreateCSVFile(targetFileName, "SUPMAST")) {
+                    if (await _qTrfCsv.CreateCSVFile("SUPMAST", targetFileName)) {
                         TargetKirim++;
                     }
 
                     targetFileName = "HRGBELI.CSV";
-                    if (await _qTrfCsv.CreateCSVFile(targetFileName, "HRGBELI")) {
+                    if (await _qTrfCsv.CreateCSVFile("HRGBELI", targetFileName)) {
                         TargetKirim++;
                     }
 
                     targetFileName = "PROTECT.CSV";
-                    if (await _qTrfCsv.CreateCSVFile(targetFileName, "PROTECT")) {
+                    if (await _qTrfCsv.CreateCSVFile("PROTECT", targetFileName)) {
                         TargetKirim++;
                     }
 
                     targetFileName = $"REG{fileTimeICHOFormat2}.CSV";
-                    if (await _qTrfCsv.CreateCSVFile(targetFileName, "REG")) {
+                    if (await _qTrfCsv.CreateCSVFile("REG", targetFileName)) {
                         TargetKirim++;
                     }
 
                     targetFileName = $"TRNH{fileTimeICHOFormat2}.CSV";
-                    if (await _qTrfCsv.CreateCSVFile(targetFileName, "TRNH")) {
+                    if (await _qTrfCsv.CreateCSVFile("TRNH", targetFileName)) {
                         TargetKirim++;
                     }
 

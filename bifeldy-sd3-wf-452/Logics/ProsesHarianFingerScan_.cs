@@ -62,7 +62,7 @@ namespace DcTransferFtpNew.Logics {
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
 
                     targetFileName = $"FINGER{await _db.GetKodeDc()}{fileTimeFingerScanFormat}.csv";
-                    if (await _qTrfCsv.CreateCSVFile(targetFileName, "FINGER")) {
+                    if (await _qTrfCsv.CreateCSVFile("FINGER", targetFileName)) {
                         TargetKirim++;
                     }
 

@@ -72,7 +72,7 @@ namespace DcTransferFtpNew.Logics {
                             throw new Exception(p_msg);
                         }
 
-                        if (await _qTrfCsv.CreateCSVFile(null, "ENDCSV")) {
+                        if (await _qTrfCsv.CreateCSVFile("ENDCSV")) {
                             TargetKirim++;
                         }
                     }

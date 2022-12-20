@@ -22,7 +22,7 @@ using bifeldy_sd3_lib_452.Utilities;
 namespace DcTransferFtpNew.Handlers {
 
     public interface IQTrfCsv {
-        Task<bool> CreateCSVFile(string filename, string q_filename, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true);
+        Task<bool> CreateCSVFile(string q_filename, string filename = null, string seperator = null, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true);
     }
 
     public sealed class CQTrfCsv : IQTrfCsv {
@@ -35,11 +35,11 @@ namespace DcTransferFtpNew.Handlers {
             _berkas = berkas;
         }
 
-        public async Task<bool> CreateCSVFile(string filename, string q_filename, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true) {
+        public async Task<bool> CreateCSVFile(string q_filename, string filename = null, string seperator = null, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true) {
             bool res = false;
-            string seperator = await _db.Q_TRF_CSV__GET("q_seperator", q_filename);
-            string queryForCSV = await _db.Q_TRF_CSV__GET("q_query", q_filename);
             filename = await _db.Q_TRF_CSV__GET("q_namafile", q_filename) ?? filename;
+            seperator = await _db.Q_TRF_CSV__GET("q_seperator", q_filename) ?? seperator;
+            string queryForCSV = await _db.Q_TRF_CSV__GET("q_query", q_filename);
             if (string.IsNullOrEmpty(seperator) || string.IsNullOrEmpty(queryForCSV) || string.IsNullOrEmpty(filename)) {
                 MessageBox.Show("Data CSV (Separator / Query / Nama File) Dari Tabel Q_TRF_CSV Tidak Lengkap!", $"{q_filename} :: {filename}");
             }

@@ -68,11 +68,11 @@ namespace DcTransferFtpNew.Logics {
                             throw new Exception($"Gagal Menjalankan Procedure {procName}");
                         }
 
-                        if (await _qTrfCsv.CreateCSVFile(null, "TOC")) {
+                        if (await _qTrfCsv.CreateCSVFile("TOC")) {
                             TargetKirim++;
                         }
 
-                        if (await _qTrfCsv.CreateCSVFile(null, "TOCHDR")) {
+                        if (await _qTrfCsv.CreateCSVFile("TOCHDR")) {
                             TargetKirim++;
                         }
                     }
