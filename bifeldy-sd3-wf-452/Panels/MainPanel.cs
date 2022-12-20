@@ -55,7 +55,7 @@ namespace DcTransferFtpNew.Panels {
             Dock = DockStyle.Fill;
 
             LogInfoReporter = new Progress<string>(log => {
-                textBoxLogInfo.Text += log;
+                textBoxLogInfo.Text = log + textBoxLogInfo.Text;
             });
         }
 
