@@ -78,39 +78,33 @@ namespace DcTransferFtpNew.Logics {
                         }
 
                         targetFileName = $"PAR{fileTimeICHOFormat}{xDate:dd}G.CSV";
-                        (bool success1, bool addQueue1) = await _qTrfCsv.CreateCSVFile(targetFileName, "PAR");
-                        if (success1 && addQueue1) {
+                        if (await _qTrfCsv.CreateCSVFile(targetFileName, "PAR")) {
                             TargetKirim++;
                         }
                     }
 
                     targetFileName = "SUPMAST.CSV";
-                    (bool success2, bool addQueue2) = await _qTrfCsv.CreateCSVFile(targetFileName, "SUPMAST");
-                    if (success2 && addQueue2) {
+                    if (await _qTrfCsv.CreateCSVFile(targetFileName, "SUPMAST")) {
                         TargetKirim++;
                     }
 
                     targetFileName = "HRGBELI.CSV";
-                    (bool success3, bool addQueue3) = await _qTrfCsv.CreateCSVFile(targetFileName, "HRGBELI");
-                    if (success3 && addQueue3) {
+                    if (await _qTrfCsv.CreateCSVFile(targetFileName, "HRGBELI")) {
                         TargetKirim++;
                     }
 
                     targetFileName = "PROTECT.CSV";
-                    (bool success4, bool addQueue4) = await _qTrfCsv.CreateCSVFile(targetFileName, "PROTECT");
-                    if (success4 && addQueue4) {
+                    if (await _qTrfCsv.CreateCSVFile(targetFileName, "PROTECT")) {
                         TargetKirim++;
                     }
 
                     targetFileName = $"REG{fileTimeICHOFormat2}.CSV";
-                    (bool success5, bool addQueue5) = await _qTrfCsv.CreateCSVFile(targetFileName, "REG");
-                    if (success5 && addQueue5) {
+                    if (await _qTrfCsv.CreateCSVFile(targetFileName, "REG")) {
                         TargetKirim++;
                     }
 
                     targetFileName = $"TRNH{fileTimeICHOFormat2}.CSV";
-                    (bool success6, bool addQueue6) = await _qTrfCsv.CreateCSVFile(targetFileName, "TRNH");
-                    if (success6 && addQueue6) {
+                    if (await _qTrfCsv.CreateCSVFile(targetFileName, "TRNH")) {
                         TargetKirim++;
                     }
 

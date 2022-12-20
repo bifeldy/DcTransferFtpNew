@@ -22,7 +22,7 @@ using bifeldy_sd3_lib_452.Utilities;
 namespace DcTransferFtpNew.Handlers {
 
     public interface IQTrfCsv {
-        Task<(bool, bool)> CreateCSVFile(string filename, string q_filename, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true);
+        Task<bool> CreateCSVFile(string filename, string q_filename, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true);
     }
 
     public sealed class CQTrfCsv : IQTrfCsv {
@@ -35,7 +35,7 @@ namespace DcTransferFtpNew.Handlers {
             _berkas = berkas;
         }
 
-        public async Task<(bool, bool)> CreateCSVFile(string filename, string q_filename, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true) {
+        public async Task<bool> CreateCSVFile(string filename, string q_filename, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true) {
             bool res = false;
             string seperator = await _db.Q_TRF_CSV__GET("q_seperator", q_filename);
             string queryForCSV = await _db.Q_TRF_CSV__GET("q_query", q_filename);
@@ -53,7 +53,7 @@ namespace DcTransferFtpNew.Handlers {
                     _berkas.ListFileForZip.Add(filename);
                 }
             }
-            return (res, addToQueueForZip);
+            return res;
         }
 
     }

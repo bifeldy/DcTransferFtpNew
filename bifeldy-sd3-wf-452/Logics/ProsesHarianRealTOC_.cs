@@ -68,13 +68,11 @@ namespace DcTransferFtpNew.Logics {
                             throw new Exception($"Gagal Menjalankan Procedure {procName}");
                         }
 
-                        (bool success1, bool addQueue1) = await _qTrfCsv.CreateCSVFile(null, "TOC");
-                        if (success1 && addQueue1) {
+                        if (await _qTrfCsv.CreateCSVFile(null, "TOC")) {
                             TargetKirim++;
                         }
 
-                        (bool success2, bool addQueue2) = await _qTrfCsv.CreateCSVFile(null, "TOCHDR");
-                        if (success2 && addQueue2) {
+                        if (await _qTrfCsv.CreateCSVFile(null, "TOCHDR")) {
                             TargetKirim++;
                         }
                     }

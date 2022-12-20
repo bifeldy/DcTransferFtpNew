@@ -79,20 +79,17 @@ namespace DcTransferFtpNew.Logics {
                         }
 
                         targetFileName = $"DC{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
-                        (bool success1, bool addQueue1) = await _qTrfCsv.CreateCSVFile(targetFileName, "DC");
-                        if (success1 && addQueue1) {
+                        if (await _qTrfCsv.CreateCSVFile(targetFileName, "DC")) {
                             TargetKirim++;
                         }
 
                         targetFileName = $"ST{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
-                        (bool success2, bool addQueue2) = await _qTrfCsv.CreateCSVFile(targetFileName, "ST");
-                        if (success2 && addQueue2) {
+                        if (await _qTrfCsv.CreateCSVFile(targetFileName, "ST")) {
                             TargetKirim++;
                         }
 
                         targetFileName = $"SX{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
-                        (bool success3, bool addQueue3) = await _qTrfCsv.CreateCSVFile(targetFileName, "SX");
-                        if (success3 && addQueue3) {
+                        if (await _qTrfCsv.CreateCSVFile(targetFileName, "SX")) {
                             TargetKirim++;
                         }
                     }

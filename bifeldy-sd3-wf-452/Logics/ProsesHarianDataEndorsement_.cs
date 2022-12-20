@@ -72,8 +72,7 @@ namespace DcTransferFtpNew.Logics {
                             throw new Exception(p_msg);
                         }
 
-                        (bool success1, bool addQueue1) = await _qTrfCsv.CreateCSVFile(null, "ENDCSV");
-                        if (success1 && addQueue1) {
+                        if (await _qTrfCsv.CreateCSVFile(null, "ENDCSV")) {
                             TargetKirim++;
                         }
                     }
