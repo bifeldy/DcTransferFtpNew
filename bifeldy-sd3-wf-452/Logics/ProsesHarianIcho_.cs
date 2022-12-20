@@ -25,9 +25,9 @@ using DcTransferFtpNew.Utilities;
 
 namespace DcTransferFtpNew.Logics {
 
-    public interface IProsesHarianDataIcho : ILogics { }
+    public interface IProsesHarianIcho : ILogics { }
 
-    public sealed class CProsesHarianDataIcho : CLogics, IProsesHarianDataIcho {
+    public sealed class CProsesHarianIcho : CLogics, IProsesHarianIcho {
 
         private readonly IApp _app;
         private readonly ILogger _logger;
@@ -36,7 +36,7 @@ namespace DcTransferFtpNew.Logics {
         private readonly IQTrfCsv _qTrfCsv;
         private readonly IDcFtpT _dcFtpT;
 
-        public CProsesHarianDataIcho(
+        public CProsesHarianIcho(
             IApp app,
             ILogger logger,
             IDb db,

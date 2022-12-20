@@ -106,11 +106,11 @@
     <Compile Include="Handlers\DcFtpT_.cs" />
     <Compile Include="Handlers\MenuNavigations_.cs" />
     <Compile Include="Handlers\QTrfCsv_.cs" />
-    <Compile Include="Logics\ProsesHarianDataEndorsement_.cs" />
+    <Compile Include="Logics\ProsesHarianEndorsement_.cs" />
     <Compile Include="Logics\ProsesHarianDataHarian_.cs" />
-    <Compile Include="Logics\ProsesHarianDataIcho_.cs" />
-    <Compile Include="Logics\ProsesHarianDataIrpc_.cs" />
-    <Compile Include="Logics\ProsesHarianDataPldc_.cs" />
+    <Compile Include="Logics\ProsesHarianIcho_.cs" />
+    <Compile Include="Logics\ProsesHarianIrpc_.cs" />
+    <Compile Include="Logics\ProsesHarianPldc_.cs" />
     <Compile Include="Logics\ProsesHarianFingerScan_.cs" />
     <Compile Include="Logics\ProsesHarianRealTOC_.cs" />
     <Compile Include="Logics\ProsesHarianTaxFull_.cs" />

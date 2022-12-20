@@ -7,13 +7,12 @@
  * Department   :: IT SD 03
  * Mail         :: bias@indomaret.co.id
  * 
- * Catatan      :: Proses Harian Data IRPC
+ * Catatan      :: Proses Harian Data Endorsement
  *              :: Harap Didaftarkan Ke DI Container
  * 
  */
 
 using System;
-using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -25,31 +24,34 @@ using DcTransferFtpNew.Handlers;
 
 namespace DcTransferFtpNew.Logics {
 
-    public interface IProsesHarianDataIrpc : ILogics { }
+    public interface IProsesHarianEndorsement : ILogics { }
 
-    public sealed class CProsesHarianDataIrpc : CLogics, IProsesHarianDataIrpc {
+    public sealed class CProsesHarianEndorsement : CLogics, IProsesHarianEndorsement {
 
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
+        private readonly IQTrfCsv _qTrfCsv;
         private readonly IDcFtpT _dcFtpT;
 
-        public CProsesHarianDataIrpc(
+        public CProsesHarianEndorsement(
             ILogger logger,
             IDb db,
             IBerkas berkas,
+            IQTrfCsv q_trf_csv,
             IDcFtpT dc_ftp_t
         ) : base(db) {
             _logger = logger;
             _db = db;
             _berkas = berkas;
+            _qTrfCsv = q_trf_csv;
             _dcFtpT = dc_ftp_t;
         }
 
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
-                if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd) && await IsDateEndYesterday(dateEnd)) {
+                if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd)) {
                     _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
                     TargetKirim = 0;
                     BerhasilKirim = 0;
@@ -60,25 +62,26 @@ namespace DcTransferFtpNew.Logics {
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
 
-                        string procName = "INS_BPBNRB_SUPROTI";
-                        CDbExecProcResult res = await _db.CALL__P_TGL(procName, xDate);
+                        CDbExecProcResult res = await _db.CALL_ENDORSEMENT(xDate);
                         if (res == null || !res.STATUS) {
-                            throw new Exception($"Gagal Menjalankan Procedure {procName}");
+                            throw new Exception($"Gagal Menjalankan Procedure CREATE_ENDORSMENT_CSV");
                         }
 
-                        DataTable dtQuery = await _db.GetIrpc(xDate);
-                        string targetFileName = $"IRPC{await _db.GetKodeDc()}{xDate:ddMMyyyyHHmm}.CSV";
-                        string seperator = ",";
-                        if (_berkas.DataTable2CSV(dtQuery, targetFileName, seperator)) {
-                            // _berkas.ListFileForZip.Add(targetFileName);
+                        string p_msg = $"{res.PARAMETERS["P_MSG"].Value}";
+                        if (!string.IsNullOrEmpty(p_msg)) {
+                            throw new Exception(p_msg);
+                        }
+
+                        if (await _qTrfCsv.CreateCSVFile(null, "ENDCSV")) {
                             TargetKirim++;
                         }
                     }
 
-                    // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "IRPC");
+                    // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "ENDCSV");
                     // int totalFileInZip = _berkas.ZipListFileInTempFolder(zipFileName);
 
-                    BerhasilKirim += await _dcFtpT.KirimFtpWithLog("IRPC"); // *.CSV Sebanyak :: TargetKirim
+                    BerhasilKirim += await _dcFtpT.KirimFtp("ENDCSV"); ; // *.CSV Sebanyak :: TargetKirim
+                    BerhasilKirim += await _dcFtpT.KirimFtpDev("ENDCSV"); // *.CSV Sebanyak :: TargetKirim
 
                     _berkas.CleanUp();
                 }

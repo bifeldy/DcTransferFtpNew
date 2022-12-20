@@ -48,15 +48,16 @@ namespace DcTransferFtpNew.Navigations {
         private void InitializeButtonProsesHarian() {
             // Button Buat Handle Ex. `\Logics\***_.cs`, Name => Gunakan Nama `class` Dan Di `sealed`
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianDataHarian", Text = "Data Harian" });
-            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianDataPldc", Text = "Data PLDC" });
-            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianDataIcho", Text = "Data ICHO" });
-            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianDataIrpc", Text = "Data IRPC" });
+            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianPldc", Text = "Data PLDC" });
+            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianIcho", Text = "Data ICHO" });
+            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianIrpc", Text = "Data IRPC" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianFingerScan", Text = "Data FingerScan" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianTaxFull", Text = "Data Tax Full" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianTaxRe", Text = "Data Tax Re:" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianTrfRekonOracle", Text = "Trf Rekon Oracle" });
-            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianDataEndorsement", Text = "Data Endorsement" });
+            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianEndorsement", Text = "Data Endorsement" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianRealTOC", Text = "Data TOC" });
+            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianBpbProc", Text = "Data BPB Proc" });
         }
 
     }
