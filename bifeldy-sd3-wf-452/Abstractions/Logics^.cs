@@ -87,7 +87,7 @@ namespace DcTransferFtpNew.Abstractions {
                 else if (BerhasilKirim < TargetKirim && TargetKirim > 0) {
                     InfoMessage = $"Ada Beberapa Proses {button.Text} Yang Gagal !!";
                 }
-                else if (BerhasilKirim >= TargetKirim && TargetKirim > 0) {
+                else if (BerhasilKirim == TargetKirim && TargetKirim > 0) {
                     InfoMessage = $"{button.Text} Sukses !!";
                 }
                 else {
