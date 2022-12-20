@@ -24,9 +24,9 @@ using DcTransferFtpNew.Handlers;
 
 namespace DcTransferFtpNew.Logics {
 
-    public interface IProsesHarianRealTOC : ILogics { }
+    public interface IProsesHarianRealToc : ILogics { }
 
-    public sealed class CProsesHarianRealTOC : CLogics, IProsesHarianRealTOC {
+    public sealed class CProsesHarianRealToc : CLogics, IProsesHarianRealToc {
 
         private readonly ILogger _logger;
         private readonly IDb _db;
@@ -34,7 +34,7 @@ namespace DcTransferFtpNew.Logics {
         private readonly IQTrfCsv _qTrfCsv;
         private readonly IDcFtpT _dcFtpT;
 
-        public CProsesHarianRealTOC(
+        public CProsesHarianRealToc(
             ILogger logger,
             IDb db,
             IBerkas berkas,
