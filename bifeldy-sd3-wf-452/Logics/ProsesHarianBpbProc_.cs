@@ -73,7 +73,9 @@ namespace DcTransferFtpNew.Logics {
                     }
 
                     // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "BPBPROCUR");
-                    // int totalFileInZip = _berkas.ZipListFileInTempFolder(zipFileName);
+                    // if (_berkas.ZipListFileInFolder(zipFileName) > 0) {
+                    //     TargetKirim += JumlahServerKirimZip;
+                    // }
 
                     BerhasilKirim += await _dcFtpT.KirimFtp("BPBPROCUR"); // *.CSV Sebanyak :: TargetKirim
 
