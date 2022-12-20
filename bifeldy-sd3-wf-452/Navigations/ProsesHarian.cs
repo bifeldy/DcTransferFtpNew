@@ -54,6 +54,7 @@ namespace DcTransferFtpNew.Navigations {
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianFingerScan", Text = "Data FingerScan" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianTaxFull", Text = "Data Tax Full" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianTaxRe", Text = "Data Tax Re:" });
+            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianTrfRekonOracle", Text = "Trf Rekon Oracle" });
         }
 
     }

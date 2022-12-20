@@ -113,6 +113,7 @@
     <Compile Include="Logics\ProsesHarianFingerScan_.cs" />
     <Compile Include="Logics\ProsesHarianTaxFull_.cs" />
     <Compile Include="Logics\ProsesHarianTaxRe_.cs" />
+    <Compile Include="Logics\ProsesHarianTrfRekonOracle.cs" />
     <Compile Include="Models\DCHO_TTF_HDR_LOG.cs" />
     <Compile Include="Models\DC_FTP_T.cs" />
     <Compile Include="Navigations\ProsesBulanan.cs">
