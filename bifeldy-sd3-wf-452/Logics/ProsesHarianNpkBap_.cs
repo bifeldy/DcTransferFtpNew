@@ -7,7 +7,7 @@
  * Department   :: IT SD 03
  * Mail         :: bias@indomaret.co.id
  * 
- * Catatan      :: Proses Harian Data BPB Proc
+ * Catatan      :: Proses Harian Data NPK BAP
  *              :: Harap Didaftarkan Ke DI Container
  * 
  */
