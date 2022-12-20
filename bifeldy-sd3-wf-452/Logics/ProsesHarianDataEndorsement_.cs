@@ -54,7 +54,32 @@ namespace DcTransferFtpNew.Logics {
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
-                throw new NotImplementedException("Fitur Belum Tersedia ...");
+                if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd)) {
+                    _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+                    TargetKirim = 0;
+                    BerhasilKirim = 0;
+
+                    int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
+                    _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
+
+                    for (int i = 0; i < jumlahHari; i++) {
+                        DateTime xDate = dateStart.AddDays(i);
+
+                        string procName = "CREATE_ENDORSMENT_CSV";
+                        CDbExecProcResult res = await _db.CALL__P_TGL(procName, xDate);
+                        if (res == null || !res.STATUS) {
+                            throw new Exception($"Gagal Menjalankan Procedure {procName}");
+                        }
+
+                        (bool success1, bool addQueue1) = await _qTrfCsv.CreateCSVFile(null, "ENDCSV");
+                        if (success1 && addQueue1) {
+                            TargetKirim++;
+                        }
+                    }
+
+                    BerhasilKirim += await _dcFtpT.KirimFtp("ENDCSV"); ; // *.CSV Sebanyak :: TargetKirim
+                    BerhasilKirim += await _dcFtpT.KirimFtpDev("ENDCSV"); // *.CSV Sebanyak :: TargetKirim
+                }
             });
             CheckHasilKiriman();
         }
