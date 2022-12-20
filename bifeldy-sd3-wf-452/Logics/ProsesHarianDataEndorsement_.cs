@@ -65,10 +65,9 @@ namespace DcTransferFtpNew.Logics {
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
 
-                        string procName = "CREATE_ENDORSMENT_CSV";
-                        CDbExecProcResult res = await _db.CALL__P_TGL(procName, xDate);
+                        CDbExecProcResult res = await _db.CALL_ENDORSEMENT(xDate);
                         if (res == null || !res.STATUS) {
-                            throw new Exception($"Gagal Menjalankan Procedure {procName}");
+                            throw new Exception($"Gagal Menjalankan Procedure CREATE_ENDORSMENT_CSV");
                         }
 
                         (bool success1, bool addQueue1) = await _qTrfCsv.CreateCSVFile(null, "ENDCSV");

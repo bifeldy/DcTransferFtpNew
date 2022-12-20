@@ -56,6 +56,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<string> TaxTempFileZipName(DateTime xDate);
         Task<int> TaxTempHitungUlangOk(DateTime xDate, string typeTrans);
         Task<int> TaxTempHitungUlangFail(DateTime xDate, string typeTrans);
+        Task<CDbExecProcResult> CALL_ENDORSEMENT(DateTime P_TGL, string P_QUERY = null, string P_FILENAME = null, string P_QUERY2 = null, string P_FILENAME2 = null, string P_MSG = null);
     }
 
     public sealed class CDb : CDbHandler, IDb {
@@ -441,6 +442,27 @@ namespace DcTransferFtpNew.Handlers {
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "x_date", VALUE = xDate },
                     new CDbQueryParamBind { NAME = "type_trans", VALUE = typeTrans }
+                }
+            );
+        }
+
+        public async Task<CDbExecProcResult> CALL_ENDORSEMENT(
+            DateTime P_TGL,
+            string P_QUERY = null,
+            string P_FILENAME = null,
+            string P_QUERY2 = null,
+            string P_FILENAME2 = null,
+            string P_MSG = null
+        ) {
+            return await OraPg.ExecProcedureAsync(
+                "CREATE_ENDORSMENT_CSV",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "P_TGL", VALUE = P_TGL },
+                    new CDbQueryParamBind { NAME = "P_QUERY", VALUE = P_QUERY, DIRECTION = ParameterDirection.InputOutput },
+                    new CDbQueryParamBind { NAME = "P_FILENAME", VALUE = P_FILENAME, DIRECTION = ParameterDirection.InputOutput },
+                    new CDbQueryParamBind { NAME = "P_QUERY2", VALUE = P_QUERY2, DIRECTION = ParameterDirection.InputOutput },
+                    new CDbQueryParamBind { NAME = "P_FILENAME2", VALUE = P_FILENAME2, DIRECTION = ParameterDirection.InputOutput },
+                    new CDbQueryParamBind { NAME = "P_MSG", VALUE = P_MSG, DIRECTION = ParameterDirection.InputOutput }
                 }
             );
         }
