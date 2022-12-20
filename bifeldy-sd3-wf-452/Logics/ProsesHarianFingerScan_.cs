@@ -70,7 +70,7 @@ namespace DcTransferFtpNew.Logics {
                     // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "FINGER");
                     // int totalFileInZip = _berkas.ZipListFileInTempFolder(zipFileName);
 
-                    BerhasilKirim += await _dcFtpT.KirimFtpFingerScan(); // *.CSV Sebanyak :: TargetKirim
+                    BerhasilKirim += await _dcFtpT.KirimFtp("FINGER"); // *.CSV Sebanyak :: TargetKirim
 
                     _berkas.CleanUp();
                 }

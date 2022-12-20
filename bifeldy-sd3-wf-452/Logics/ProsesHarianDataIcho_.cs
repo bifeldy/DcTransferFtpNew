@@ -117,7 +117,7 @@ namespace DcTransferFtpNew.Logics {
                     string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "TRNH");
                     int totalFileInZip = _berkas.ZipListFileInFolder(zipFileName);
 
-                    BerhasilKirim += await _dcFtpT.KirimFtpLocal(); // *.CSV Sebanyak :: TargetKirim
+                    BerhasilKirim += await _dcFtpT.KirimFtp("LOCAL"); // *.CSV Sebanyak :: TargetKirim
                     BerhasilKirim += await _dcFtpT.KirimFtpDev("ICHO", zipFileName, true); // *.ZIP Sebanyak :: 1
 
                     _berkas.CleanUp();

@@ -32,12 +32,9 @@ using DcTransferFtpNew.Models;
 namespace DcTransferFtpNew.Handlers {
 
     public interface IDcFtpT {
-        Task<int> KirimFtpLocal(string zipFileName = null, string folderPath = null);
-        Task<int> KirimFtpEis(string zipFileName = null, string folderPath = null);
-        Task<int> KirimFtpFingerScan(string zipFileName = null, string folderPath = null);
+        Task<int> KirimFtp(string pga_type, string folderPath = null, string zipFileName = null);
         Task<int> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false, string folderPath = null);
         Task<int> KirimFtpIrpc(string zipFileName = null, string folderPath = null);
-        Task<int> KirimFtpTaxTemp(string zipFileName = null, string folderPath = null);
     }
 
     public sealed class CDcFtpT : IDcFtpT {
@@ -109,7 +106,7 @@ namespace DcTransferFtpNew.Handlers {
             return ftpObject;
         }
 
-        private async Task<int> KirimFtp(string pga_type, string folderPath = null, string zipFileName = null) {
+        public async Task<int> KirimFtp(string pga_type, string folderPath = null, string zipFileName = null) {
             if (folderPath == null) {
                 folderPath = _berkas.TempFolderPath;
             }
@@ -130,22 +127,6 @@ namespace DcTransferFtpNew.Handlers {
         /// Jika `zipFileName` Tidak NULL, Maka Hanya Akan Kirim 1 Berkas .ZIP Saja
         /// Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
         /// </summary>
-
-        public async Task<int> KirimFtpLocal(string zipFileName = null, string folderPath = null) {
-            return await KirimFtp("LOCAL", folderPath, zipFileName);
-        }
-
-        public async Task<int> KirimFtpEis(string zipFileName = null, string folderPath = null) {
-            return await KirimFtp("EIS", folderPath, zipFileName);
-        }
-
-        public async Task<int> KirimFtpFingerScan(string zipFileName = null, string folderPath = null) {
-            return await KirimFtp("FINGER", folderPath, zipFileName);
-        }
-
-        public async Task<int> KirimFtpTaxTemp(string zipFileName = null, string folderPath = null) {
-            return await KirimFtp("TTF", folderPath, zipFileName);
-        }
 
         public async Task<int> KirimFtpDev(string processName, string zipFileName = null, bool reportLogHo = false, string folderPath = null) {
             if (folderPath == null) {
