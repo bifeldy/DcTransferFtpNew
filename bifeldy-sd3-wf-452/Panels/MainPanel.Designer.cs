@@ -38,7 +38,7 @@ namespace DcTransferFtpNew.Panels {
             this.btnMiscLogErrorProses = new System.Windows.Forms.Button();
             this.btnMiscLogErrorTransfer = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.navMenu = new System.Windows.Forms.FlowLayoutPanel();
+            this.navMenu = new DcTransferFtpNew.Components.FixAutoScrollFlowLayoutPanel();
             this.textBoxLogInfo = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();

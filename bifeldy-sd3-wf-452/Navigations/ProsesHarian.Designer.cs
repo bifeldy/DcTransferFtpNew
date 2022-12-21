@@ -25,7 +25,7 @@ namespace DcTransferFtpNew.Navigations {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.flowLayoutPanelProsesHarian = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanelProsesHarian = new DcTransferFtpNew.Components.FixAutoScrollFlowLayoutPanel();
             this.panelProsesHarian = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();

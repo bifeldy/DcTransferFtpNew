@@ -90,6 +90,9 @@
     <Compile Include="Abstractions\Navigations.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Components\FixAutoScrollFlowLayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Components\MonthYearPicker.cs">
       <SubType>Component</SubType>
     </Compile>
