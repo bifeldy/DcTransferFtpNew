@@ -67,17 +67,14 @@ namespace DcTransferFtpNew.Logics {
 
                         DataTable dtQuery = await _db.GetIrpc(xDate);
                         string targetFileName = $"IRPC{await _db.GetKodeDc()}{xDate:ddMMyyyyHHmm}.CSV";
-                        string seperator = ",";
-                        if (_berkas.DataTable2CSV(dtQuery, targetFileName, seperator)) {
-                            // _berkas.ListFileForZip.Add(targetFileName);
-                            TargetKirim += JumlahServerKirimCsv;
-                        }
+                        _berkas.DataTable2CSV(dtQuery, targetFileName, ",");
+                        // _berkas.ListFileForZip.Add(targetFileName);
+                        TargetKirim += JumlahServerKirimCsv;
                     }
 
                     // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "IRPC");
-                    // if (_berkas.ZipListFileInFolder(zipFileName) > 0) {
-                    //     TargetKirim += JumlahServerKirimZip;
-                    // }
+                    // _berkas.ZipListFileInFolder(zipFileName);
+                    // TargetKirim += JumlahServerKirimZip;
 
                     BerhasilKirim += await _dcFtpT.KirimFtpWithLog("IRPC"); // *.CSV Sebanyak :: TargetKirim
 

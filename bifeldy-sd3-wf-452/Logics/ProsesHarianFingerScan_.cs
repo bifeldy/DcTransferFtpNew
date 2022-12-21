@@ -61,14 +61,12 @@ namespace DcTransferFtpNew.Logics {
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
 
                     targetFileName = $"FINGER{await _db.GetKodeDc()}{fileTimeFingerScanFormat}.csv";
-                    if (await _qTrfCsv.CreateCSVFile("FINGER", targetFileName)) {
-                        TargetKirim += JumlahServerKirimCsv;
-                    }
+                    await _qTrfCsv.CreateCSVFile("FINGER", targetFileName);
+                    TargetKirim += JumlahServerKirimCsv;
 
                     // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "FINGER");
-                    // if (_berkas.ZipListFileInFolder(zipFileName) > 0) {
-                    //     TargetKirim += JumlahServerKirimZip;
-                    // }
+                    // _berkas.ZipListFileInFolder(zipFileName);
+                    // TargetKirim += JumlahServerKirimZip;
 
                     BerhasilKirim += await _dcFtpT.KirimFtp("FINGER"); // *.CSV Sebanyak :: TargetKirim
 

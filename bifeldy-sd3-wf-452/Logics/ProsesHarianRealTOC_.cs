@@ -67,19 +67,16 @@ namespace DcTransferFtpNew.Logics {
                             throw new Exception($"Gagal Menjalankan Procedure {procName}");
                         }
 
-                        if (await _qTrfCsv.CreateCSVFile("TOC")) {
-                            TargetKirim += JumlahServerKirimCsv;
-                        }
+                        await _qTrfCsv.CreateCSVFile("TOC");
+                        TargetKirim += JumlahServerKirimCsv;
 
-                        if (await _qTrfCsv.CreateCSVFile("TOCHDR")) {
-                            TargetKirim += JumlahServerKirimCsv;
-                        }
+                        await _qTrfCsv.CreateCSVFile("TOCHDR");
+                        TargetKirim += JumlahServerKirimCsv;
                     }
 
                     // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "TOC");
-                    // if (_berkas.ZipListFileInFolder(zipFileName) > 0) {
-                    //     TargetKirim += JumlahServerKirimZip;
-                    // }
+                    // _berkas.ZipListFileInFolder(zipFileName);
+                    // TargetKirim += JumlahServerKirimZip;
 
                     BerhasilKirim += await _dcFtpT.KirimFtpWithLog("TOC"); // *.CSV Sebanyak :: TargetKirim
 

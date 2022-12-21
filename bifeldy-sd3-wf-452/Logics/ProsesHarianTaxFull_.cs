@@ -32,7 +32,7 @@ using DcTransferFtpNew.Models;
 namespace DcTransferFtpNew.Logics {
 
     public interface IProsesHarianTaxFull : ILogics {
-        Task<(int, int)> FromZip(string fileName, DateTime xDate, string folderPath);
+        Task<int> FromZip(string fileName, DateTime xDate, string folderPath);
         Task<(int, int)> FromTransfer(string fileName, Button button, DateTime xDate, string folderPath);
     }
 
@@ -102,10 +102,9 @@ namespace DcTransferFtpNew.Logics {
                             await _db.UpdateDcTtfHdrLog($"status_tax = 'Data Kosong'", xDate);
                         }
 
-                        if (_berkas.DataTable2CSV(dtQueryRes, filename, seperator, TaxTempFullFolderPath)) {
-                            // _berkas.ListFileForZip.Add(filename);
-                            // TargetKirim++;
-                        }
+                        _berkas.DataTable2CSV(dtQueryRes, filename, seperator, TaxTempFullFolderPath);
+                        // _berkas.ListFileForZip.Add(filename);
+                        TargetKirim += JumlahServerKirimCsv;
                     }
                     catch (Exception e) {
                         MessageBox.Show(e.Message, $"{button.Text} :: TAX2", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -154,19 +153,20 @@ namespace DcTransferFtpNew.Logics {
 
                             countBPBok++;
                             statusBlobTaxBPB = "OK";
-                            // TargetKirim++;
-                            // _berkas.ListFileForZip.Add(drTaxBPB["FILE_NAME"].ToString());
                         }
                         catch (Exception e) {
                             countBPBfail++;
                             statusBlobTaxBPB = e.Message;
                             MessageBox.Show(e.Message, $"{button.Text} :: BPB", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
+                        finally {
+                            // _berkas.ListFileForZip.Add(drTaxBPB["FILE_NAME"].ToString());
+                            TargetKirim += JumlahServerKirimCsv;
+                        }
 
                         await _db.InsertNewDcTtfDtlLog(statusBlobTaxBPB, drTaxBPB);
                     }
 
-                    // TargetKirim += (countBPBok + countBPBfail);
                     string statusTaxBPB = "NOT COMPLETED";
                     if (countBPBok + countBPBfail == dtTaxBPB.Rows.Count) {
                         statusTaxBPB = "COMPLETED";
@@ -207,19 +207,20 @@ namespace DcTransferFtpNew.Logics {
 
                             countNRBok++;
                             statusBlobTaxNRB = "OK";
-                            // TargetKirim++;
-                            // _berkas.ListFileForZip.Add(drTaxNRB["FILE_NAME"].ToString());
                         }
                         catch (Exception e) {
                             countNRBfail++;
                             statusBlobTaxNRB = e.Message;
                             MessageBox.Show(e.Message, $"{button.Text} :: NRB", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
+                        finally {
+                            // _berkas.ListFileForZip.Add(drTaxNRB["FILE_NAME"].ToString());
+                            TargetKirim += JumlahServerKirimCsv;
+                        }
 
                         await _db.InsertNewDcTtfDtlLog(statusBlobTaxNRB, drTaxNRB);
                     }
 
-                    // TargetKirim += (countNRBok + countNRBfail);
                     string statusTaxNRB = "NOT COMPLETED";
                     if (countNRBok + countNRBfail == dtTaxNRB.Rows.Count) {
                         statusTaxNRB = "COMPLETED";
@@ -240,7 +241,7 @@ namespace DcTransferFtpNew.Logics {
             }
         }
 
-        public async Task<(int, int)> FromZip(string zipFileName, DateTime xDate, string folderPath) {
+        public async Task<int> FromZip(string zipFileName, DateTime xDate, string folderPath) {
             int totalFileInZip = _berkas.ZipAllFileInFolder(zipFileName, folderPath);
 
             await _db.UpdateDcTtfHdrLog($"FILE_ZIP = {zipFileName}", xDate);
@@ -249,7 +250,7 @@ namespace DcTransferFtpNew.Logics {
                 Directory.Delete(folderPath, true);
             }
 
-            return (totalFileInZip, 1);
+            return totalFileInZip;
         }
 
         public async Task<(int, int)> FromTransfer(string zipFileName, Button button, DateTime xDate, string folderPath) {
@@ -319,8 +320,8 @@ namespace DcTransferFtpNew.Logics {
                         if (cekLog == 0) {
                             await FullCreate(button, xDate, TaxTempFullFolderPath);
 
-                            (int totalFiles, int totalZips) = await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
-                            TargetKirim += (totalFiles * JumlahServerKirimCsv) + (totalZips * JumlahServerKirimZip);
+                            await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
+                            TargetKirim += JumlahServerKirimZip;
 
                             (int csvTerkirim, int zipTerkirim) = await FromTransfer(targetFileName, button, xDate, TaxTempFullFolderPath);
                             BerhasilKirim += (csvTerkirim + zipTerkirim);
@@ -343,8 +344,8 @@ namespace DcTransferFtpNew.Logics {
 
                                     await FullCreate(button, xDate, TaxTempFullFolderPath);
 
-                                    (int totalFiles, int totalZips) = await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
-                                    TargetKirim += (totalFiles * JumlahServerKirimCsv) + (totalZips * JumlahServerKirimZip);
+                                    await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
+                                    TargetKirim += JumlahServerKirimZip;
 
                                     (int csvTerkirim, int zipTerkirim) = await FromTransfer(targetFileName, button, xDate, TaxTempFullFolderPath);
                                     BerhasilKirim += (csvTerkirim + zipTerkirim);

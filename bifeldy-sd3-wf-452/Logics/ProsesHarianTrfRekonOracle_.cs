@@ -71,15 +71,13 @@ namespace DcTransferFtpNew.Logics {
                         }
 
                         targetFileName = $"{fileTimeBRDFormat}{xDate:dd}.CSV";
-                        if (await _qTrfCsv.CreateCSVFile("RECON", targetFileName)) {
-                            TargetKirim += JumlahServerKirimCsv;
-                        }
+                        await _qTrfCsv.CreateCSVFile("RECON", targetFileName);
+                        TargetKirim += JumlahServerKirimCsv;
                     }
 
                     // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "REKON");
-                    // if (_berkas.ZipListFileInFolder(zipFileName) > 0) {
-                    //     TargetKirim += JumlahServerKirimZip;
-                    // }
+                    // _berkas.ZipListFileInFolder(zipFileName);
+                    // TargetKirim += JumlahServerKirimZip;
 
                     BerhasilKirim += await _dcFtpT.KirimFtp("LOCAL"); ; // *.CSV Sebanyak :: TargetKirim
                     BerhasilKirim += await _dcFtpT.KirimFtpDev("REKON"); // *.CSV Sebanyak :: TargetKirim

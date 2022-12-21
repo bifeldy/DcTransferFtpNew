@@ -79,25 +79,21 @@ namespace DcTransferFtpNew.Logics {
                         }
 
                         targetFileName = $"DC{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
-                        if (await _qTrfCsv.CreateCSVFile("DC", targetFileName)) {
-                            TargetKirim += JumlahServerKirimCsv;
-                        }
+                        await _qTrfCsv.CreateCSVFile("DC", targetFileName);
+                        TargetKirim += JumlahServerKirimCsv;
 
                         targetFileName = $"ST{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
-                        if (await _qTrfCsv.CreateCSVFile("ST", targetFileName)) {
-                            TargetKirim += JumlahServerKirimCsv;
-                        }
+                        await _qTrfCsv.CreateCSVFile("ST", targetFileName);
+                        TargetKirim += JumlahServerKirimCsv;
 
                         targetFileName = $"SX{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
-                        if (await _qTrfCsv.CreateCSVFile("SX", targetFileName)) {
-                            TargetKirim += JumlahServerKirimCsv;
-                        }
+                        await _qTrfCsv.CreateCSVFile("SX", targetFileName);
+                        TargetKirim += JumlahServerKirimCsv;
                     }
 
                     string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "DC");
-                    if (_berkas.ZipListFileInFolder(zipFileName) > 0) {
-                        TargetKirim += JumlahServerKirimZip;
-                    }
+                    _berkas.ZipListFileInFolder(zipFileName);
+                    TargetKirim += JumlahServerKirimZip;
 
                     BerhasilKirim += await _dcFtpT.KirimFtp("LOCAL"); // *.CSV Sebanyak :: TargetKirim
                     BerhasilKirim += await _dcFtpT.KirimFtpDev("PLDC", zipFileName, true); // *.ZIP Sebanyak :: 1

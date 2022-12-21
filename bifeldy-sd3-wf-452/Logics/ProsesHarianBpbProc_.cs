@@ -67,15 +67,13 @@ namespace DcTransferFtpNew.Logics {
                             throw new Exception($"Gagal Menjalankan Procedure {procName}");
                         }
 
-                        if (await _qTrfCsv.CreateCSVFile("BPBPROCUR", seperator: "|")) {
-                            TargetKirim += JumlahServerKirimCsv;
-                        }
+                        await _qTrfCsv.CreateCSVFile("BPBPROCUR", seperator: "|");
+                        TargetKirim += JumlahServerKirimCsv;
                     }
 
                     // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "BPBPROCUR");
-                    // if (_berkas.ZipListFileInFolder(zipFileName) > 0) {
-                    //     TargetKirim += JumlahServerKirimZip;
-                    // }
+                    // _berkas.ZipListFileInFolder(zipFileName);
+                    // TargetKirim += JumlahServerKirimZip;
 
                     BerhasilKirim += await _dcFtpT.KirimFtp("BPBPROCUR"); // *.CSV Sebanyak :: TargetKirim
 

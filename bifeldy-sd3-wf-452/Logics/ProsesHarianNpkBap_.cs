@@ -97,9 +97,8 @@ namespace DcTransferFtpNew.Logics {
                     /* ** */
 
                     string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "NPKBAP");
-                    if (_berkas.ZipListFileInFolder(zipFileName) > 0) {
-                        TargetKirim += JumlahServerKirimZip;
-                    }
+                    _berkas.ZipListFileInFolder(zipFileName);
+                    TargetKirim += JumlahServerKirimZip;
 
                     BerhasilKirim += await _dcFtpT.KirimFtp("LOCAL", zipFileName: zipFileName); // *.ZIP Sebanyak :: 1
                     BerhasilKirim += await _dcFtpT.KirimFtpDev("NPKBAP", zipFileName: zipFileName); // *.ZIP Sebanyak :: 1

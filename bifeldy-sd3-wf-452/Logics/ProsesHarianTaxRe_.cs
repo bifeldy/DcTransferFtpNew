@@ -131,10 +131,9 @@ namespace DcTransferFtpNew.Logics {
                                                     await _db.UpdateDcTtfHdrLog($"status_tax = 'Data Kosong'", xDate);
                                                 }
 
-                                                if (_berkas.DataTable2CSV(dtTax2RE, targetFileName, seperator, TaxTempReFolderPath)) {
-                                                    // _berkas.ListFileForZip.Add(filename);
-                                                    // TargetKirim++;
-                                                }
+                                                _berkas.DataTable2CSV(dtTax2RE, targetFileName, seperator, TaxTempReFolderPath);
+                                                // _berkas.ListFileForZip.Add(filename);
+                                                TargetKirim += JumlahServerKirimCsv;
                                             }
                                             catch (Exception ex) {
                                                 MessageBox.Show(ex.Message, $"{button.Text} :: TAX2RE", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -170,13 +169,15 @@ namespace DcTransferFtpNew.Logics {
 
                                                     countBPBok++;
                                                     statusBlobTaxBPBRe = "OK";
-                                                    // TargetKirim++;
-                                                    // _berkas.ListFileForZip.Add(drTaxBPB["FILE_NAME"].ToString());
                                                 }
                                                 catch (Exception ex) {
                                                     countBPBfail++;
                                                     statusBlobTaxBPBRe = ex.Message;
                                                     MessageBox.Show(ex.Message, $"{button.Text} :: BPBRe", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                                }
+                                                finally {
+                                                    // _berkas.ListFileForZip.Add(drTaxBPBRe["FILE_NAME"].ToString());
+                                                    TargetKirim += JumlahServerKirimCsv;
                                                 }
 
                                                 await _db.UpdateDcTtfDtlLog(
@@ -189,7 +190,6 @@ namespace DcTransferFtpNew.Logics {
                                                 );
                                             }
 
-                                            // TargetKirim += (countBPBok + countBPBfail);
                                             string statusTaxBPBRe = "NOT COMPLETED";
                                             if (countBPBok + countBPBfail == dtTaxBPBRe.Rows.Count) {
                                                 statusTaxBPBRe = "COMPLETED";
@@ -234,13 +234,15 @@ namespace DcTransferFtpNew.Logics {
 
                                                     countNRBok++;
                                                     statusBlobTaxNRBRe = "OK";
-                                                    // TargetKirim++;
-                                                    // _berkas.ListFileForZip.Add(drTaxNRB["FILE_NAME"].ToString());
                                                 }
                                                 catch (Exception ex) {
                                                     countNRBfail++;
                                                     statusBlobTaxNRBRe = ex.Message;
                                                     MessageBox.Show(ex.Message, $"{button.Text} :: NRBRe", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                                }
+                                                finally {
+                                                    // _berkas.ListFileForZip.Add(drTaxNRBRe["FILE_NAME"].ToString());
+                                                    TargetKirim += JumlahServerKirimCsv;
                                                 }
 
                                                 await _db.UpdateDcTtfDtlLog(
@@ -253,7 +255,6 @@ namespace DcTransferFtpNew.Logics {
                                                 );
                                             }
 
-                                            // TargetKirim += (countNRBok + countNRBfail);
                                             string statusTaxNRBRe = "NOT COMPLETED";
                                             if (countNRBok + countNRBfail == dtTaxNRBRe.Rows.Count) {
                                                 statusTaxNRBRe = "COMPLETED";
@@ -281,8 +282,8 @@ namespace DcTransferFtpNew.Logics {
                                         targetFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}_{countSeq}.ZIP";
 
                                         // Sama Persis Dari Yang Full
-                                        (int totalFiles, int totalZips) = await _prosesHarianTaxFull.FromZip(targetFileName, xDate, TaxTempReFolderPath);
-                                        TargetKirim += (totalFiles * JumlahServerKirimCsv) + (totalZips * JumlahServerKirimZip);
+                                        await _prosesHarianTaxFull.FromZip(targetFileName, xDate, TaxTempReFolderPath);
+                                        TargetKirim += JumlahServerKirimZip;
 
                                         (int csvTerkirim, int zipTerkirim) = await _prosesHarianTaxFull.FromTransfer(targetFileName, button, xDate, TaxTempReFolderPath);
                                         BerhasilKirim += (csvTerkirim + zipTerkirim);
