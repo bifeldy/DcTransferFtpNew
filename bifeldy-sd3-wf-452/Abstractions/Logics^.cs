@@ -66,7 +66,7 @@ namespace DcTransferFtpNew.Abstractions {
         protected void PrepareBulanan(object sender, EventArgs e, Control currentControl) {
             SetBtnSenderSelected(sender);
             CProsesBulanan prosesBulanan = (CProsesBulanan) currentControl;
-            datePeriode = prosesBulanan.DateTimePickerBulanan.Value.Date;
+            datePeriode = prosesBulanan.DateTimePeriodeBulanan.Value.Date;
         }
 
         protected bool IsDateRangeValid(DateTime dateStart, DateTime dateEnd) {
