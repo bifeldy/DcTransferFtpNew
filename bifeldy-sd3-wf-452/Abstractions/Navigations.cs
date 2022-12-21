@@ -30,6 +30,8 @@ namespace DcTransferFtpNew.Abstractions {
         private readonly ILogger _logger;
         private readonly IDb _db;
 
+        public CNavigations() { }
+
         public CNavigations(ILogger logger, IDb db) {
             _logger = logger;
             _db = db;
