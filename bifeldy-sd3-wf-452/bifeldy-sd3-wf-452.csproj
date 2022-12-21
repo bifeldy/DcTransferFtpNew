@@ -90,6 +90,12 @@
     <Compile Include="Abstractions\Navigations.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Components\MonthYearPicker.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\NoBorderTab.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +112,7 @@
     <Compile Include="Handlers\DcFtpT_.cs" />
     <Compile Include="Handlers\MenuNavigations_.cs" />
     <Compile Include="Handlers\QTrfCsv_.cs" />
+    <Compile Include="Logics\ProsesBulananDataBulanan.cs" />
     <Compile Include="Logics\ProsesHarianBpbProc_.cs" />
     <Compile Include="Logics\ProsesHarianEndorsement_.cs" />
     <Compile Include="Logics\ProsesHarianDataHarian_.cs" />
