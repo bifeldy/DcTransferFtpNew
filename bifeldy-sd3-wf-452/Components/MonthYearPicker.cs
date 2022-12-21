@@ -8,6 +8,7 @@
  * Mail         :: bias@indomaret.co.id
  * 
  * Catatan      :: Custom Toolbox Date Picker Hanya Bulan Dan Tahun Saja
+ *              :: Seharusnya Tidak Untuk Didaftarkan Ke DI Container
  *              :: https://stackoverflow.com/questions/34846455/how-can-i-set-the-datetimepicker-dropdown-to-show-months-only
  * 
  */

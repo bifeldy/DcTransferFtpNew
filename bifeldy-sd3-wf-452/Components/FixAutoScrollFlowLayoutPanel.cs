@@ -8,6 +8,7 @@
  * Mail         :: bias@indomaret.co.id
  * 
  * Catatan      :: Custom Toolbox FlowLayoutPanel Yang Auto Scoll Mental Ke Atas
+ *              :: Seharusnya Tidak Untuk Didaftarkan Ke DI Container
  *              :: https://stackoverflow.com/questions/6443086/prevent-flowlayoutpanel-scrolling-to-updated-control
  * 
  */

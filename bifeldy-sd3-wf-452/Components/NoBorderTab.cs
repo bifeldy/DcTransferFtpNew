@@ -8,6 +8,7 @@
  * Mail         :: bias@indomaret.co.id
  * 
  * Catatan      :: Custom Tab Control Tanpa Border
+ *              :: Seharusnya Tidak Untuk Didaftarkan Ke DI Container
  *              :: https://stackoverflow.com/questions/4912354/how-do-i-create-a-tabcontrol-with-no-tab-headers
  * 
  */
