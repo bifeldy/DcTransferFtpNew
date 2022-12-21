@@ -76,7 +76,10 @@ namespace DcTransferFtpNew.Logics {
                     }
 
                     await _qTrfCsv.CreateCSVFile("NPK");
+                    TargetKirim += JumlahServerKirimCsv;
+
                     await _qTrfCsv.CreateCSVFile("NPKHDR");
+                    TargetKirim += JumlahServerKirimCsv;
 
                     /* BAP */
 
@@ -92,7 +95,10 @@ namespace DcTransferFtpNew.Logics {
                     }
 
                     await _qTrfCsv.CreateCSVFile("BAP");
+                    TargetKirim += JumlahServerKirimCsv;
+
                     await _qTrfCsv.CreateCSVFile("BAPHDR");
+                    TargetKirim += JumlahServerKirimCsv;
 
                     /* ** */
 
