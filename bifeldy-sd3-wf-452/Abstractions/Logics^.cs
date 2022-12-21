@@ -43,6 +43,7 @@ namespace DcTransferFtpNew.Abstractions {
 
         protected DateTime dateStart = DateTime.MinValue;
         protected DateTime dateEnd = DateTime.MinValue;
+        protected DateTime datePeriode = DateTime.MinValue;
 
         public CLogics(IDb db) {
             _db = db;
@@ -60,6 +61,12 @@ namespace DcTransferFtpNew.Abstractions {
             CProsesHarian prosesHarian = (CProsesHarian) currentControl;
             dateStart = prosesHarian.DateTimePickerHarianAwal.Value.Date;
             dateEnd = prosesHarian.DateTimePickerHarianAkhir.Value.Date;
+        }
+
+        protected void PrepareBulanan(object sender, EventArgs e, Control currentControl) {
+            SetBtnSenderSelected(sender);
+            CProsesBulanan prosesBulanan = (CProsesBulanan) currentControl;
+            datePeriode = prosesBulanan.DateTimePickerBulanan.Value.Date;
         }
 
         protected bool IsDateRangeValid(DateTime dateStart, DateTime dateEnd) {
