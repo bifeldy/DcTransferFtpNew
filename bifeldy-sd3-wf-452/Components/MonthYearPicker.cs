@@ -7,8 +7,8 @@
  * Department   :: IT SD 03
  * Mail         :: bias@indomaret.co.id
  * 
- * Catatan      :: Custom Toolbox Date Picker
- *              :: Tapi Hanya Bulan Dan Tahun Saja
+ * Catatan      :: Custom Toolbox Date Picker Hanya Bulan Dan Tahun Saja
+ *              :: https://stackoverflow.com/questions/34846455/how-can-i-set-the-datetimepicker-dropdown-to-show-months-only
  * 
  */
 
