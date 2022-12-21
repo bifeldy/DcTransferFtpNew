@@ -28,7 +28,7 @@ namespace DcTransferFtpNew.Navigations {
             this.panelProsesBulanan = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.flowLayoutPanelProsesBulanan = new System.Windows.Forms.FlowLayoutPanel();
-            this.dtpBulanan = new System.Windows.Forms.DateTimePicker();
+            this.dtpBulanan = new DcTransferFtpNew.Components.MonthYearPicker();
             this.panelProsesBulanan.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,13 +69,11 @@ namespace DcTransferFtpNew.Navigations {
             // 
             // dtpBulanan
             // 
-            this.dtpBulanan.CustomFormat = "MMMM-yyyy";
-            this.dtpBulanan.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpBulanan.CustomFormat = "MMMM yyyy";
             this.dtpBulanan.Location = new System.Drawing.Point(13, 35);
             this.dtpBulanan.Name = "dtpBulanan";
-            this.dtpBulanan.ShowUpDown = true;
             this.dtpBulanan.Size = new System.Drawing.Size(207, 20);
-            this.dtpBulanan.TabIndex = 18;
+            this.dtpBulanan.TabIndex = 19;
             // 
             // CProsesBulanan
             // 
@@ -96,7 +94,7 @@ namespace DcTransferFtpNew.Navigations {
         private System.Windows.Forms.Panel panelProsesBulanan;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelProsesBulanan;
-        internal System.Windows.Forms.DateTimePicker dtpBulanan;
+        private Components.MonthYearPicker dtpBulanan;
     }
 
 }

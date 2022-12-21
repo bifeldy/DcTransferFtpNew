@@ -39,6 +39,11 @@ namespace DcTransferFtpNew.Navigations {
         private void OnInit() {
             Dock = DockStyle.Fill;
             InitializeButtonProsesHarian();
+
+            dateTimePickerHarianAwal.MaxDate = DateTime.Now;
+            dateTimePickerHarianAkhir.MaxDate = DateTime.Now;
+
+            dateTimePickerHarianAkhir.MinDate = dateTimePickerHarianAwal.Value;
         }
 
         private void CProsesHarian_Load(object sender, EventArgs e) {
@@ -59,6 +64,13 @@ namespace DcTransferFtpNew.Navigations {
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianRealToc", Text = "Data TOC" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianBpbProc", Text = "Data BPB Proc" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianNpkBap", Text = "Data NPK BAP" });
+        }
+
+        private void dateTimePickerHarianAwal_ValueChanged(object sender, EventArgs e) {
+            if (dateTimePickerHarianAwal.Value > dateTimePickerHarianAkhir.Value) {
+                dateTimePickerHarianAkhir.Value = dateTimePickerHarianAwal.Value;
+            }
+            dateTimePickerHarianAkhir.MinDate = dateTimePickerHarianAwal.Value;
         }
 
     }

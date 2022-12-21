@@ -32,11 +32,13 @@ namespace DcTransferFtpNew.Navigations {
             OnInit();
         }
 
-        public DateTimePicker DateTimePickerBulanan => DateTimePickerBulanan;
+        public DateTimePicker DateTimePeriodeBulanan => dtpBulanan;
 
         private void OnInit() {
             Dock = DockStyle.Fill;
             InitializeButtonProsesBulanan();
+
+            dtpBulanan.MaxDate = DateTime.Now;
         }
 
         private void CProsesBulanan_Load(object sender, EventArgs e) {
