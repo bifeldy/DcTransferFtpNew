@@ -34,7 +34,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<string> Q_TRF_CSV__GET(string kolom, string q_filename);
         Task<string> DC_FILE_SCHEDULER_T__GET(string kolom, string file_key);
         Task<DbDataReader> GetFtpInfo(string pga_type);
-        Task<string> GetURLWebServiceHO();
+        Task<string> GetURLWebService(string webType);
         Task<string> GetDcExt();
         Task<string> GetWinFunction();
         /* Proses Harian Data Irpc */
@@ -139,8 +139,13 @@ namespace DcTransferFtpNew.Handlers {
             );
         }
 
-        public async Task<string> GetURLWebServiceHO() {
-            return await OraPg.ExecScalarAsync<string>($@"SELECT WEB_URL FROM DC_WEBSERVICE_T WHERE WEB_TYPE = 'HO'");
+        public async Task<string> GetURLWebService(string webType) {
+            return await OraPg.ExecScalarAsync<string>(
+                $@"SELECT WEB_URL FROM DC_WEBSERVICE_T WHERE WEB_TYPE = :web_type",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "web_type", VALUE = webType }
+                }
+            );
         }
 
         public async Task<string> GetDcExt() {
