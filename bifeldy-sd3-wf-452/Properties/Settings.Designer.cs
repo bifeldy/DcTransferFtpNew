@@ -32,5 +32,35 @@ namespace DcTransferFtpNew.Properties {
                 return ((string)(this["DcTransferFtpNew_localhost_TTFLOGService"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:62204/Service.asmx")]
+        public string DcTransferFtpNew_GetDataAntarDC_Service {
+            get {
+                return ((string)(this["DcTransferFtpNew_GetDataAntarDC_Service"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://192.168.24.125:1717/DSI_WS.asmx")]
+        public string DcTransferFtpNew_DSI_WS_DSI_WS {
+            get {
+                return ((string)(this["DcTransferFtpNew_DSI_WS_DSI_WS"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://172.24.16.171/GetAnalisaDSIHO/Service.asmx")]
+        public string DcTransferFtpNew_GetAnalisaDSIHO_Service {
+            get {
+                return ((string)(this["DcTransferFtpNew_GetAnalisaDSIHO_Service"]));
+            }
+        }
     }
 }

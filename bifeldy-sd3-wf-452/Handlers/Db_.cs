@@ -59,6 +59,10 @@ namespace DcTransferFtpNew.Handlers {
         Task<int> TaxTempHitungUlangFail(DateTime xDate, string typeTrans);
         Task<CDbExecProcResult> CALL_ENDORSEMENT(DateTime P_TGL, string P_QUERY = null, string P_FILENAME = null, string P_QUERY2 = null, string P_FILENAME2 = null, string P_MSG = null);
         Task<CDbExecProcResult> CALL_NPK_BAP(string procName, string TGLAWALPAR, string TGLAKHIRPAR, string V_RESULT = null);
+        Task<CDbExecProcResult> CALL_ID_BULAN_G_EVO(string procName, DateTime dateTime);
+        Task<CDbExecProcResult> CALL_DataBulananCentralisasiHO(string procName, string tahunBulan);
+        Task<bool> BulananDeleteDcDsiWsToko(string fileTimeIdBulanGFormat);
+        Task<DataTable> BulananDsiGetDataTable(string periode);
     }
 
     public sealed class CDb : CDbHandler, IDb {
@@ -464,6 +468,8 @@ namespace DcTransferFtpNew.Handlers {
             );
         }
 
+        /* ** */
+
         public async Task<CDbExecProcResult> CALL_ENDORSEMENT(DateTime P_TGL, string P_QUERY = null, string P_FILENAME = null, string P_QUERY2 = null, string P_FILENAME2 = null, string P_MSG = null) {
             return await OraPg.ExecProcedureAsync(
                 "CREATE_ENDORSMENT_CSV",
@@ -488,6 +494,61 @@ namespace DcTransferFtpNew.Handlers {
                 }
             );
         }
+
+        /* Data Bulanan */
+
+        public async Task<CDbExecProcResult> CALL_ID_BULAN_G_EVO(string procName, DateTime dateTime) {
+            return await OraPg.ExecProcedureAsync(
+                procName,
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "p_tgl", VALUE = dateTime },
+                    new CDbQueryParamBind { NAME = "p_dckode", VALUE = await GetKodeDc() }
+                }
+            );
+        }
+
+        public async Task<CDbExecProcResult> CALL_DataBulananCentralisasiHO(string procName, string tahunBulan) {
+            return await OraPg.ExecProcedureAsync(
+                procName,
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "p_tahunbulan", VALUE = tahunBulan }
+                }
+            );
+        }
+
+        public async Task<bool> BulananDeleteDcDsiWsToko(string fileTimeIdBulanGFormat) {
+            return await OraPg.ExecQueryAsync(
+                $@"DELETE FROM DC_DSI_WSTOKO WHERE THNBLN = :thn_bln",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "thn_bln", VALUE = fileTimeIdBulanGFormat }
+                }
+            );
+        }
+
+        public async Task<DataTable> BulananDsiGetDataTable(string periode) {
+            return await OraPg.GetDataTableAsync(
+                $@"
+                    SELECT
+                        KDDC, PERIODE, JML_HARI, PLUID, DIV, DEP,
+                        KAT, TAG, KD_SUPPLIER, NM_SUPPLIER, QTY_SLD_AWL, RP_SLD_AWL,
+                        QTY_SLD_AKHR, RP_SLD_AKHR, QTY_NPB, RP_NPB, DSI, UPDREC_DATE,
+                        HPP_TOKO
+                    FROM
+                        dc_analisa_dsi_t
+                    WHERE
+                        kddc = :kddc
+                        AND periode = :periode
+                    ORDER BY
+                        pluid
+                ",
+                new List<CDbQueryParamBind>() {
+                    new CDbQueryParamBind { NAME = "kddc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "periode", VALUE = periode }
+                }
+            );
+        }
+
+        /* ** */
 
     }
 

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="GetDataAntarDC">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetDataAntarDCResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDataAntarDCResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNoTglPB">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="p_kodeDCAsal" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="p_kodeDCTujuan" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNoTglPBResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetNoTglPBResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Cek_Rekon">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="p_dckirim" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="p_dctujuan" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="p_docno" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="p_tgl" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Cek_RekonResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Cek_RekonResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Get_BpbDc">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="p_dckirim" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="p_dctujuan" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="p_docno" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="p_tgl" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Get_BpbDcResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Get_BpbDcResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="del_npb">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="p_dckirim" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="p_dctujuan" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="p_docno" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="p_tgl" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="p_isUpdate" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="del_npbResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="del_npbResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ins_rekon_bpbdc">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="p_type_trans" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="p_hdrid" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="p_byte" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ins_rekon_bpbdcResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ins_rekon_bpbdcResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetDataAntarDCSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDataAntarDC" />
+  </wsdl:message>
+  <wsdl:message name="GetDataAntarDCSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDataAntarDCResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetNoTglPBSoapIn">
+    <wsdl:part name="parameters" element="tns:GetNoTglPB" />
+  </wsdl:message>
+  <wsdl:message name="GetNoTglPBSoapOut">
+    <wsdl:part name="parameters" element="tns:GetNoTglPBResponse" />
+  </wsdl:message>
+  <wsdl:message name="Cek_RekonSoapIn">
+    <wsdl:part name="parameters" element="tns:Cek_Rekon" />
+  </wsdl:message>
+  <wsdl:message name="Cek_RekonSoapOut">
+    <wsdl:part name="parameters" element="tns:Cek_RekonResponse" />
+  </wsdl:message>
+  <wsdl:message name="Get_BpbDcSoapIn">
+    <wsdl:part name="parameters" element="tns:Get_BpbDc" />
+  </wsdl:message>
+  <wsdl:message name="Get_BpbDcSoapOut">
+    <wsdl:part name="parameters" element="tns:Get_BpbDcResponse" />
+  </wsdl:message>
+  <wsdl:message name="del_npbSoapIn">
+    <wsdl:part name="parameters" element="tns:del_npb" />
+  </wsdl:message>
+  <wsdl:message name="del_npbSoapOut">
+    <wsdl:part name="parameters" element="tns:del_npbResponse" />
+  </wsdl:message>
+  <wsdl:message name="ins_rekon_bpbdcSoapIn">
+    <wsdl:part name="parameters" element="tns:ins_rekon_bpbdc" />
+  </wsdl:message>
+  <wsdl:message name="ins_rekon_bpbdcSoapOut">
+    <wsdl:part name="parameters" element="tns:ins_rekon_bpbdcResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ServiceSoap">
+    <wsdl:operation name="GetDataAntarDC">
+      <wsdl:input message="tns:GetDataAntarDCSoapIn" />
+      <wsdl:output message="tns:GetDataAntarDCSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNoTglPB">
+      <wsdl:input message="tns:GetNoTglPBSoapIn" />
+      <wsdl:output message="tns:GetNoTglPBSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Cek_Rekon">
+      <wsdl:input message="tns:Cek_RekonSoapIn" />
+      <wsdl:output message="tns:Cek_RekonSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Get_BpbDc">
+      <wsdl:input message="tns:Get_BpbDcSoapIn" />
+      <wsdl:output message="tns:Get_BpbDcSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="del_npb">
+      <wsdl:input message="tns:del_npbSoapIn" />
+      <wsdl:output message="tns:del_npbSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ins_rekon_bpbdc">
+      <wsdl:input message="tns:ins_rekon_bpbdcSoapIn" />
+      <wsdl:output message="tns:ins_rekon_bpbdcSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetDataAntarDC">
+      <soap:operation soapAction="http://tempuri.org/GetDataAntarDC" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNoTglPB">
+      <soap:operation soapAction="http://tempuri.org/GetNoTglPB" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Cek_Rekon">
+      <soap:operation soapAction="http://tempuri.org/Cek_Rekon" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Get_BpbDc">
+      <soap:operation soapAction="http://tempuri.org/Get_BpbDc" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="del_npb">
+      <soap:operation soapAction="http://tempuri.org/del_npb" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ins_rekon_bpbdc">
+      <soap:operation soapAction="http://tempuri.org/ins_rekon_bpbdc" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetDataAntarDC">
+      <soap12:operation soapAction="http://tempuri.org/GetDataAntarDC" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNoTglPB">
+      <soap12:operation soapAction="http://tempuri.org/GetNoTglPB" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Cek_Rekon">
+      <soap12:operation soapAction="http://tempuri.org/Cek_Rekon" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Get_BpbDc">
+      <soap12:operation soapAction="http://tempuri.org/Get_BpbDc" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="del_npb">
+      <soap12:operation soapAction="http://tempuri.org/del_npb" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ins_rekon_bpbdc">
+      <soap12:operation soapAction="http://tempuri.org/ins_rekon_bpbdc" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service">
+    <wsdl:port name="ServiceSoap" binding="tns:ServiceSoap">
+      <soap:address location="http://localhost:62204/Service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServiceSoap12" binding="tns:ServiceSoap12">
+      <soap12:address location="http://localhost:62204/Service.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

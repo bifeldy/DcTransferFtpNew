@@ -128,6 +128,9 @@
     <Compile Include="Logics\ProsesHarianTaxFull_.cs" />
     <Compile Include="Logics\ProsesHarianTaxRe_.cs" />
     <Compile Include="Logics\ProsesHarianTrfRekonOracle_.cs" />
+    <Compile Include="Models\DataAntarDc.cs" />
+    <Compile Include="Models\DataDSI_ANALISA.cs" />
+    <Compile Include="Models\DataDSI_WS.cs" />
     <Compile Include="Models\DCHO_TTF_HDR_LOG.cs" />
     <Compile Include="Models\DC_FTP_T.cs" />
     <Compile Include="Navigations\ProsesBulanan.cs">
@@ -170,7 +173,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Utilities\App_.cs" />
+    <Compile Include="Web References\DSI_WS\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\GetAnalisaDSIHO\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="Web References\localhost\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\GetDataAntarDC\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
@@ -220,6 +238,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Web References\DSI_WS\DSI_WS.wsdl" />
+    <None Include="Web References\DSI_WS\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\GetAnalisaDSIHO\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\GetAnalisaDSIHO\Service.wsdl" />
+    <None Include="Web References\GetDataAntarDC\Service.wsdl" />
     <None Include="Web References\localhost\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -258,6 +287,13 @@
     <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Web References\GetAnalisaDSIHO\Service.disco" />
+    <None Include="Web References\DSI_WS\DSI_WS.disco" />
+    <None Include="Web References\GetDataAntarDC\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\GetDataAntarDC\Service.disco" />
     <None Include="Web References\localhost\Service.disco" />
   </ItemGroup>
   <ItemGroup>
@@ -270,6 +306,39 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
+    <WebReferenceUrl Include="D:\_data\Bifeldy\_sources\DcTransferFtpNew\bifeldy-sd3-wf-452\Libraries\DSI_WS\DSI_WS.disco">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\DSI_WS\</RelPath>
+      <UpdateFromURL>D:\_data\Bifeldy\_sources\DcTransferFtpNew\bifeldy-sd3-wf-452\Libraries\DSI_WS\DSI_WS.disco</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>DcTransferFtpNew_DSI_WS_DSI_WS</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="D:\_data\Bifeldy\_sources\DcTransferFtpNew\bifeldy-sd3-wf-452\Libraries\GetAnalisaDSIHO\Service.disco">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\GetAnalisaDSIHO\</RelPath>
+      <UpdateFromURL>D:\_data\Bifeldy\_sources\DcTransferFtpNew\bifeldy-sd3-wf-452\Libraries\GetAnalisaDSIHO\Service.disco</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>DcTransferFtpNew_GetAnalisaDSIHO_Service</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="D:\_data\Bifeldy\_sources\DcTransferFtpNew\bifeldy-sd3-wf-452\Libraries\GetDataAntarDC\Service.disco">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\GetDataAntarDC\</RelPath>
+      <UpdateFromURL>D:\_data\Bifeldy\_sources\DcTransferFtpNew\bifeldy-sd3-wf-452\Libraries\GetDataAntarDC\Service.disco</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>DcTransferFtpNew_GetDataAntarDC_Service</CachedSettingsPropName>
+    </WebReferenceUrl>
     <WebReferenceUrl Include="D:\_data\Bifeldy\_sources\DcTransferFtpNew\bifeldy-sd3-wf-452\Libraries\localhost\Service.wsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\localhost\</RelPath>

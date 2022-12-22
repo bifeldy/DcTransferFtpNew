@@ -13,6 +13,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,6 +24,7 @@ namespace DcTransferFtpNew.Handlers {
 
     public interface IQTrfCsv {
         Task<bool> CreateCSVFile(string q_filename, string filename = null, string seperator = null, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true);
+        Task<List<string>> GetFileNameMulti(List<string> q_filename);
     }
 
     public sealed class CQTrfCsv : IQTrfCsv {
@@ -54,6 +56,14 @@ namespace DcTransferFtpNew.Handlers {
                 }
             }
             return res;
+        }
+
+        public async Task<List<string>> GetFileNameMulti(List<string> q_filename) {
+            List<string> fileNames = new List<string>();
+            foreach(string q in q_filename) {
+                fileNames.Add(await _db.Q_TRF_CSV__GET("q_namafile", q));
+            }
+            return fileNames;
         }
 
     }

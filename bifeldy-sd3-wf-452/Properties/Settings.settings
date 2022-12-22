@@ -5,5 +5,14 @@
     <Setting Name="DcTransferFtpNew_localhost_TTFLOGService" Type="(Web Service URL)" Scope="Application">
       <Value Profile="(Default)">http://localhost:52242/Service.asmx</Value>
     </Setting>
+    <Setting Name="DcTransferFtpNew_GetDataAntarDC_Service" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost:62204/Service.asmx</Value>
+    </Setting>
+    <Setting Name="DcTransferFtpNew_DSI_WS_DSI_WS" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://192.168.24.125:1717/DSI_WS.asmx</Value>
+    </Setting>
+    <Setting Name="DcTransferFtpNew_GetAnalisaDSIHO_Service" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://172.24.16.171/GetAnalisaDSIHO/Service.asmx</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
