@@ -106,7 +106,7 @@ namespace DcTransferFtpNew.Logics {
                     _berkas.ZipListFileInFolder(zipFileName);
                     TargetKirim += JumlahServerKirimZip;
 
-                    BerhasilKirim += await _dcFtpT.KirimFtp("LOCAL"); // *.CSV Sebanyak :: TargetKirim
+                    BerhasilKirim += await _dcFtpT.KirimAllCsvOrZip("LOCAL"); // *.CSV Sebanyak :: TargetKirim
                     BerhasilKirim += await _dcFtpT.KirimFtpDev("ICHO", zipFileName, true); // *.ZIP Sebanyak :: 1
 
                     _berkas.CleanUp();

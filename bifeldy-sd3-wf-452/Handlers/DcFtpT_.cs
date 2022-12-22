@@ -32,7 +32,8 @@ using DcTransferFtpNew.Models;
 namespace DcTransferFtpNew.Handlers {
 
     public interface IDcFtpT {
-        Task<int> KirimFtp(string pga_type, string folderPath = null, string zipFileName = null);
+        Task<int> KirimAllCsvOrZip(string pga_type, string folderPath = null, string zipFileName = null);
+        Task<int> KirimSingleCsv(string pga_type, string csvFileName, string folderPath = null);
         Task<int> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false, string folderPath = null);
         Task<int> KirimFtpWithLog(string pgaType, string zipFileName = null, string folderPath = null);
     }
@@ -106,7 +107,7 @@ namespace DcTransferFtpNew.Handlers {
             return ftpObject;
         }
 
-        public async Task<int> KirimFtp(string pga_type, string folderPath = null, string zipFileName = null) {
+        public async Task<int> KirimAllCsvOrZip(string pga_type, string folderPath = null, string zipFileName = null) {
             if (folderPath == null) {
                 folderPath = _berkas.TempFolderPath;
             }
@@ -119,6 +120,23 @@ namespace DcTransferFtpNew.Handlers {
                 ftpInfo.PGA_FOLDER,
                 zipFileName == null ? folderPath : _berkas.ZipFolderPath,
                 zipFileName
+            );
+            return ftpResultSent.Where(r => r.FtpStatusSendGet == FtpStatus.Success).ToArray().Length;
+        }
+
+        public async Task<int> KirimSingleCsv(string pga_type, string csvFileName, string folderPath = null) {
+            if (folderPath == null) {
+                folderPath = _berkas.TempFolderPath;
+            }
+            DC_FTP_T ftpInfo = await GetFtpInfo(pga_type);
+            List<CFtpResultSendGet> ftpResultSent = await _ftp.CreateFtpConnectionAndSendFtpFiles(
+                ftpInfo.PGA_IPADDRESS,
+                int.Parse(ftpInfo.PGA_PORTNUMBER),
+                ftpInfo.PGA_USERNAME,
+                ftpInfo.PGA_PASSWORD,
+                ftpInfo.PGA_FOLDER,
+                folderPath,
+                csvFileName
             );
             return ftpResultSent.Where(r => r.FtpStatusSendGet == FtpStatus.Success).ToArray().Length;
         }

@@ -76,10 +76,10 @@ namespace DcTransferFtpNew.Logics {
                     }
 
                     await _qTrfCsv.CreateCSVFile("NPK");
-                    TargetKirim += JumlahServerKirimCsv;
+                    // TargetKirim += JumlahServerKirimCsv;
 
                     await _qTrfCsv.CreateCSVFile("NPKHDR");
-                    TargetKirim += JumlahServerKirimCsv;
+                    // TargetKirim += JumlahServerKirimCsv;
 
                     /* BAP */
 
@@ -95,10 +95,10 @@ namespace DcTransferFtpNew.Logics {
                     }
 
                     await _qTrfCsv.CreateCSVFile("BAP");
-                    TargetKirim += JumlahServerKirimCsv;
+                    // TargetKirim += JumlahServerKirimCsv;
 
                     await _qTrfCsv.CreateCSVFile("BAPHDR");
-                    TargetKirim += JumlahServerKirimCsv;
+                    // TargetKirim += JumlahServerKirimCsv;
 
                     /* ** */
 
@@ -106,7 +106,7 @@ namespace DcTransferFtpNew.Logics {
                     _berkas.ZipListFileInFolder(zipFileName);
                     TargetKirim += JumlahServerKirimZip;
 
-                    BerhasilKirim += await _dcFtpT.KirimFtp("LOCAL", zipFileName: zipFileName); // *.ZIP Sebanyak :: 1
+                    BerhasilKirim += await _dcFtpT.KirimAllCsvOrZip("LOCAL", zipFileName: zipFileName); // *.ZIP Sebanyak :: 1
                     BerhasilKirim += await _dcFtpT.KirimFtpDev("NPKBAP", zipFileName: zipFileName); // *.ZIP Sebanyak :: 1
 
                     _berkas.CleanUp();
