@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -198,19 +197,19 @@ namespace DcTransferFtpNew.Logics {
                 await _qTrfCsv.CreateCSVFile("JKM", jkm, addToQueueForZip: false);
                 TargetKirim += 1;
 
-         //       // Tambahan insert data DSI 22/03/2019 Sulis
-         //       DSI_WS.DSI_WS dsi_ws = new DSI_WS.DSI_WS {
-         //           Url = await _db.GetURLWebService("DSI_WSTOKO") ?? _app.GetConfig("ws_dsi")
-         //       };
-         //       string responseDsiDetail = dsi_ws.Get_DSIDetail(datePeriode);
-         //
-         //       List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObj<List<DataDSI_WS>>(responseDsiDetail);
-         //       if (objListDataDSIWS.Count > 0) {
-         //           string tabel = "DC_DSI_WSTOKO";
-         //           DataTable dtInsert = _converter.ConvertListToDataTable(tabel, objListDataDSIWS);
-         //           await _db.BulananDeleteDcDsiWsToko(fileTimeIdBulanGFormat);
-         //           await _db.BulkInsertIntoOraPg(tabel, dtInsert);
-         //       }
+                // Tambahan insert data DSI 22/03/2019 Sulis
+                DSI_WS.DSI_WS dsi_ws = new DSI_WS.DSI_WS {
+                    Url = await _db.GetURLWebService("DSI_WSTOKO") ?? _app.GetConfig("ws_dsi")
+                };
+                string responseDsiDetail = dsi_ws.Get_DSIDetail(datePeriode);
+         
+                List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObj<List<DataDSI_WS>>(responseDsiDetail);
+                if (objListDataDSIWS.Count > 0) {
+                    string tabel = "DC_DSI_WSTOKO";
+                    DataTable dtInsert = _converter.ConvertListToDataTable(tabel, objListDataDSIWS);
+                    await _db.BulananDeleteDcDsiWsToko(fileTimeIdBulanGFormat);
+                    await _db.BulkInsertIntoOraPg(tabel, dtInsert);
+                }
 
                 string procName6 = "GET_DSI_EVO";
                 CDbExecProcResult res6 = await _db.CALL_DataBulananCentralisasiHO(procName6, $"{datePeriode:yyyymm}");
@@ -218,13 +217,13 @@ namespace DcTransferFtpNew.Logics {
                     throw new Exception($"Gagal Menjalankan Procedure {procName6}");
                 }
 
-         //       GetAnalisaDSIHO.Service dsi_ho = new GetAnalisaDSIHO.Service {
-         //           Url = await _db.GetURLWebService("DSI_WSDC") ?? _app.GetConfig("ws_dsi_ho")
-         //       };
-         //       DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable($"{datePeriode:yyyyMM}");
-         //       List<DataDSI_ANALISA> lsDCAnalisa = _converter.ConvertDataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
-         //       string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
-         //       string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
+                GetAnalisaDSIHO.Service dsi_ho = new GetAnalisaDSIHO.Service {
+                    Url = await _db.GetURLWebService("DSI_WSDC") ?? _app.GetConfig("ws_dsi_ho")
+                };
+                DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable($"{datePeriode:yyyyMM}");
+                List<DataDSI_ANALISA> lsDCAnalisa = _converter.ConvertDataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
+                string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
+                string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
 
                 string procName7 = "TRF_NBRMRBREAD_EVO";
                 CDbExecProcResult res7 = await _db.CALL__P_TGL(procName7, datePeriode);
@@ -239,8 +238,8 @@ namespace DcTransferFtpNew.Logics {
                 string zipFileName = $"{VAR_KODE_DC}_SENTRAL_{datePeriode:MMM-yy}.ZIP";
                 List<string> listFileNameToZip = await _qTrfCsv.GetFileNameMulti(lsCsvToZip);
                 _berkas.ZipListFileInFolder(zipFileName, listFileNameToZip);
-                foreach (string ls in listFileNameToZip) {
-                    _berkas.DeleteSingleFile(Path.Combine(_berkas.TempFolderPath, ls));
+                foreach (string fileNameInZipToBeDeleted in listFileNameToZip) {
+                    _berkas.DeleteSingleFileInFolder(fileNameInZipToBeDeleted);
                 }
                 TargetKirim += 1;
 
