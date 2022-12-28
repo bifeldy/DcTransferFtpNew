@@ -118,10 +118,9 @@ namespace DcTransferFtpNew.Logics {
                 await _qTrfCsv.CreateCSVFile("TK2", targetFileName);
                 TargetKirim += JumlahServerKirimCsv;
 
-                // TK3S tidak di transfer
                 targetFileName = $"TK3S{fileTimeIdBulanGFormat}.CSV";
                 await _qTrfCsv.CreateCSVFile("TK3S", targetFileName, addToQueueForZip: false);
-                // TargetKirim += JumlahServerKirimCsv;
+                TargetKirim += JumlahServerKirimCsv;
 
                 targetFileName = $"{await _db.GetKodeDc()}{fileTimeIdBulanGFormat}.CSV";
                 await _qTrfCsv.CreateCSVFile("GXXX", targetFileName);
