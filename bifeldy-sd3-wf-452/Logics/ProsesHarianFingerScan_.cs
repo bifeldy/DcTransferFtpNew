@@ -68,7 +68,7 @@ namespace DcTransferFtpNew.Logics {
                     // _berkas.ZipListFileInFolder(zipFileName);
                     // TargetKirim += JumlahServerKirimZip;
 
-                    BerhasilKirim += await _dcFtpT.KirimSingleCsv("FINGER", targetFileName); // *.CSV Sebanyak :: 1
+                    BerhasilKirim += await _dcFtpT.KirimSingleFile("FINGER", targetFileName); // *.CSV Sebanyak :: 1
 
                     _berkas.CleanUp();
                 }

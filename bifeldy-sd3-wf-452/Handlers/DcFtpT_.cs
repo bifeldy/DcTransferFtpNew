@@ -33,7 +33,7 @@ namespace DcTransferFtpNew.Handlers {
 
     public interface IDcFtpT {
         Task<int> KirimAllCsvOrZip(string pga_type, string folderPath = null, string zipFileName = null);
-        Task<int> KirimSingleCsv(string pga_type, string csvFileName, string folderPath = null);
+        Task<int> KirimSingleFile(string pga_type, string fileName, string folderPath = null);
         Task<int> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false, string folderPath = null);
         Task<int> KirimFtpWithLog(string pgaType, string zipFileName = null, string folderPath = null);
     }
@@ -124,7 +124,7 @@ namespace DcTransferFtpNew.Handlers {
             return ftpResultSent.Where(r => r.FtpStatusSendGet == FtpStatus.Success).ToArray().Length;
         }
 
-        public async Task<int> KirimSingleCsv(string pga_type, string csvFileName, string folderPath = null) {
+        public async Task<int> KirimSingleFile(string pga_type, string fileName, string folderPath = null) {
             if (folderPath == null) {
                 folderPath = _berkas.TempFolderPath;
             }
@@ -136,7 +136,7 @@ namespace DcTransferFtpNew.Handlers {
                 ftpInfo.PGA_PASSWORD,
                 ftpInfo.PGA_FOLDER,
                 folderPath,
-                csvFileName
+                fileName
             );
             return ftpResultSent.Where(r => r.FtpStatusSendGet == FtpStatus.Success).ToArray().Length;
         }
