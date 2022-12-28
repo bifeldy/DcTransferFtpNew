@@ -33,7 +33,7 @@ namespace DcTransferFtpNew.Handlers {
 
     public interface IDcFtpT {
         Task<int> KirimAllCsvOrZip(string pga_type, string folderPath = null, string zipFileName = null);
-        Task<int> KirimSingleFile(string pga_type, string fileName, string folderPath);
+        Task<int> KirimSingleFileInFolder(string pga_type, string fileName, string folderPath);
         Task<int> KirimSingleCsv(string pga_type, string fileName, string folderPath = null);
         Task<int> KirimSingleZip(string pga_type, string fileName, string folderPath = null);
         Task<int> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false, string folderPath = null);
@@ -126,7 +126,7 @@ namespace DcTransferFtpNew.Handlers {
             return ftpResultSent.Where(r => r.FtpStatusSendGet == FtpStatus.Success).ToArray().Length;
         }
 
-        public async Task<int> KirimSingleFile(string pga_type, string fileName, string folderPath) {
+        public async Task<int> KirimSingleFileInFolder(string pga_type, string fileName, string folderPath) {
             DC_FTP_T ftpInfo = await GetFtpInfo(pga_type);
             List<CFtpResultSendGet> ftpResultSent = await _ftp.CreateFtpConnectionAndSendFtpFiles(
                 ftpInfo.PGA_IPADDRESS,
@@ -141,11 +141,11 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<int> KirimSingleCsv(string pga_type, string csvFileName, string folderPath = null) {
-            return await KirimSingleFile(pga_type, csvFileName, folderPath ?? _berkas.TempFolderPath);
+            return await KirimSingleFileInFolder(pga_type, csvFileName, folderPath ?? _berkas.TempFolderPath);
         }
 
         public async Task<int> KirimSingleZip(string pga_type, string zipFileName, string folderPath = null) {
-            return await KirimSingleFile(pga_type, zipFileName, folderPath ?? _berkas.ZipFolderPath);
+            return await KirimSingleFileInFolder(pga_type, zipFileName, folderPath ?? _berkas.ZipFolderPath);
         }
 
         /// <summary>
