@@ -33,7 +33,9 @@ namespace DcTransferFtpNew.Handlers {
 
     public interface IDcFtpT {
         Task<int> KirimAllCsvOrZip(string pga_type, string folderPath = null, string zipFileName = null);
-        Task<int> KirimSingleFile(string pga_type, string fileName, string folderPath = null);
+        Task<int> KirimSingleFile(string pga_type, string fileName, string folderPath);
+        Task<int> KirimSingleCsv(string pga_type, string fileName, string folderPath = null);
+        Task<int> KirimSingleZip(string pga_type, string fileName, string folderPath = null);
         Task<int> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false, string folderPath = null);
         Task<int> KirimFtpWithLog(string pgaType, string zipFileName = null, string folderPath = null);
     }
@@ -124,10 +126,7 @@ namespace DcTransferFtpNew.Handlers {
             return ftpResultSent.Where(r => r.FtpStatusSendGet == FtpStatus.Success).ToArray().Length;
         }
 
-        public async Task<int> KirimSingleFile(string pga_type, string fileName, string folderPath = null) {
-            if (folderPath == null) {
-                folderPath = _berkas.TempFolderPath;
-            }
+        public async Task<int> KirimSingleFile(string pga_type, string fileName, string folderPath) {
             DC_FTP_T ftpInfo = await GetFtpInfo(pga_type);
             List<CFtpResultSendGet> ftpResultSent = await _ftp.CreateFtpConnectionAndSendFtpFiles(
                 ftpInfo.PGA_IPADDRESS,
@@ -139,6 +138,14 @@ namespace DcTransferFtpNew.Handlers {
                 fileName
             );
             return ftpResultSent.Where(r => r.FtpStatusSendGet == FtpStatus.Success).ToArray().Length;
+        }
+
+        public async Task<int> KirimSingleCsv(string pga_type, string csvFileName, string folderPath = null) {
+            return await KirimSingleFile(pga_type, csvFileName, _berkas.TempFolderPath);
+        }
+
+        public async Task<int> KirimSingleZip(string pga_type, string zipFileName, string folderPath = null) {
+            return await KirimSingleFile(pga_type, zipFileName, _berkas.ZipFolderPath);
         }
 
         /// <summary>
