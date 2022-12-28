@@ -75,7 +75,7 @@ namespace DcTransferFtpNew.Logics {
                     // _berkas.ZipListFileInFolder(zipFileName);
                     // TargetKirim += JumlahServerKirimZip;
 
-                    BerhasilKirim += await _dcFtpT.KirimAllCsvOrZip("BPBPROCUR"); // *.CSV Sebanyak :: TargetKirim
+                    BerhasilKirim += await _dcFtpT.KirimAllCsv("BPBPROCUR"); // *.CSV Sebanyak :: TargetKirim
 
                     _berkas.CleanUp();
                 }

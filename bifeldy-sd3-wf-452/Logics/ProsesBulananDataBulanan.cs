@@ -245,7 +245,7 @@ namespace DcTransferFtpNew.Logics {
                 }
                 TargetKirim += 1;
 
-                BerhasilKirim += await _dcFtpT.KirimAllCsvOrZip("LOCAL"); // *.CSV Sebanyak :: TargetKirim
+                BerhasilKirim += await _dcFtpT.KirimAllCsv("LOCAL"); // *.CSV Sebanyak :: TargetKirim
                 BerhasilKirim += await _dcFtpT.KirimFtpDev("Data Bulanan"); // *.CSV Sebanyak :: TargetKirim
 
                 targetFileName = await _db.Q_TRF_CSV__GET("q_namafile", "JKM") ?? jkm;

@@ -258,7 +258,7 @@ namespace DcTransferFtpNew.Logics {
             int zipTerkirim = 0;
 
             try {
-                csvTerkirim += await _dcFtpT.KirimAllCsvOrZip("TTF", folderPath); // *.CSV Sebanyak :: TargetKirim
+                csvTerkirim += await _dcFtpT.KirimAllCsv("TTF", folderPath); // *.CSV Sebanyak :: TargetKirim
                 zipTerkirim += await _dcFtpT.KirimSingleZip("TTF", zipFileName, folderPath); // *.ZIP Sebanyak :: 1
 
                 await _db.UpdateDcTtfHdrLog($@"
