@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -71,6 +72,8 @@ namespace DcTransferFtpNew.Logics {
                 _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
                 JumlahServerKirimCsv = 2;
 
+                List<string> lsCsvToZip = new List<string>();
+
                 string targetFileName = null;
                 string fileTimeIdBulanGFormat = $"{datePeriode:yyMM}";
                 string varDCEXT = await _db.GetDcExt();
@@ -108,7 +111,7 @@ namespace DcTransferFtpNew.Logics {
                 TargetKirim += JumlahServerKirimCsv;
 
                 targetFileName = $"TK1{fileTimeIdBulanGFormat}.CSV";
-                await _qTrfCsv.CreateCSVFile("TK1", targetFileName);
+                await _qTrfCsv.CreateCSVFile("TK1S", targetFileName);
                 TargetKirim += JumlahServerKirimCsv;
 
                 targetFileName = $"TK2{fileTimeIdBulanGFormat}.CSV";
@@ -145,10 +148,12 @@ namespace DcTransferFtpNew.Logics {
 
                 targetFileName = $"TAXTEMP_SUM_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
                 await _qTrfCsv.CreateCSVFile("TAXTEMP_SUM", targetFileName, addToQueueForZip: false);
+                lsCsvToZip.Add("TAXTEMP_SUM");
                 // TargetKirim += JumlahServerKirimCsv;
 
                 targetFileName = $"TAXTEMP_DETAIL_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
                 await _qTrfCsv.CreateCSVFile("TAXTEMP_DETAIL", targetFileName, addToQueueForZip: false);
+                lsCsvToZip.Add("TAXTEMP_DETAIL");
                 // TargetKirim += JumlahServerKirimCsv;
 
                 string procName3 = "CREATE_PJBLN_EVO";
@@ -159,10 +164,12 @@ namespace DcTransferFtpNew.Logics {
 
                 targetFileName = $"PJ_DC_SUM_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
                 await _qTrfCsv.CreateCSVFile("PJ_DC_SUM", targetFileName, addToQueueForZip: false);
+                lsCsvToZip.Add("PJ_DC_SUM");
                 // TargetKirim += JumlahServerKirimCsv;
 
                 targetFileName = $"PJ_DC_DET_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
                 await _qTrfCsv.CreateCSVFile("PJ_DC_DET", targetFileName, addToQueueForZip: false);
+                lsCsvToZip.Add("PJ_DC_DET");
                 // TargetKirim += JumlahServerKirimCsv;
 
                 string procName4 = "CREATE_BPBATKBLN_EVO";
@@ -173,10 +180,12 @@ namespace DcTransferFtpNew.Logics {
 
                 targetFileName = $"DCATK_SUM_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
                 await _qTrfCsv.CreateCSVFile("DCATK_SUM", targetFileName, addToQueueForZip: false);
+                lsCsvToZip.Add("DCATK_SUM");
                 // TargetKirim += JumlahServerKirimCsv;
 
                 targetFileName = $"DCATK_DET_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
                 await _qTrfCsv.CreateCSVFile("DCATK_DET", targetFileName, addToQueueForZip: false);
+                lsCsvToZip.Add("DCATK_DET");
                 // TargetKirim += JumlahServerKirimCsv;
 
                 // Tambahan data JKM 03/10/2018 Sulis
@@ -190,33 +199,33 @@ namespace DcTransferFtpNew.Logics {
                 await _qTrfCsv.CreateCSVFile("JKM", jkm, addToQueueForZip: false);
                 TargetKirim += 1;
 
-                // Tambahan insert data DSI 22/03/2019 Sulis
-                DSI_WS.DSI_WS dsi_ws = new DSI_WS.DSI_WS {
-                    Url = await _db.GetURLWebService("DSI_WSTOKO") ?? _app.GetConfig("ws_dsi")
-                };
-                string responseDsiDetail = dsi_ws.Get_DSIDetail(datePeriode);
-
-                List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObj<List<DataDSI_WS>>(responseDsiDetail);
-                if (objListDataDSIWS.Count > 0) {
-                    string tabel = "DC_DSI_WSTOKO";
-                    DataTable dtInsert = _converter.ConvertListToDataTable(tabel, objListDataDSIWS);
-                    await _db.BulananDeleteDcDsiWsToko(fileTimeIdBulanGFormat);
-                    await _db.BulkInsertIntoOraPg(tabel, dtInsert);
-                }
+         //       // Tambahan insert data DSI 22/03/2019 Sulis
+         //       DSI_WS.DSI_WS dsi_ws = new DSI_WS.DSI_WS {
+         //           Url = await _db.GetURLWebService("DSI_WSTOKO") ?? _app.GetConfig("ws_dsi")
+         //       };
+         //       string responseDsiDetail = dsi_ws.Get_DSIDetail(datePeriode);
+         //
+         //       List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObj<List<DataDSI_WS>>(responseDsiDetail);
+         //       if (objListDataDSIWS.Count > 0) {
+         //           string tabel = "DC_DSI_WSTOKO";
+         //           DataTable dtInsert = _converter.ConvertListToDataTable(tabel, objListDataDSIWS);
+         //           await _db.BulananDeleteDcDsiWsToko(fileTimeIdBulanGFormat);
+         //           await _db.BulkInsertIntoOraPg(tabel, dtInsert);
+         //       }
 
                 string procName6 = "GET_DSI_EVO";
-                CDbExecProcResult res6 = await _db.CALL__P_TGL(procName6, datePeriode);
+                CDbExecProcResult res6 = await _db.CALL_DataBulananCentralisasiHO(procName6, $"{datePeriode:yyyymm}");
                 if (res6 == null || !res6.STATUS) {
                     throw new Exception($"Gagal Menjalankan Procedure {procName6}");
                 }
 
-                GetAnalisaDSIHO.Service dsi_ho = new GetAnalisaDSIHO.Service {
-                    Url = await _db.GetURLWebService("DSI_WSDC") ?? _app.GetConfig("ws_dsi_ho")
-                };
-                DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable($"{datePeriode:yyyyMM}");
-                List<DataDSI_ANALISA> lsDCAnalisa = _converter.ConvertDataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
-                string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
-                string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
+         //       GetAnalisaDSIHO.Service dsi_ho = new GetAnalisaDSIHO.Service {
+         //           Url = await _db.GetURLWebService("DSI_WSDC") ?? _app.GetConfig("ws_dsi_ho")
+         //       };
+         //       DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable($"{datePeriode:yyyyMM}");
+         //       List<DataDSI_ANALISA> lsDCAnalisa = _converter.ConvertDataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
+         //       string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
+         //       string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
 
                 string procName7 = "TRF_NBRMRBREAD_EVO";
                 CDbExecProcResult res7 = await _db.CALL__P_TGL(procName7, datePeriode);
@@ -229,10 +238,11 @@ namespace DcTransferFtpNew.Logics {
                 TargetKirim += 1;
 
                 string zipFileName = $"{VAR_KODE_DC}_SENTRAL_{datePeriode:MMM-yy}.ZIP";
-                List<string> listFileNameToZip = await _qTrfCsv.GetFileNameMulti(new List<string>() {
-                    "TAXTEMP_SUM", "TAXTEMP_DETAIL", "PJ_DC_SUM", "PJ_DC_DET", "DCATK_SUM", "DCATK_DET"
-                });
+                List<string> listFileNameToZip = await _qTrfCsv.GetFileNameMulti(lsCsvToZip);
                 _berkas.ZipListFileInFolder(zipFileName, listFileNameToZip);
+                foreach (string ls in listFileNameToZip) {
+                    _berkas.DeleteSingleFile(Path.Combine(_berkas.TempFolderPath, ls));
+                }
                 TargetKirim += 1;
 
                 BerhasilKirim += await _dcFtpT.KirimAllCsvOrZip("LOCAL"); // *.CSV Sebanyak :: TargetKirim
