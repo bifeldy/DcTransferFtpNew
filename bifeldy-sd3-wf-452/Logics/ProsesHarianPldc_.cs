@@ -97,7 +97,7 @@ namespace DcTransferFtpNew.Logics {
 
                     BerhasilKirim += await _dcFtpT.KirimAllCsvOrZip("LOCAL"); // *.CSV Sebanyak :: TargetKirim
                     BerhasilKirim += await _dcFtpT.KirimFtpDev("PLDC", zipFileName, true); // *.ZIP Sebanyak :: 1
-                    BerhasilKirim += await _dcFtpT.KirimAllCsvOrZip("EIS", zipFileName: zipFileName); // *.ZIP Sebanyak :: 1
+                    BerhasilKirim += await _dcFtpT.KirimSingleZip("EIS", zipFileName); // *.ZIP Sebanyak :: 1
 
                     _berkas.CleanUp();
                 }

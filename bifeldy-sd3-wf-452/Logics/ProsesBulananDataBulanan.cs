@@ -250,7 +250,7 @@ namespace DcTransferFtpNew.Logics {
 
                 targetFileName = await _db.Q_TRF_CSV__GET("q_namafile", "JKM") ?? jkm;
                 BerhasilKirim += await _dcFtpT.KirimSingleCsv("TTF", targetFileName); // *.CSV Sebanyak :: 1
-                BerhasilKirim += await _dcFtpT.KirimAllCsvOrZip("TTF", zipFileName: zipFileName); // *.ZIP Sebanyak :: 1
+                BerhasilKirim += await _dcFtpT.KirimSingleZip("TTF", zipFileName); // *.ZIP Sebanyak :: 1
 
                 targetFileName = await _db.Q_TRF_CSV__GET("q_namafile", "NBRMRBREAD") ?? nbrMrBread;
                 BerhasilKirim += await _dcFtpT.KirimSingleCsv("NBRMRBREAD", targetFileName); // *.CSV Sebanyak :: 1

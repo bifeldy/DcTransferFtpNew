@@ -141,11 +141,11 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<int> KirimSingleCsv(string pga_type, string csvFileName, string folderPath = null) {
-            return await KirimSingleFile(pga_type, csvFileName, _berkas.TempFolderPath);
+            return await KirimSingleFile(pga_type, csvFileName, folderPath ?? _berkas.TempFolderPath);
         }
 
         public async Task<int> KirimSingleZip(string pga_type, string zipFileName, string folderPath = null) {
-            return await KirimSingleFile(pga_type, zipFileName, _berkas.ZipFolderPath);
+            return await KirimSingleFile(pga_type, zipFileName, folderPath ?? _berkas.ZipFolderPath);
         }
 
         /// <summary>
