@@ -36,6 +36,8 @@ namespace DcTransferFtpNew.Handlers {
         Task<int> KirimSingleZip(string pga_type, string fileName, string folderPath = null);
         Task<int> KirimAllCsv(string pga_type, string folderPath = null);
         Task<int> KirimAllZip(string pga_type, string folderPath = null);
+        Task<int> KirimSelectedCsv(string pga_type, List<string> listCsvFileName, string folderPath = null);
+        Task<int> KirimSelectedZip(string pga_type, List<string> listZipFileName, string folderPath = null);
         Task<int> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false, string folderPath = null);
         Task<int> KirimFtpWithLog(string pgaType, string zipFileName = null, string folderPath = null);
     }
@@ -143,6 +145,22 @@ namespace DcTransferFtpNew.Handlers {
 
         public async Task<int> KirimAllZip(string pga_type, string folderPath = null) {
             return await KirimAllFilesInFolder(pga_type, folderPath ?? _berkas.ZipFolderPath);
+        }
+
+        public async Task<int> KirimSelectedCsv(string pga_type, List<string> listCsvFileName, string folderPath = null) {
+            int terkirim = 0;
+            foreach (string fn in listCsvFileName) {
+                terkirim += await KirimSingleFileInFolder(pga_type, fn, folderPath ?? _berkas.TempFolderPath);
+            }
+            return terkirim;
+        }
+
+        public async Task<int> KirimSelectedZip(string pga_type, List<string> listZipFileName, string folderPath = null) {
+            int terkirim = 0;
+            foreach (string fn in listZipFileName) {
+                terkirim += await KirimSingleFileInFolder(pga_type, fn, folderPath ?? _berkas.ZipFolderPath);
+            }
+            return terkirim;
         }
 
         /// <summary>
