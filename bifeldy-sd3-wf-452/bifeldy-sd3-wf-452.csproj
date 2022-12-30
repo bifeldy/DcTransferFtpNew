@@ -116,6 +116,7 @@
     <Compile Include="Handlers\MenuNavigations_.cs" />
     <Compile Include="Handlers\QTrfCsv_.cs" />
     <Compile Include="Logics\ProsesBulananDataBulanan_.cs" />
+    <Compile Include="Logics\ProsesBulananTransferMstxhg_.cs" />
     <Compile Include="Logics\ProsesHarianBpbProc_.cs" />
     <Compile Include="Logics\ProsesHarianEndorsement_.cs" />
     <Compile Include="Logics\ProsesHarianDataHarian_.cs" />
