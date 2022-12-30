@@ -62,7 +62,7 @@ namespace DcTransferFtpNew.Logics {
 
                     string fileTimeBRDFormat2Hariana = $"{dateStart:MM}";
                     string DBFformat = $"{dateStart:MM}";
-                    string targetFileName = null;
+                    string csvFileName = null;
 
                     string varDcExt = await _db.GetDcExt();
 
@@ -78,16 +78,16 @@ namespace DcTransferFtpNew.Logics {
                             throw new Exception($"Gagal Menjalankan Procedure {procName}");
                         }
 
-                        targetFileName = $"DC{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
-                        await _qTrfCsv.CreateCSVFile("DC", targetFileName);
+                        csvFileName = $"DC{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
+                        await _qTrfCsv.CreateCSVFile("DC", csvFileName);
                         TargetKirim += JumlahServerKirimCsv;
 
-                        targetFileName = $"ST{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
-                        await _qTrfCsv.CreateCSVFile("ST", targetFileName);
+                        csvFileName = $"ST{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
+                        await _qTrfCsv.CreateCSVFile("ST", csvFileName);
                         TargetKirim += JumlahServerKirimCsv;
 
-                        targetFileName = $"SX{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
-                        await _qTrfCsv.CreateCSVFile("SX", targetFileName);
+                        csvFileName = $"SX{fileTimeBRDFormat2Hariana}{xDate:dd}G.{varDcExt}";
+                        await _qTrfCsv.CreateCSVFile("SX", csvFileName);
                         TargetKirim += JumlahServerKirimCsv;
                     }
 

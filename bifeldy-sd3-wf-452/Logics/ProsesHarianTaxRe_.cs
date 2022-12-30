@@ -63,7 +63,7 @@ namespace DcTransferFtpNew.Logics {
 
                     JumlahServerKirimCsv = 1;
                     JumlahServerKirimZip = 1;
-                    string targetFileName = null;
+                    string csvFileName = null;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
@@ -107,14 +107,14 @@ namespace DcTransferFtpNew.Logics {
                                             tempNameDepan = tempName.Substring(0, tempName.LastIndexOf("."));
                                         }
 
-                                        targetFileName = $"{tempNameDepan}_{countSeq}{tempName.Substring(tempName.LastIndexOf("."))}";
+                                        csvFileName = $"{tempNameDepan}_{countSeq}{tempName.Substring(tempName.LastIndexOf("."))}";
 
-                                        await _db.UpdateDcTtfHdrLog($"FILE_TAX = '{targetFileName}'", xDate);
+                                        await _db.UpdateDcTtfHdrLog($"FILE_TAX = '{csvFileName}'", xDate);
 
                                         string seperator = await _db.Q_TRF_CSV__GET("q_seperator", "TAX2RE");
                                         string queryTax2RE = await _db.Q_TRF_CSV__GET("q_query", "TAX2RE");
 
-                                        if (string.IsNullOrEmpty(seperator) || string.IsNullOrEmpty(queryTax2RE) || string.IsNullOrEmpty(targetFileName)) {
+                                        if (string.IsNullOrEmpty(seperator) || string.IsNullOrEmpty(queryTax2RE) || string.IsNullOrEmpty(csvFileName)) {
                                             string status_error = "Data CSV (Separator / Query / Nama File) Tidak Lengkap!";
                                             MessageBox.Show(status_error, $"{button.Text} :: Q_TRF_CSV", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -131,7 +131,7 @@ namespace DcTransferFtpNew.Logics {
                                                     await _db.UpdateDcTtfHdrLog($"status_tax = 'Data Kosong'", xDate);
                                                 }
 
-                                                _berkas.DataTable2CSV(dtTax2RE, targetFileName, seperator, TaxTempReFolderPath);
+                                                _berkas.DataTable2CSV(dtTax2RE, csvFileName, seperator, TaxTempReFolderPath);
                                                 // _berkas.ListFileForZip.Add(filename);
                                                 TargetKirim += JumlahServerKirimCsv;
                                             }
@@ -279,13 +279,13 @@ namespace DcTransferFtpNew.Logics {
                                         string tempName = await _db.TaxTempFileZipName(xDate);
                                         int countSeq = tempName.IndexOf("_") > -1 ? int.Parse(tempName.Substring(tempName.LastIndexOf("_") + 1, 1)) + 1 : 1;
 
-                                        targetFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}_{countSeq}.ZIP";
+                                        csvFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}_{countSeq}.ZIP";
 
                                         // Sama Persis Dari Yang Full
-                                        await _prosesHarianTaxFull.FromZip(targetFileName, xDate, TaxTempReFolderPath);
+                                        await _prosesHarianTaxFull.FromZip(csvFileName, xDate, TaxTempReFolderPath);
                                         TargetKirim += JumlahServerKirimZip;
 
-                                        (int csvTerkirim, int zipTerkirim) = await _prosesHarianTaxFull.FromTransfer(targetFileName, button, xDate, TaxTempReFolderPath);
+                                        (int csvTerkirim, int zipTerkirim) = await _prosesHarianTaxFull.FromTransfer(csvFileName, button, xDate, TaxTempReFolderPath);
                                         BerhasilKirim += (csvTerkirim + zipTerkirim);
                                     }
                                     else {

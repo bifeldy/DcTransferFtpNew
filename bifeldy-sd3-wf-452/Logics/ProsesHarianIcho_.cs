@@ -61,7 +61,7 @@ namespace DcTransferFtpNew.Logics {
                     JumlahServerKirimZip = 1;
 
                     string fileTimeICHOFormat = $"{dateStart:MM}";
-                    string targetFileName = null;
+                    string csvFileName = null;
 
                     string fileTimeICHOFormat2 = await _db.GetWinFunction();
 
@@ -77,29 +77,29 @@ namespace DcTransferFtpNew.Logics {
                             throw new Exception($"Gagal Menjalankan Procedure {procName}");
                         }
 
-                        targetFileName = $"PAR{fileTimeICHOFormat}{xDate:dd}G.CSV";
-                        await _qTrfCsv.CreateCSVFile("PAR", targetFileName);
+                        csvFileName = $"PAR{fileTimeICHOFormat}{xDate:dd}G.CSV";
+                        await _qTrfCsv.CreateCSVFile("PAR", csvFileName);
                         TargetKirim += JumlahServerKirimCsv;
                     }
 
-                    targetFileName = "SUPMAST.CSV";
-                    await _qTrfCsv.CreateCSVFile("SUPMAST", targetFileName);
+                    csvFileName = "SUPMAST.CSV";
+                    await _qTrfCsv.CreateCSVFile("SUPMAST", csvFileName);
                     TargetKirim += JumlahServerKirimCsv;
 
-                    targetFileName = "HRGBELI.CSV";
-                    await _qTrfCsv.CreateCSVFile("HRGBELI", targetFileName);
+                    csvFileName = "HRGBELI.CSV";
+                    await _qTrfCsv.CreateCSVFile("HRGBELI", csvFileName);
                     TargetKirim += JumlahServerKirimCsv;
 
-                    targetFileName = "PROTECT.CSV";
-                    await _qTrfCsv.CreateCSVFile("PROTECT", targetFileName);
+                    csvFileName = "PROTECT.CSV";
+                    await _qTrfCsv.CreateCSVFile("PROTECT", csvFileName);
                     TargetKirim += JumlahServerKirimCsv;
 
-                    targetFileName = $"REG{fileTimeICHOFormat2}.CSV";
-                    await _qTrfCsv.CreateCSVFile("REG", targetFileName);
+                    csvFileName = $"REG{fileTimeICHOFormat2}.CSV";
+                    await _qTrfCsv.CreateCSVFile("REG", csvFileName);
                     TargetKirim += JumlahServerKirimCsv;
 
-                    targetFileName = $"TRNH{fileTimeICHOFormat2}.CSV";
-                    await _qTrfCsv.CreateCSVFile("TRNH", targetFileName);
+                    csvFileName = $"TRNH{fileTimeICHOFormat2}.CSV";
+                    await _qTrfCsv.CreateCSVFile("TRNH", csvFileName);
                     TargetKirim += JumlahServerKirimCsv;
 
                     string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "TRNH");

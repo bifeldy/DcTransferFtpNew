@@ -62,7 +62,7 @@ namespace DcTransferFtpNew.Logics {
 
                     string fileTimeBRDFormat2Hariana = $"{dateStart:MM}";
                     string fileTimeBRDFormat2Harianb = $"{dateStart:yyyy}";
-                    string targetFileName = null;
+                    string csvFileName = null;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
@@ -76,17 +76,17 @@ namespace DcTransferFtpNew.Logics {
                             throw new Exception($"Gagal Menjalankan Procedure {procName}");
                         }
 
-                        targetFileName = $"STM{fileTimeBRDFormat2Harianb.Substring(3, 1)}{fileTimeBRDFormat2Hariana}{xDate:dd}.CSV";
-                        await _qTrfCsv.CreateCSVFile("STM", targetFileName);
+                        csvFileName = $"STM{fileTimeBRDFormat2Harianb.Substring(3, 1)}{fileTimeBRDFormat2Hariana}{xDate:dd}.CSV";
+                        await _qTrfCsv.CreateCSVFile("STM", csvFileName);
                         TargetKirim += JumlahServerKirimCsv;
 
-                        targetFileName = $"HPG{fileTimeBRDFormat2Harianb.Substring(3, 1)}{fileTimeBRDFormat2Hariana}{xDate:dd}.CSV";
-                        await _qTrfCsv.CreateCSVFile("HPG", targetFileName);
+                        csvFileName = $"HPG{fileTimeBRDFormat2Harianb.Substring(3, 1)}{fileTimeBRDFormat2Hariana}{xDate:dd}.CSV";
+                        await _qTrfCsv.CreateCSVFile("HPG", csvFileName);
                         TargetKirim += JumlahServerKirimCsv;
                     }
 
-                    targetFileName = "PRODMAST.CSV";
-                    await _qTrfCsv.CreateCSVFile("PRODMAST", targetFileName);
+                    csvFileName = "PRODMAST.CSV";
+                    await _qTrfCsv.CreateCSVFile("PRODMAST", csvFileName);
                     TargetKirim += JumlahServerKirimCsv;
 
                     string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "STM");

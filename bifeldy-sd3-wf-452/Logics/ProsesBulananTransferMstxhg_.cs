@@ -60,7 +60,7 @@ namespace DcTransferFtpNew.Logics {
         }
 
         public override Task Run(object sender, EventArgs e, Control currentControl) {
-            throw new NotImplementedException("Fitur Belum Di Implentasi ...");
+            throw new NotImplementedException("Fitur Belum Di-Implementasi-Kan ...");
         }
 
     }

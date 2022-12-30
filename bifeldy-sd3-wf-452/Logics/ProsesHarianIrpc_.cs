@@ -66,9 +66,9 @@ namespace DcTransferFtpNew.Logics {
                         }
 
                         DataTable dtQuery = await _db.GetIrpc(xDate);
-                        string targetFileName = $"IRPC{await _db.GetKodeDc()}{xDate:ddMMyyyyHHmm}.CSV";
-                        _berkas.DataTable2CSV(dtQuery, targetFileName, ",");
-                        // _berkas.ListFileForZip.Add(targetFileName);
+                        string csvFileName = $"IRPC{await _db.GetKodeDc()}{xDate:ddMMyyyyHHmm}.CSV";
+                        _berkas.DataTable2CSV(dtQuery, csvFileName, ",");
+                        // _berkas.ListFileForZip.Add(csvFileName);
                         TargetKirim += JumlahServerKirimCsv;
                     }
 

@@ -55,20 +55,20 @@ namespace DcTransferFtpNew.Logics {
                     JumlahServerKirimCsv = 1;
 
                     string fileTimeFingerScanFormat = $"{dateEnd:MMyyyy}";
-                    string targetFileName = null;
+                    string csvFileName = null;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
 
-                    targetFileName = $"FINGER{await _db.GetKodeDc()}{fileTimeFingerScanFormat}.csv";
-                    await _qTrfCsv.CreateCSVFile("FINGER", targetFileName, addToQueueForZip: false);
+                    csvFileName = $"FINGER{await _db.GetKodeDc()}{fileTimeFingerScanFormat}.csv";
+                    await _qTrfCsv.CreateCSVFile("FINGER", csvFileName, addToQueueForZip: false);
                     TargetKirim += 1;
 
                     // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "FINGER");
                     // _berkas.ZipListFileInFolder(zipFileName);
                     // TargetKirim += JumlahServerKirimZip;
 
-                    BerhasilKirim += await _dcFtpT.KirimSingleCsv("FINGER", targetFileName); // *.CSV Sebanyak :: 1
+                    BerhasilKirim += await _dcFtpT.KirimSingleCsv("FINGER", csvFileName); // *.CSV Sebanyak :: 1
 
                     _berkas.CleanUp();
                 }

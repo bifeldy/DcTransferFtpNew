@@ -56,7 +56,7 @@ namespace DcTransferFtpNew.Logics {
                     JumlahServerKirimCsv = 2;
 
                     string fileTimeBRDFormat = $"{dateStart:yyyyMM}";
-                    string targetFileName = null;
+                    string csvFileName = null;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
@@ -70,8 +70,8 @@ namespace DcTransferFtpNew.Logics {
                             throw new Exception($"Gagal Menjalankan Procedure {procName}");
                         }
 
-                        targetFileName = $"{fileTimeBRDFormat}{xDate:dd}.CSV";
-                        await _qTrfCsv.CreateCSVFile("RECON", targetFileName);
+                        csvFileName = $"{fileTimeBRDFormat}{xDate:dd}.CSV";
+                        await _qTrfCsv.CreateCSVFile("RECON", csvFileName);
                         TargetKirim += JumlahServerKirimCsv;
                     }
 

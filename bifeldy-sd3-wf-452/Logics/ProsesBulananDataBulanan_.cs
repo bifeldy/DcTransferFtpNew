@@ -67,7 +67,7 @@ namespace DcTransferFtpNew.Logics {
 
                 List<string> lsCsvToZip = new List<string>();
 
-                string targetFileName = null;
+                string csvFileName = null;
                 string fileTimeIdBulanGFormat = $"{datePeriode:yyMM}";
                 string varDCEXT = await _db.GetDcExt();
                 string VAR_KODE_DC = await _db.GetKodeDc();
@@ -95,40 +95,40 @@ namespace DcTransferFtpNew.Logics {
                     throw new Exception($"Gagal Menjalankan Procedure {procName1}");
                 }
 
-                targetFileName = $"ID{fileTimeIdBulanGFormat}.{varDCEXT}";
-                await _qTrfCsv.CreateCSVFile("ID", targetFileName);
+                csvFileName = $"ID{fileTimeIdBulanGFormat}.{varDCEXT}";
+                await _qTrfCsv.CreateCSVFile("ID", csvFileName);
                 TargetKirim += JumlahServerKirimCsv;
 
-                targetFileName = $"AP{fileTimeIdBulanGFormat}.CSV";
-                await _qTrfCsv.CreateCSVFile("AP", targetFileName);
+                csvFileName = $"AP{fileTimeIdBulanGFormat}.CSV";
+                await _qTrfCsv.CreateCSVFile("AP", csvFileName);
                 TargetKirim += JumlahServerKirimCsv;
 
-                targetFileName = $"TK1{fileTimeIdBulanGFormat}.CSV";
-                await _qTrfCsv.CreateCSVFile("TK1S", targetFileName);
+                csvFileName = $"TK1{fileTimeIdBulanGFormat}.CSV";
+                await _qTrfCsv.CreateCSVFile("TK1S", csvFileName);
                 TargetKirim += JumlahServerKirimCsv;
 
-                targetFileName = $"TK2{fileTimeIdBulanGFormat}.CSV";
-                await _qTrfCsv.CreateCSVFile("TK2", targetFileName);
+                csvFileName = $"TK2{fileTimeIdBulanGFormat}.CSV";
+                await _qTrfCsv.CreateCSVFile("TK2", csvFileName);
                 TargetKirim += JumlahServerKirimCsv;
 
-                targetFileName = $"TK3S{fileTimeIdBulanGFormat}.CSV";
-                await _qTrfCsv.CreateCSVFile("TK3S", targetFileName, addToQueueForZip: false);
+                csvFileName = $"TK3S{fileTimeIdBulanGFormat}.CSV";
+                await _qTrfCsv.CreateCSVFile("TK3S", csvFileName, addToQueueForZip: false);
                 TargetKirim += JumlahServerKirimCsv;
 
-                targetFileName = $"{await _db.GetKodeDc()}{fileTimeIdBulanGFormat}.CSV";
-                await _qTrfCsv.CreateCSVFile("GXXX", targetFileName);
+                csvFileName = $"{await _db.GetKodeDc()}{fileTimeIdBulanGFormat}.CSV";
+                await _qTrfCsv.CreateCSVFile("GXXX", csvFileName);
                 TargetKirim += JumlahServerKirimCsv;
 
-                targetFileName = $"MATI{fileTimeIdBulanGFormat}.CSV";
-                await _qTrfCsv.CreateCSVFile("MATI", targetFileName);
+                csvFileName = $"MATI{fileTimeIdBulanGFormat}.CSV";
+                await _qTrfCsv.CreateCSVFile("MATI", csvFileName);
                 TargetKirim += JumlahServerKirimCsv;
 
-                targetFileName = $"HPPDC_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
-                await _qTrfCsv.CreateCSVFile("HPPDC", targetFileName);
+                csvFileName = $"HPPDC_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
+                await _qTrfCsv.CreateCSVFile("HPPDC", csvFileName);
                 TargetKirim += JumlahServerKirimCsv;
 
-                targetFileName = $"LBDC_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
-                await _qTrfCsv.CreateCSVFile("LBDC", targetFileName);
+                csvFileName = $"LBDC_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
+                await _qTrfCsv.CreateCSVFile("LBDC", csvFileName);
                 TargetKirim += JumlahServerKirimCsv;
 
                 // Tambahan untuk buat file untuk TAXTEMP, Penjualan, dan BPB ATK (Sulis 09/10/2018)
@@ -138,13 +138,13 @@ namespace DcTransferFtpNew.Logics {
                     throw new Exception($"Gagal Menjalankan Procedure {procName2}");
                 }
 
-                targetFileName = $"TAXTEMP_SUM_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
-                await _qTrfCsv.CreateCSVFile("TAXTEMP_SUM", targetFileName, addToQueueForZip: false);
+                csvFileName = $"TAXTEMP_SUM_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
+                await _qTrfCsv.CreateCSVFile("TAXTEMP_SUM", csvFileName, addToQueueForZip: false);
                 lsCsvToZip.Add("TAXTEMP_SUM");
                 // TargetKirim += JumlahServerKirimCsv;
 
-                targetFileName = $"TAXTEMP_DETAIL_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
-                await _qTrfCsv.CreateCSVFile("TAXTEMP_DETAIL", targetFileName, addToQueueForZip: false);
+                csvFileName = $"TAXTEMP_DETAIL_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
+                await _qTrfCsv.CreateCSVFile("TAXTEMP_DETAIL", csvFileName, addToQueueForZip: false);
                 lsCsvToZip.Add("TAXTEMP_DETAIL");
                 // TargetKirim += JumlahServerKirimCsv;
 
@@ -154,13 +154,13 @@ namespace DcTransferFtpNew.Logics {
                     throw new Exception($"Gagal Menjalankan Procedure {procName3}");
                 }
 
-                targetFileName = $"PJ_DC_SUM_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
-                await _qTrfCsv.CreateCSVFile("PJ_DC_SUM", targetFileName, addToQueueForZip: false);
+                csvFileName = $"PJ_DC_SUM_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
+                await _qTrfCsv.CreateCSVFile("PJ_DC_SUM", csvFileName, addToQueueForZip: false);
                 lsCsvToZip.Add("PJ_DC_SUM");
                 // TargetKirim += JumlahServerKirimCsv;
 
-                targetFileName = $"PJ_DC_DET_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
-                await _qTrfCsv.CreateCSVFile("PJ_DC_DET", targetFileName, addToQueueForZip: false);
+                csvFileName = $"PJ_DC_DET_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
+                await _qTrfCsv.CreateCSVFile("PJ_DC_DET", csvFileName, addToQueueForZip: false);
                 lsCsvToZip.Add("PJ_DC_DET");
                 // TargetKirim += JumlahServerKirimCsv;
 
@@ -170,13 +170,13 @@ namespace DcTransferFtpNew.Logics {
                     throw new Exception($"Gagal Menjalankan Procedure {procName4}");
                 }
 
-                targetFileName = $"DCATK_SUM_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
-                await _qTrfCsv.CreateCSVFile("DCATK_SUM", targetFileName, addToQueueForZip: false);
+                csvFileName = $"DCATK_SUM_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
+                await _qTrfCsv.CreateCSVFile("DCATK_SUM", csvFileName, addToQueueForZip: false);
                 lsCsvToZip.Add("DCATK_SUM");
                 // TargetKirim += JumlahServerKirimCsv;
 
-                targetFileName = $"DCATK_DET_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
-                await _qTrfCsv.CreateCSVFile("DCATK_DET", targetFileName, addToQueueForZip: false);
+                csvFileName = $"DCATK_DET_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
+                await _qTrfCsv.CreateCSVFile("DCATK_DET", csvFileName, addToQueueForZip: false);
                 lsCsvToZip.Add("DCATK_DET");
                 // TargetKirim += JumlahServerKirimCsv;
 
@@ -240,12 +240,12 @@ namespace DcTransferFtpNew.Logics {
                 BerhasilKirim += await _dcFtpT.KirimAllCsv("LOCAL"); // *.CSV Sebanyak :: TargetKirim
                 BerhasilKirim += await _dcFtpT.KirimFtpDev("Data Bulanan"); // *.CSV Sebanyak :: TargetKirim
 
-                targetFileName = await _db.Q_TRF_CSV__GET("q_namafile", "JKM") ?? jkm;
-                BerhasilKirim += await _dcFtpT.KirimSingleCsv("TTF", targetFileName); // *.CSV Sebanyak :: 1
+                csvFileName = await _db.Q_TRF_CSV__GET("q_namafile", "JKM") ?? jkm;
+                BerhasilKirim += await _dcFtpT.KirimSingleCsv("TTF", csvFileName); // *.CSV Sebanyak :: 1
                 BerhasilKirim += await _dcFtpT.KirimSingleZip("TTF", zipFileName); // *.ZIP Sebanyak :: 1
 
-                targetFileName = await _db.Q_TRF_CSV__GET("q_namafile", "NBRMRBREAD") ?? nbrMrBread;
-                BerhasilKirim += await _dcFtpT.KirimSingleCsv("NBRMRBREAD", targetFileName); // *.CSV Sebanyak :: 1
+                csvFileName = await _db.Q_TRF_CSV__GET("q_namafile", "NBRMRBREAD") ?? nbrMrBread;
+                BerhasilKirim += await _dcFtpT.KirimSingleCsv("NBRMRBREAD", csvFileName); // *.CSV Sebanyak :: 1
 
                 _berkas.CleanUp();
             });

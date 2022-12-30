@@ -305,7 +305,7 @@ namespace DcTransferFtpNew.Logics {
 
                     JumlahServerKirimCsv = 1;
                     JumlahServerKirimZip = 1;
-                    string targetFileName = null;
+                    string csvFileName = null;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
@@ -314,16 +314,16 @@ namespace DcTransferFtpNew.Logics {
                         DateTime xDate = dateStart.AddDays(i);
 
                         _berkas.DeleteOldFilesInFolder(TaxTempFullFolderPath, 0);
-                        targetFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}.ZIP";
+                        csvFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}.ZIP";
 
                         int cekLog = await _db.TaxTempCekLog(xDate);
                         if (cekLog == 0) {
                             await FullCreate(button, xDate, TaxTempFullFolderPath);
 
-                            await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
+                            await FromZip(csvFileName, xDate, TaxTempFullFolderPath);
                             TargetKirim += JumlahServerKirimZip;
 
-                            (int csvTerkirim, int zipTerkirim) = await FromTransfer(targetFileName, button, xDate, TaxTempFullFolderPath);
+                            (int csvTerkirim, int zipTerkirim) = await FromTransfer(csvFileName, button, xDate, TaxTempFullFolderPath);
                             BerhasilKirim += (csvTerkirim + zipTerkirim);
                         }
                         else {
@@ -344,10 +344,10 @@ namespace DcTransferFtpNew.Logics {
 
                                     await FullCreate(button, xDate, TaxTempFullFolderPath);
 
-                                    await FromZip(targetFileName, xDate, TaxTempFullFolderPath);
+                                    await FromZip(csvFileName, xDate, TaxTempFullFolderPath);
                                     TargetKirim += JumlahServerKirimZip;
 
-                                    (int csvTerkirim, int zipTerkirim) = await FromTransfer(targetFileName, button, xDate, TaxTempFullFolderPath);
+                                    (int csvTerkirim, int zipTerkirim) = await FromTransfer(csvFileName, button, xDate, TaxTempFullFolderPath);
                                     BerhasilKirim += (csvTerkirim + zipTerkirim);
                                 }
                             }
