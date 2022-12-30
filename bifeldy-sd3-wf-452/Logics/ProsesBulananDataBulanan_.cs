@@ -37,8 +37,6 @@ namespace DcTransferFtpNew.Logics {
     public sealed class CProsesBulananDataBulanan : CLogics, IProsesBulananDataBulanan {
 
         private readonly IApp _app;
-        private readonly ILogger _logger;
-        private readonly IApi _api;
         private readonly IConverter _converter;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
@@ -47,8 +45,6 @@ namespace DcTransferFtpNew.Logics {
 
         public CProsesBulananDataBulanan(
             IApp app,
-            ILogger logger,
-            IApi api,
             IConverter converter,
             IDb db,
             IBerkas berkas,
@@ -56,8 +52,6 @@ namespace DcTransferFtpNew.Logics {
             IDcFtpT dc_ftp_t
         ) : base(db) {
             _app = app;
-            _logger = logger;
-            _api = api;
             _converter = converter;
             _db = db;
             _berkas = berkas;
