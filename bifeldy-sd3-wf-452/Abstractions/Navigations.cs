@@ -69,6 +69,7 @@ namespace DcTransferFtpNew.Abstractions {
                         }
                         catch (Exception ex) {
                             // _db.MarkFailedRollbackAndClose();
+                            // _logger.WriteError(ex);
                             MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
 
