@@ -25,6 +25,7 @@ using DcTransferFtpNew.Panels;
 
 namespace DcTransferFtpNew.Abstractions {
 
+    // Tidak Bisa Dibuat Menjadi `abstract class` Karena Ini Tampilan
     public class CNavigations : UserControl {
 
         private readonly ILogger _logger;
@@ -40,7 +41,7 @@ namespace DcTransferFtpNew.Abstractions {
         protected void AddButtonToMainPanel(Control panel, List<Button> buttonList, FlowLayoutPanel flowLayoutPanel) {
             CMainPanel mainPanel = (CMainPanel) panel;
             foreach (Button button in buttonList) {
-                // If Antisipasi Re-Render Akibat Garbage Collector Jalan Saat Minimize -> Normal Window Trigger *_Load();
+                // If Antisipasi Re-Render Akibat Garbage Collector Jalan Saat 'Minimize' -> 'Normal' Window Trigger *_Load();
                 if (!flowLayoutPanel.Controls.ContainsKey(button.Name)) {
                     button.BackColor = SystemColors.ControlLight;
                     button.FlatStyle = FlatStyle.Flat;
