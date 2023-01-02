@@ -37,6 +37,7 @@ namespace DcTransferFtpNew.Logics {
     public sealed class CProsesBulananDataBulanan : CLogics, IProsesBulananDataBulanan {
 
         private readonly IApp _app;
+        private readonly ILogger _logger;
         private readonly IConverter _converter;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
@@ -45,6 +46,7 @@ namespace DcTransferFtpNew.Logics {
 
         public CProsesBulananDataBulanan(
             IApp app,
+            ILogger logger,
             IConverter converter,
             IDb db,
             IBerkas berkas,
@@ -52,6 +54,7 @@ namespace DcTransferFtpNew.Logics {
             IDcFtpT dc_ftp_t
         ) : base(db) {
             _app = app;
+            _logger = logger;
             _converter = converter;
             _db = db;
             _berkas = berkas;
@@ -90,7 +93,8 @@ namespace DcTransferFtpNew.Logics {
                 //         await _db.BulkInsertIntoOraPg(tabel, dtInsert);
                 //     }
                 // }
-                // catch (Exception ex) {
+                // catch (Exception ex1) {
+                //     _logger.WriteError(ex1);
                 //     throw new Exception($"Web Service {listAntarDc} Tidak Tersedia");
                 // }
                 //
@@ -213,7 +217,8 @@ namespace DcTransferFtpNew.Logics {
                         await _db.BulkInsertIntoOraPg(tabel, dtInsert);
                     }
                 }
-                catch (Exception ex) {
+                catch (Exception ex2) {
+                    _logger.WriteError(ex2);
                     throw new Exception($"Web Service {dsiWsToko} Tidak Tersedia");
                 }
 
@@ -233,7 +238,8 @@ namespace DcTransferFtpNew.Logics {
                     string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
                     string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
                 }
-                catch (Exception ex) {
+                catch (Exception ex3) {
+                    _logger.WriteError(ex3);
                     throw new Exception($"Web Service {dsiWsDc} Tidak Tersedia");
                 }
 
