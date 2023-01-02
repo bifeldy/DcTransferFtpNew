@@ -75,17 +75,23 @@ namespace DcTransferFtpNew.Logics {
                 //
                 // v1062 di commend gk tw fungsi nya buat apa ?? (Sulis,01/03/2021)
                 //
-                // GetDataAntarDC.Service wsGetAntarDC = new GetDataAntarDC.Service {
-                //     Url = await _db.GetURLWebService("LISTANTARDC") ?? _app.GetConfig("ws_list_antar_dc")
-                // };
-                // string sValueGet = wsGetAntarDC.GetDataAntarDC();
+                // string listAntarDc = "LISTANTARDC";
+                // try {
+                //     GetDataAntarDC.Service wsGetAntarDC = new GetDataAntarDC.Service {
+                //         Url = await _db.GetURLWebService(listAntarDc) ?? _app.GetConfig("ws_list_antar_dc")
+                //     };
+                //     string sValueGet = wsGetAntarDC.GetDataAntarDC();
                 // 
-                // List<DataAntarDC> objListAntarDC = _converter.JsonToObj<List<DataAntarDC>>(sValueGet);
-                // if (objListAntarDC.Count > 0) {
-                //     string tabel = "DC_TABEL_DC_TEMP";
-                //     DataTable dtInsert = _converter.ConvertListToDataTable(tabel, objListAntarDC);
-                //     await _db.TruncateTableOraPg(tabel);
-                //     await _db.BulkInsertIntoOraPg(tabel, dtInsert);
+                //     List<DataAntarDC> objListAntarDC = _converter.JsonToObj<List<DataAntarDC>>(sValueGet);
+                //     if (objListAntarDC.Count > 0) {
+                //         string tabel = "DC_TABEL_DC_TEMP";
+                //         DataTable dtInsert = _converter.ConvertListToDataTable(tabel, objListAntarDC);
+                //         await _db.TruncateTableOraPg(tabel);
+                //         await _db.BulkInsertIntoOraPg(tabel, dtInsert);
+                //     }
+                // }
+                // catch (Exception ex) {
+                //     throw new Exception($"Web Service {listAntarDc} Tidak Tersedia");
                 // }
                 //
 
@@ -192,17 +198,23 @@ namespace DcTransferFtpNew.Logics {
                 TargetKirim += 1;
 
                 // Tambahan insert data DSI 22/03/2019 Sulis
-                DSI_WS.DSI_WS dsi_ws = new DSI_WS.DSI_WS {
-                    Url = await _db.GetURLWebService("DSI_WSTOKO") ?? _app.GetConfig("ws_dsi")
-                };
-                string responseDsiDetail = dsi_ws.Get_DSIDetail(datePeriode);
-         
-                List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObj<List<DataDSI_WS>>(responseDsiDetail);
-                if (objListDataDSIWS.Count > 0) {
-                    string tabel = "DC_DSI_WSTOKO";
-                    DataTable dtInsert = _converter.ConvertListToDataTable(tabel, objListDataDSIWS);
-                    await _db.BulananDeleteDcDsiWsToko(fileTimeIdBulanGFormat);
-                    await _db.BulkInsertIntoOraPg(tabel, dtInsert);
+                string dsiWsToko = "DSI_WSTOKO";
+                try {
+                    DSI_WS.DSI_WS dsi_ws = new DSI_WS.DSI_WS {
+                        Url = await _db.GetURLWebService(dsiWsToko) ?? _app.GetConfig("ws_dsi")
+                    };
+                    string responseDsiDetail = dsi_ws.Get_DSIDetail(datePeriode);
+
+                    List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObj<List<DataDSI_WS>>(responseDsiDetail);
+                    if (objListDataDSIWS.Count > 0) {
+                        string tabel = $"DC_{dsiWsToko}";
+                        DataTable dtInsert = _converter.ConvertListToDataTable(tabel, objListDataDSIWS);
+                        await _db.BulananDeleteDcDsiWsToko(fileTimeIdBulanGFormat);
+                        await _db.BulkInsertIntoOraPg(tabel, dtInsert);
+                    }
+                }
+                catch (Exception ex) {
+                    throw new Exception($"Web Service {dsiWsToko} Tidak Tersedia");
                 }
 
                 string procName6 = "GET_DSI_EVO";
@@ -211,13 +223,19 @@ namespace DcTransferFtpNew.Logics {
                     throw new Exception($"Gagal Menjalankan Procedure {procName6}");
                 }
 
-                GetAnalisaDSIHO.Service dsi_ho = new GetAnalisaDSIHO.Service {
-                    Url = await _db.GetURLWebService("DSI_WSDC") ?? _app.GetConfig("ws_dsi_ho")
-                };
-                DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable($"{datePeriode:yyyyMM}");
-                List<DataDSI_ANALISA> lsDCAnalisa = _converter.ConvertDataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
-                string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
-                string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
+                string dsiWsDc = "DSI_WSDC";
+                try {
+                    GetAnalisaDSIHO.Service dsi_ho = new GetAnalisaDSIHO.Service {
+                        Url = await _db.GetURLWebService(dsiWsDc) ?? _app.GetConfig("ws_dsi_ho")
+                    };
+                    DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable($"{datePeriode:yyyyMM}");
+                    List<DataDSI_ANALISA> lsDCAnalisa = _converter.ConvertDataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
+                    string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
+                    string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
+                }
+                catch (Exception ex) {
+                    throw new Exception($"Web Service {dsiWsDc} Tidak Tersedia");
+                }
 
                 string procName7 = "TRF_NBRMRBREAD_EVO";
                 CDbExecProcResult res7 = await _db.CALL__P_TGL(procName7, datePeriode);
