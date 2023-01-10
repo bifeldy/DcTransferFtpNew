@@ -279,7 +279,7 @@ namespace DcTransferFtpNew.Logics {
 
                 DataTable dtRettok = await _db.TaxTempGetDataTable(xDate);
 
-                List<DCHO_TTF_HDR_LOG> listTTF = _converter.ConvertDataTableToList<DCHO_TTF_HDR_LOG>(dtRettok);
+                List<DCHO_TTF_HDR_LOG> listTTF = _converter.DataTableToList<DCHO_TTF_HDR_LOG>(dtRettok);
                 string sTTF = _converter.ObjectToJson(listTTF);
                 byte[] byteOfData = _stream.MemStream(sTTF);
                 string tempHasil = ws.SendLogTTF(byteOfData);

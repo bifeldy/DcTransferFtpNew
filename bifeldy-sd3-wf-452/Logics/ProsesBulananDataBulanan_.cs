@@ -212,7 +212,7 @@ namespace DcTransferFtpNew.Logics {
                     List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObj<List<DataDSI_WS>>(responseDsiDetail);
                     if (objListDataDSIWS.Count > 0) {
                         string tabel = $"DC_{dsiWsToko}";
-                        DataTable dtInsert = _converter.ConvertListToDataTable(tabel, objListDataDSIWS);
+                        DataTable dtInsert = _converter.ListToDataTable(objListDataDSIWS, tabel);
                         await _db.BulananDeleteDcDsiWsToko(fileTimeIdBulanGFormat);
                         await _db.BulkInsertIntoOraPg(tabel, dtInsert);
                     }
@@ -234,7 +234,7 @@ namespace DcTransferFtpNew.Logics {
                         Url = await _db.GetURLWebService(dsiWsDc) ?? _app.GetConfig("ws_dsi_ho")
                     };
                     DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable($"{datePeriode:yyyyMM}");
-                    List<DataDSI_ANALISA> lsDCAnalisa = _converter.ConvertDataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
+                    List<DataDSI_ANALISA> lsDCAnalisa = _converter.DataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
                     string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
                     string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
                 }
