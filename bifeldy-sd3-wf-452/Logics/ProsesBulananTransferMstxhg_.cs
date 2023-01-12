@@ -13,22 +13,15 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using bifeldy_sd3_lib_452.Models;
 using bifeldy_sd3_lib_452.Utilities;
 
-using DcTransferFtpNew.DSI_WS;
-using DcTransferFtpNew.GetAnalisaDSIHO;
-using DcTransferFtpNew.GetDataAntarDC;
-
 using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Utilities;
-using DcTransferFtpNew.Models;
 
 namespace DcTransferFtpNew.Logics {
 
