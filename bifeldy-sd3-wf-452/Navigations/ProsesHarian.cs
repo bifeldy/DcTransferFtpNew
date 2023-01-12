@@ -64,6 +64,7 @@ namespace DcTransferFtpNew.Navigations {
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianRealToc", Text = "Data TOC" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianBpbProc", Text = "Data BPB Proc" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianNpkBap", Text = "Data NPK BAP" });
+            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianBrdRekon", Text = "Data BRD Rekon" });
         }
 
         private void dateTimePickerHarianAwal_ValueChanged(object sender, EventArgs e) {

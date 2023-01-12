@@ -118,6 +118,7 @@
     <Compile Include="Logics\ProsesBulananDataBulanan_.cs" />
     <Compile Include="Logics\ProsesBulananTransferMstxhg_.cs" />
     <Compile Include="Logics\ProsesHarianBpbProc_.cs" />
+    <Compile Include="Logics\ProsesHarianBrdRekon_.cs" />
     <Compile Include="Logics\ProsesHarianEndorsement_.cs" />
     <Compile Include="Logics\ProsesHarianDataHarian_.cs" />
     <Compile Include="Logics\ProsesHarianIcho_.cs" />
