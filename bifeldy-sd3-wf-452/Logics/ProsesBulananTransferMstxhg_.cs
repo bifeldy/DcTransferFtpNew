@@ -73,18 +73,18 @@ namespace DcTransferFtpNew.Logics {
                 await _qTrfCsv.CreateCSVFile("MSTXHG", csvFileName);
                 TargetKirim += JumlahServerKirimCsv;
 
-                string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "MSTXHG") ?? "MSTXHG";
+                string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "MSTXHG");
                 _berkas.ZipListFileInFolder(zipFileName);
                 TargetKirim += JumlahServerKirimZip;
 
                 BerhasilKirim += await _dcFtpT.KirimAllCsv("LOCAL"); // *.CSV Sebanyak :: TargetKirim
-                BerhasilKirim += await _dcFtpT.KirimFtpDev("HARIAN", zipFileName, true); // *.ZIP Sebanyak :: 1
+                BerhasilKirim += await _dcFtpT.KirimFtpDev("MSTXHG", zipFileName, true); // *.ZIP Sebanyak :: 1
 
                 csvFileName = $"MSTXHGG{fileTimeMSTXHGGFormat}.CSV";
                 await _qTrfCsv.CreateCSVFile("MSTXHGG", csvFileName);
                 // TargetKirim += JumlahServerKirimCsv;
 
-                zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "MSTXHGG") ?? "MSTXHGG";
+                zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "MSTXHGG");
                 _berkas.ZipListFileInFolder(zipFileName);
                 TargetKirim += JumlahServerKirimZip;
 
