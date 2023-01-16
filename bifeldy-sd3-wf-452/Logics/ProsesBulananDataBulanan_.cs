@@ -143,7 +143,7 @@ namespace DcTransferFtpNew.Logics {
 
                 // Tambahan untuk buat file untuk TAXTEMP, Penjualan, dan BPB ATK (Sulis 09/10/2018)
                 string procName2 = "CREATE_TAXTEMPBLN_EVO";
-                CDbExecProcResult res2 = await _db.CALL_DataBulananCentralisasiHO(procName2, $"{datePeriode:yyyymm}");
+                CDbExecProcResult res2 = await _db.CALL_DataBulananCentralisasiHO(procName2, $"{datePeriode:yyyyMM}");
                 if (res2 == null || !res2.STATUS) {
                     throw new Exception($"Gagal Menjalankan Procedure {procName2}");
                 }
@@ -159,7 +159,7 @@ namespace DcTransferFtpNew.Logics {
                 // TargetKirim += JumlahServerKirimCsv;
 
                 string procName3 = "CREATE_PJBLN_EVO";
-                CDbExecProcResult res3 = await _db.CALL_DataBulananCentralisasiHO(procName3, $"{datePeriode:yyyymm}");
+                CDbExecProcResult res3 = await _db.CALL_DataBulananCentralisasiHO(procName3, $"{datePeriode:yyyyMM}");
                 if (res3 == null || !res3.STATUS) {
                     throw new Exception($"Gagal Menjalankan Procedure {procName3}");
                 }
@@ -175,7 +175,7 @@ namespace DcTransferFtpNew.Logics {
                 // TargetKirim += JumlahServerKirimCsv;
 
                 string procName4 = "CREATE_BPBATKBLN_EVO";
-                CDbExecProcResult res4 = await _db.CALL_DataBulananCentralisasiHO(procName4, $"{datePeriode:yyyymm}");
+                CDbExecProcResult res4 = await _db.CALL_DataBulananCentralisasiHO(procName4, $"{datePeriode:yyyyMM}");
                 if (res4 == null || !res4.STATUS) {
                     throw new Exception($"Gagal Menjalankan Procedure {procName4}");
                 }
@@ -201,47 +201,47 @@ namespace DcTransferFtpNew.Logics {
                 await _qTrfCsv.CreateCSVFile("JKM", jkm, addToQueueForZip: false);
                 TargetKirim += 1;
 
-                // Tambahan insert data DSI 22/03/2019 Sulis
-                string dsiWsToko = "DSI_WSTOKO";
-                try {
-                    DSI_WS.DSI_WS dsi_ws = new DSI_WS.DSI_WS {
-                        Url = await _db.GetURLWebService(dsiWsToko) ?? _app.GetConfig("ws_dsi")
-                    };
-                    string responseDsiDetail = dsi_ws.Get_DSIDetail(datePeriode);
-
-                    List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObj<List<DataDSI_WS>>(responseDsiDetail);
-                    if (objListDataDSIWS.Count > 0) {
-                        string tabel = $"DC_{dsiWsToko}";
-                        DataTable dtInsert = _converter.ListToDataTable(objListDataDSIWS, tabel);
-                        await _db.BulananDeleteDcDsiWsToko(fileTimeIdBulanGFormat);
-                        await _db.BulkInsertIntoOraPg(tabel, dtInsert);
-                    }
-                }
-                catch (Exception ex2) {
-                    _logger.WriteError(ex2);
-                    throw new Exception($"Web Service {dsiWsToko} Tidak Tersedia");
-                }
+                // // Tambahan insert data DSI 22/03/2019 Sulis
+                // string dsiWsToko = "DSI_WSTOKO";
+                // try {
+                //     DSI_WS.DSI_WS dsi_ws = new DSI_WS.DSI_WS {
+                //         Url = await _db.GetURLWebService(dsiWsToko) ?? _app.GetConfig("ws_dsi")
+                //     };
+                //     string responseDsiDetail = dsi_ws.Get_DSIDetail(datePeriode);
+                // 
+                //     List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObj<List<DataDSI_WS>>(responseDsiDetail);
+                //     if (objListDataDSIWS.Count > 0) {
+                //         string tabel = $"DC_{dsiWsToko}";
+                //         DataTable dtInsert = _converter.ListToDataTable(objListDataDSIWS, tabel);
+                //         await _db.BulananDeleteDcDsiWsToko(fileTimeIdBulanGFormat);
+                //         await _db.BulkInsertIntoOraPg(tabel, dtInsert);
+                //     }
+                // }
+                // catch (Exception ex2) {
+                //     _logger.WriteError(ex2);
+                //     throw new Exception($"Web Service {dsiWsToko} Tidak Tersedia");
+                // }
 
                 string procName6 = "GET_DSI_EVO";
-                CDbExecProcResult res6 = await _db.CALL_DataBulananCentralisasiHO(procName6, $"{datePeriode:yyyymm}");
+                CDbExecProcResult res6 = await _db.CALL_DataBulananCentralisasiHO(procName6, $"{datePeriode:yyyyMM}");
                 if (res6 == null || !res6.STATUS) {
                     throw new Exception($"Gagal Menjalankan Procedure {procName6}");
                 }
 
-                string dsiWsDc = "DSI_WSDC";
-                try {
-                    GetAnalisaDSIHO.Service dsi_ho = new GetAnalisaDSIHO.Service {
-                        Url = await _db.GetURLWebService(dsiWsDc) ?? _app.GetConfig("ws_dsi_ho")
-                    };
-                    DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable($"{datePeriode:yyyyMM}");
-                    List<DataDSI_ANALISA> lsDCAnalisa = _converter.DataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
-                    string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
-                    string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
-                }
-                catch (Exception ex3) {
-                    _logger.WriteError(ex3);
-                    throw new Exception($"Web Service {dsiWsDc} Tidak Tersedia");
-                }
+                // string dsiWsDc = "DSI_WSDC";
+                // try {
+                //     GetAnalisaDSIHO.Service dsi_ho = new GetAnalisaDSIHO.Service {
+                //         Url = await _db.GetURLWebService(dsiWsDc) ?? _app.GetConfig("ws_dsi_ho")
+                //     };
+                //     DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable($"{datePeriode:yyyyMM}");
+                //     List<DataDSI_ANALISA> lsDCAnalisa = _converter.DataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
+                //     string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
+                //     string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
+                // }
+                // catch (Exception ex3) {
+                //     _logger.WriteError(ex3);
+                //     throw new Exception($"Web Service {dsiWsDc} Tidak Tersedia");
+                // }
 
                 string procName7 = "TRF_NBRMRBREAD_EVO";
                 CDbExecProcResult res7 = await _db.CALL__P_TGL(procName7, datePeriode);
@@ -261,15 +261,15 @@ namespace DcTransferFtpNew.Logics {
                 }
                 TargetKirim += 1;
 
-                BerhasilKirim += await _dcFtpT.KirimAllCsv("LOCAL"); // *.CSV Sebanyak :: TargetKirim
-                BerhasilKirim += await _dcFtpT.KirimFtpDev("Data Bulanan"); // *.CSV Sebanyak :: TargetKirim
-
-                csvFileName = await _db.Q_TRF_CSV__GET("q_namafile", "JKM") ?? jkm;
-                BerhasilKirim += await _dcFtpT.KirimSingleCsv("TTF", csvFileName); // *.CSV Sebanyak :: 1
-                BerhasilKirim += await _dcFtpT.KirimSingleZip("TTF", zipFileName); // *.ZIP Sebanyak :: 1
-
-                csvFileName = await _db.Q_TRF_CSV__GET("q_namafile", "NBRMRBREAD") ?? nbrMrBread;
-                BerhasilKirim += await _dcFtpT.KirimSingleCsv("NBRMRBREAD", csvFileName); // *.CSV Sebanyak :: 1
+                // BerhasilKirim += await _dcFtpT.KirimAllCsv("LOCAL"); // *.CSV Sebanyak :: TargetKirim
+                // BerhasilKirim += await _dcFtpT.KirimFtpDev("Data Bulanan"); // *.CSV Sebanyak :: TargetKirim
+                // 
+                // csvFileName = await _db.Q_TRF_CSV__GET("q_namafile", "JKM") ?? jkm;
+                // BerhasilKirim += await _dcFtpT.KirimSingleCsv("TTF", csvFileName); // *.CSV Sebanyak :: 1
+                // BerhasilKirim += await _dcFtpT.KirimSingleZip("TTF", zipFileName); // *.ZIP Sebanyak :: 1
+                // 
+                // csvFileName = await _db.Q_TRF_CSV__GET("q_namafile", "NBRMRBREAD") ?? nbrMrBread;
+                // BerhasilKirim += await _dcFtpT.KirimSingleCsv("NBRMRBREAD", csvFileName); // *.CSV Sebanyak :: 1
 
                 _berkas.CleanUp();
             });
