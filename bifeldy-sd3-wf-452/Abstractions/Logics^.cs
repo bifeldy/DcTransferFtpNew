@@ -87,24 +87,28 @@ namespace DcTransferFtpNew.Abstractions {
         }
 
         protected void CheckHasilKiriman() {
+            MessageBoxIcon msgBxIco = MessageBoxIcon.Error;
             if (string.IsNullOrEmpty(InfoMessage)) {
                 if (BerhasilKirim == 0 && TargetKirim == 0) {
                     InfoMessage = $"Selesai Proses {button.Text}, Namun Tidak Ada File Yang Dikirim !!";
+                    msgBxIco = MessageBoxIcon.Information;
                 }
                 else if (BerhasilKirim == 0 || TargetKirim == 0) {
                     InfoMessage = $"Ada Masalah, Belum Ada {button.Text} Yang Diproses !!";
+                    msgBxIco = MessageBoxIcon.Warning;
                 }
                 else if (BerhasilKirim < TargetKirim && TargetKirim > 0) {
                     InfoMessage = $"Ada Beberapa Proses {button.Text} Yang Gagal !!";
                 }
                 else if (BerhasilKirim == TargetKirim && TargetKirim > 0) {
                     InfoMessage = $"{button.Text} Sukses !!";
+                    msgBxIco = MessageBoxIcon.Information;
                 }
                 else {
                     InfoMessage = $"{button.Text} Error !!";
                 }
             }
-            MessageBox.Show(InfoMessage, button.Text);
+            MessageBox.Show(InfoMessage, button.Text, MessageBoxButtons.OK, msgBxIco);
         }
 
     }
