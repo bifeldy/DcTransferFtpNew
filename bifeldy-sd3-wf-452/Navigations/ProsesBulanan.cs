@@ -39,6 +39,7 @@ namespace DcTransferFtpNew.Navigations {
             InitializeButtonProsesBulanan();
 
             dtpBulanan.MaxDate = DateTime.Now;
+            dtpBulanan.Value = DateTime.Now;
         }
 
         private void CProsesBulanan_Load(object sender, EventArgs e) {

@@ -41,6 +41,8 @@ namespace DcTransferFtpNew.Navigations {
             InitializeButtonProsesHarian();
 
             dateTimePickerHarianAwal.MaxDate = DateTime.Now;
+            dateTimePickerHarianAwal.Value = DateTime.Now;
+
             dateTimePickerHarianAkhir.MaxDate = DateTime.Now;
 
             dateTimePickerHarianAkhir.MinDate = dateTimePickerHarianAwal.Value;
