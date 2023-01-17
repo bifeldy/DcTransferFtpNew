@@ -88,6 +88,9 @@ namespace DcTransferFtpNew.Abstractions {
 
         protected void CheckHasilKiriman() {
             if (string.IsNullOrEmpty(InfoMessage)) {
+                if (BerhasilKirim == 0 && TargetKirim == 0) {
+                    InfoMessage = $"Selesai Proses {button.Text}, Namun Tidak Ada File Yang Dikirim !!";
+                }
                 if (BerhasilKirim == 0 || TargetKirim == 0) {
                     InfoMessage = $"Ada Masalah, Belum Ada {button.Text} Yang Diproses !!";
                 }

@@ -128,6 +128,7 @@
     <Compile Include="Logics\ProsesHarianFingerScan_.cs" />
     <Compile Include="Logics\ProsesHarianRealToc_.cs" />
     <Compile Include="Logics\ProsesHarianTaxFull_.cs" />
+    <Compile Include="Logics\ProsesHarianTaxNonFad_.cs" />
     <Compile Include="Logics\ProsesHarianTaxRe_.cs" />
     <Compile Include="Logics\ProsesHarianTrfRekonOracle_.cs" />
     <Compile Include="Models\DataAntarDc.cs" />

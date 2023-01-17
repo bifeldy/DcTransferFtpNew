@@ -44,12 +44,18 @@ namespace DcTransferFtpNew.Navigations {
             dateTimePickerHarianAwal.Value = DateTime.Now;
 
             dateTimePickerHarianAkhir.MaxDate = DateTime.Now;
-
             dateTimePickerHarianAkhir.MinDate = dateTimePickerHarianAwal.Value;
         }
 
         private void CProsesHarian_Load(object sender, EventArgs e) {
             AddButtonToMainPanel(Parent.Parent, ButtonMenuHarianList, flowLayoutPanelProsesHarian);
+        }
+
+        private void dateTimePickerHarianAwal_ValueChanged(object sender, EventArgs e) {
+            if (dateTimePickerHarianAwal.Value > dateTimePickerHarianAkhir.Value) {
+                dateTimePickerHarianAkhir.Value = dateTimePickerHarianAwal.Value;
+            }
+            dateTimePickerHarianAkhir.MinDate = dateTimePickerHarianAwal.Value;
         }
 
         private void InitializeButtonProsesHarian() {
@@ -67,13 +73,7 @@ namespace DcTransferFtpNew.Navigations {
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianBpbProc", Text = "Data BPB Proc" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianNpkBap", Text = "Data NPK BAP" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianBrdRekon", Text = "Data BRD Rekon" });
-        }
-
-        private void dateTimePickerHarianAwal_ValueChanged(object sender, EventArgs e) {
-            if (dateTimePickerHarianAwal.Value > dateTimePickerHarianAkhir.Value) {
-                dateTimePickerHarianAkhir.Value = dateTimePickerHarianAwal.Value;
-            }
-            dateTimePickerHarianAkhir.MinDate = dateTimePickerHarianAwal.Value;
+            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianTaxNonFad", Text = "Data TAX Non-FAD" });
         }
 
     }
