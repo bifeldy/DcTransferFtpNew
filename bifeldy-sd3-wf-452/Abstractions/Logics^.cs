@@ -83,7 +83,7 @@ namespace DcTransferFtpNew.Abstractions {
 
         protected async Task<bool> IsDateEndYesterday(DateTime dateEnd, int lastDay = 1) {
             DateTime currentDay = await _db.GetYesterdayDate(lastDay);
-            return dateEnd <= currentDay ? true : throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari!");
+            return dateEnd <= currentDay ? true : throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari <= {currentDay:dd-MMM-yyyy}!");
         }
 
         protected void CheckHasilKiriman() {
