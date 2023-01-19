@@ -344,7 +344,7 @@ namespace DcTransferFtpNew.Logics {
                         string fileName = resAll.FileInformation.Name;
                         string columnDb = ftpFileKirim[fileName];
                         bool success = resAll.FtpStatusSendGet == FtpStatus.Success;
-                        await _db.UpdateDcDcAmtaLog($@"{columnDb} = {columnDb} || 'AMTA {(success ? "Ok" : "Gagal")}'", dateStart);
+                        await _db.UpdateDcDcAmtaLog($"{columnDb} = {columnDb} || 'AMTA {(success ? "Ok" : "Gagal")}'", dateStart);
                     }
                     BerhasilKirim += ftpResultInfo1.Success.Count; // *.CSV Sebanyak :: TargetKirim
 
@@ -354,7 +354,7 @@ namespace DcTransferFtpNew.Logics {
                         string fileName = resAll.FileInformation.Name;
                         string columnDb = ftpFileKirim[fileName];
                         bool success = resAll.FtpStatusSendGet == FtpStatus.Success;
-                        await _db.UpdateDcDcAmtaLog($@"{columnDb} = {columnDb} || ' - ' || 'WEBREKAP {(success ? "Ok" : "Gagal")}'", dateStart);
+                        await _db.UpdateDcDcAmtaLog($"{columnDb} = {columnDb} || ' - ' || 'WEBREKAP {(success ? "Ok" : "Gagal")}'", dateStart);
                     }
                     BerhasilKirim += ftpResultInfo2.Success.Count; // *.CSV Sebanyak :: TargetKirim
 
