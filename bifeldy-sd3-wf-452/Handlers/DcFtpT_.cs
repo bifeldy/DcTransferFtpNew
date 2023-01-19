@@ -250,10 +250,17 @@ namespace DcTransferFtpNew.Handlers {
                 );
             }
             if (reportLogHo && logs.Count > 0) {
-                // Transfer log ke HO (Sulis, v1054, 22/08/2019)
-                string urlWebServiceHO = await _db.GetURLWebService("HO") ?? _app.GetConfig("ws_ho");
-                SenderLog senderLog = new SenderLog(urlWebServiceHO);
-                senderLog.CatatTransferLogToHO(logs);
+                string HO = "HO";
+                try {
+                    // Transfer log ke HO (Sulis, v1054, 22/08/2019)
+                    string urlWebServiceHO = await _db.GetURLWebService(HO); // ?? _app.GetConfig("ws_ho");
+                    SenderLog senderLog = new SenderLog(urlWebServiceHO);
+                    senderLog.CatatTransferLogToHO(logs);
+                }
+                catch (Exception ex) {
+                    _logger.WriteError(ex);
+                    MessageBox.Show(ex.Message, $"Web Service {HO} Tidak Tersedia", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             previewResult(ftpResultInfo);
             return ftpResultInfo;

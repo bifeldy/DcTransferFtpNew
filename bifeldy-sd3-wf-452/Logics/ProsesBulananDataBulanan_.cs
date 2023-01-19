@@ -81,21 +81,21 @@ namespace DcTransferFtpNew.Logics {
                 // string listAntarDc = "LISTANTARDC";
                 // try {
                 //     GetDataAntarDC.Service wsGetAntarDC = new GetDataAntarDC.Service {
-                //         Url = await _db.GetURLWebService(listAntarDc) ?? _app.GetConfig("ws_list_antar_dc")
+                //         Url = await _db.GetURLWebService(listAntarDc) // ?? _app.GetConfig("ws_list_antar_dc")
                 //     };
                 //     string sValueGet = wsGetAntarDC.GetDataAntarDC();
                 // 
                 //     List<DataAntarDC> objListAntarDC = _converter.JsonToObj<List<DataAntarDC>>(sValueGet);
                 //     if (objListAntarDC.Count > 0) {
                 //         string tabel = "DC_TABEL_DC_TEMP";
-                //         DataTable dtInsert = _converter.ConvertListToDataTable(tabel, objListAntarDC);
+                //         DataTable dtInsert = _converter.ListToDataTable(objListAntarDC, tabel);
                 //         await _db.TruncateTableOraPg(tabel);
                 //         await _db.BulkInsertIntoOraPg(tabel, dtInsert);
                 //     }
                 // }
                 // catch (Exception ex1) {
                 //     _logger.WriteError(ex1);
-                //     throw new Exception($"Web Service {listAntarDc} Tidak Tersedia");
+                //     MessageBox.Show(ex.Message, $"Web Service {listAntarDc}", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 // }
                 //
 
@@ -205,10 +205,10 @@ namespace DcTransferFtpNew.Logics {
                 string dsiWsToko = "DSI_WSTOKO";
                 try {
                     DSI_WS.DSI_WS dsi_ws = new DSI_WS.DSI_WS {
-                        Url = await _db.GetURLWebService(dsiWsToko) ?? _app.GetConfig("ws_dsi")
+                        Url = await _db.GetURLWebService(dsiWsToko) // ?? _app.GetConfig("ws_dsi")
                     };
                     string responseDsiDetail = dsi_ws.Get_DSIDetail(datePeriode);
-                
+
                     List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObj<List<DataDSI_WS>>(responseDsiDetail);
                     if (objListDataDSIWS.Count > 0) {
                         string tabel = $"DC_{dsiWsToko}";
@@ -219,7 +219,7 @@ namespace DcTransferFtpNew.Logics {
                 }
                 catch (Exception ex2) {
                     _logger.WriteError(ex2);
-                    throw new Exception($"Web Service {dsiWsToko} Tidak Tersedia");
+                    MessageBox.Show(ex2.Message, $"Web Service {dsiWsToko}", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 string procName6 = "GET_DSI_EVO";
@@ -231,16 +231,17 @@ namespace DcTransferFtpNew.Logics {
                 string dsiWsDc = "DSI_WSDC";
                 try {
                     GetAnalisaDSIHO.Service dsi_ho = new GetAnalisaDSIHO.Service {
-                        Url = await _db.GetURLWebService(dsiWsDc) ?? _app.GetConfig("ws_dsi_ho")
+                        Url = await _db.GetURLWebService(dsiWsDc) // ?? _app.GetConfig("ws_dsi_ho")
                     };
                     DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable($"{datePeriode:yyyyMM}");
+
                     List<DataDSI_ANALISA> lsDCAnalisa = _converter.DataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
                     string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
                     string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
                 }
                 catch (Exception ex3) {
                     _logger.WriteError(ex3);
-                    throw new Exception($"Web Service {dsiWsDc} Tidak Tersedia");
+                    MessageBox.Show(ex3.Message, $"Web Service {dsiWsDc}", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 string procName7 = "TRF_NBRMRBREAD_EVO";
