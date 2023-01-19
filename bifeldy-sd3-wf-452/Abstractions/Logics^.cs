@@ -89,7 +89,7 @@ namespace DcTransferFtpNew.Abstractions {
         protected void CheckHasilKiriman() {
             MessageBoxIcon msgBxIco = MessageBoxIcon.Error;
             if (string.IsNullOrEmpty(InfoMessage)) {
-                if (BerhasilKirim == 0 && TargetKirim == 0) {
+                if (JumlahServerKirimCsv == 0 && JumlahServerKirimZip == 0 && BerhasilKirim == 0 && TargetKirim == 0) {
                     InfoMessage = $"Selesai Proses {button.Text}, Namun Tidak Ada File Yang Dikirim !!";
                     msgBxIco = MessageBoxIcon.Information;
                 }
