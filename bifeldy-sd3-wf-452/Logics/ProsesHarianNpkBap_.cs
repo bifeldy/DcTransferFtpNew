@@ -106,8 +106,8 @@ namespace DcTransferFtpNew.Logics {
                     _berkas.ZipListFileInFolder(zipFileName);
                     TargetKirim += JumlahServerKirimZip;
 
-                    BerhasilKirim += await _dcFtpT.KirimSingleZip("LOCAL", zipFileName); // *.ZIP Sebanyak :: 1
-                    BerhasilKirim += await _dcFtpT.KirimFtpDev("NPKBAP", zipFileName: zipFileName); // *.ZIP Sebanyak :: 1
+                    BerhasilKirim += (await _dcFtpT.KirimSingleZip("LOCAL", zipFileName)).Success.Count; // *.ZIP Sebanyak :: 1
+                    BerhasilKirim += (await _dcFtpT.KirimFtpDev("NPKBAP", zipFileName: zipFileName)).Success.Count; // *.ZIP Sebanyak :: 1
 
                     _berkas.CleanUp();
                 }

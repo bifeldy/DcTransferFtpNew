@@ -95,9 +95,9 @@ namespace DcTransferFtpNew.Logics {
                     _berkas.ZipListFileInFolder(zipFileName);
                     TargetKirim += JumlahServerKirimZip;
 
-                    BerhasilKirim += await _dcFtpT.KirimAllCsv("LOCAL"); // *.CSV Sebanyak :: TargetKirim
-                    BerhasilKirim += await _dcFtpT.KirimFtpDev("PLDC", zipFileName, true); // *.ZIP Sebanyak :: 1
-                    BerhasilKirim += await _dcFtpT.KirimSingleZip("EIS", zipFileName); // *.ZIP Sebanyak :: 1
+                    BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                    BerhasilKirim += (await _dcFtpT.KirimFtpDev("PLDC", zipFileName, true)).Success.Count; // *.ZIP Sebanyak :: 1
+                    BerhasilKirim += (await _dcFtpT.KirimSingleZip("EIS", zipFileName)).Success.Count; // *.ZIP Sebanyak :: 1
 
                     _berkas.CleanUp();
                 }

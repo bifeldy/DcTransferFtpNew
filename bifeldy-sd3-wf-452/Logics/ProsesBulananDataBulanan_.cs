@@ -261,15 +261,15 @@ namespace DcTransferFtpNew.Logics {
                 }
                 TargetKirim += 1;
 
-                BerhasilKirim += await _dcFtpT.KirimAllCsv("LOCAL"); // *.CSV Sebanyak :: TargetKirim
-                BerhasilKirim += await _dcFtpT.KirimFtpDev("Data Bulanan"); // *.CSV Sebanyak :: TargetKirim
+                BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                BerhasilKirim += (await _dcFtpT.KirimFtpDev("Data Bulanan")).Success.Count; // *.CSV Sebanyak :: TargetKirim
                 
                 csvFileName = await _db.Q_TRF_CSV__GET("q_namafile", "JKM") ?? jkm;
-                BerhasilKirim += await _dcFtpT.KirimSingleCsv("TTF", csvFileName); // *.CSV Sebanyak :: 1
-                BerhasilKirim += await _dcFtpT.KirimSingleZip("TTF", zipFileName); // *.ZIP Sebanyak :: 1
+                BerhasilKirim += (await _dcFtpT.KirimSingleCsv("TTF", csvFileName)).Success.Count; // *.CSV Sebanyak :: 1
+                BerhasilKirim += (await _dcFtpT.KirimSingleZip("TTF", zipFileName)).Success.Count; // *.ZIP Sebanyak :: 1
                 
                 csvFileName = await _db.Q_TRF_CSV__GET("q_namafile", "NBRMRBREAD") ?? nbrMrBread;
-                BerhasilKirim += await _dcFtpT.KirimSingleCsv("NBRMRBREAD", csvFileName); // *.CSV Sebanyak :: 1
+                BerhasilKirim += (await _dcFtpT.KirimSingleCsv("NBRMRBREAD", csvFileName)).Success.Count; // *.CSV Sebanyak :: 1
 
                 _berkas.CleanUp();
             });
