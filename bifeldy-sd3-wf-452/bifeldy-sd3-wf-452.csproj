@@ -138,7 +138,6 @@
     <Compile Include="Models\DataDSI_WS.cs" />
     <Compile Include="Models\DCHO_TTF_HDR_LOG.cs" />
     <Compile Include="Models\DC_FTP_T.cs" />
-    <Compile Include="Models\DC_TABEL_V.cs" />
     <Compile Include="Navigations\ProsesBulanan.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -21,7 +21,6 @@ using bifeldy_sd3_lib_452.Utilities;
 
 using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Handlers;
-using DcTransferFtpNew.Utilities;
 
 namespace DcTransferFtpNew.Logics {
 
@@ -29,7 +28,6 @@ namespace DcTransferFtpNew.Logics {
 
     public sealed class CProsesHarianBrdRekon : CLogics, IProsesHarianBrdRekon {
 
-        private readonly IApp _app;
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
@@ -37,14 +35,12 @@ namespace DcTransferFtpNew.Logics {
         private readonly IDcFtpT _dcFtpT;
 
         public CProsesHarianBrdRekon(
-            IApp app,
             ILogger logger,
             IDb db,
             IBerkas berkas,
             IQTrfCsv q_trf_csv,
             IDcFtpT dc_ftp_t
         ) : base(db) {
-            _app = app;
             _logger = logger;
             _db = db;
             _berkas = berkas;

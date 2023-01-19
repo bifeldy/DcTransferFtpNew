@@ -30,7 +30,6 @@ namespace DcTransferFtpNew.Logics {
     public sealed class CProsesBulananTransferMstxhg : CLogics, IProsesBulananTransferMstxhg {
 
         private readonly IApp _app;
-        private readonly IConverter _converter;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
         private readonly IQTrfCsv _qTrfCsv;
@@ -38,14 +37,12 @@ namespace DcTransferFtpNew.Logics {
 
         public CProsesBulananTransferMstxhg(
             IApp app,
-            IConverter converter,
             IDb db,
             IBerkas berkas,
             IQTrfCsv q_trf_csv,
             IDcFtpT dc_ftp_t
         ) : base(db) {
             _app = app;
-            _converter = converter;
             _db = db;
             _berkas = berkas;
             _qTrfCsv = q_trf_csv;

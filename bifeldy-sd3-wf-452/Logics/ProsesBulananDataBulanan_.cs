@@ -36,7 +36,6 @@ namespace DcTransferFtpNew.Logics {
 
     public sealed class CProsesBulananDataBulanan : CLogics, IProsesBulananDataBulanan {
 
-        private readonly IApp _app;
         private readonly ILogger _logger;
         private readonly IConverter _converter;
         private readonly IDb _db;
@@ -45,7 +44,6 @@ namespace DcTransferFtpNew.Logics {
         private readonly IDcFtpT _dcFtpT;
 
         public CProsesBulananDataBulanan(
-            IApp app,
             ILogger logger,
             IConverter converter,
             IDb db,
@@ -53,7 +51,6 @@ namespace DcTransferFtpNew.Logics {
             IQTrfCsv q_trf_csv,
             IDcFtpT dc_ftp_t
         ) : base(db) {
-            _app = app;
             _logger = logger;
             _converter = converter;
             _db = db;

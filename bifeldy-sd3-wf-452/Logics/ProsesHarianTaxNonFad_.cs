@@ -29,27 +29,21 @@ namespace DcTransferFtpNew.Logics {
 
     public sealed class CProsesHarianTaxNonFad : CLogics, IProsesHarianTaxNonFad {
 
-        private readonly IApp _app;
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
         private readonly IQTrfCsv _qTrfCsv;
-        private readonly IDcFtpT _dcFtpT;
 
         public CProsesHarianTaxNonFad(
-            IApp app,
             ILogger logger,
             IDb db,
             IBerkas berkas,
-            IQTrfCsv q_trf_csv,
-            IDcFtpT dc_ftp_t
+            IQTrfCsv q_trf_csv
         ) : base(db) {
-            _app = app;
             _logger = logger;
             _db = db;
             _berkas = berkas;
             _qTrfCsv = q_trf_csv;
-            _dcFtpT = dc_ftp_t;
         }
 
         public override async Task Run(object sender, EventArgs e, Control currentControl) {

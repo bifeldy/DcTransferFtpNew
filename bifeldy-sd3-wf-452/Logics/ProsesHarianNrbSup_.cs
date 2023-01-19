@@ -24,8 +24,6 @@ using bifeldy_sd3_lib_452.Utilities;
 
 using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Handlers;
-using DcTransferFtpNew.Models;
-using DcTransferFtpNew.Utilities;
 
 namespace DcTransferFtpNew.Logics {
 
@@ -33,28 +31,22 @@ namespace DcTransferFtpNew.Logics {
 
     public sealed class CProsesHarianNrbSup : CLogics, IProsesHarianNrbSup {
 
-        private readonly IApp _app;
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
-        private readonly IQTrfCsv _qTrfCsv;
         private readonly IDcFtpT _dcFtpT;
         private readonly IBranchCabang _branchCabang;
 
         public CProsesHarianNrbSup(
-            IApp app,
             ILogger logger,
             IDb db,
             IBerkas berkas,
-            IQTrfCsv q_trf_csv,
             IDcFtpT dc_ftp_t,
             IBranchCabang branchCabang
         ) : base(db) {
-            _app = app;
             _logger = logger;
             _db = db;
             _berkas = berkas;
-            _qTrfCsv = q_trf_csv;
             _dcFtpT = dc_ftp_t;
             _branchCabang = branchCabang;
         }
@@ -70,7 +62,7 @@ namespace DcTransferFtpNew.Logics {
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
 
                     string kodeDCInduk = await _db.GetKodeDCInduk();
-                    List<DC_TABEL_V> listBranchConnection = _branchCabang.GetListConnection(kodeDCInduk);
+                    List<DC_TABEL_V> listBranchConnection = _branchCabang.GetListBranchConnection(kodeDCInduk);
                     List<string> ftpFileKirim = new List<string>();
 
                     for (int i = 0; i < jumlahHari; i++) {
