@@ -88,15 +88,13 @@ namespace DcTransferFtpNew.Logics {
                                 lbcDbOraPg = _db.NewExternalConnectionOra(lbc.IP_DB, lbc.DB_PORT, lbc.DB_USER_NAME, lbc.DB_PASSWORD, lbc.DB_SID);
                             }
 
+                            List<CDbQueryParamBind> nrpSup = new List<CDbQueryParamBind> {
+                                new CDbQueryParamBind { NAME = "nrb_sup", VALUE = "NRBSUP" }
+                            };
+
                             string procName = await lbcDbOraPg.ExecScalarAsync<string>(
-                                $@"
-                                    SELECT FILE_PROCEDURE
-                                    FROM DC_FILE_SCHEDULER_T
-                                    WHERE file_key = :file_key
-                                ",
-                                new List<CDbQueryParamBind> {
-                                    new CDbQueryParamBind { NAME = "file_key", VALUE = "NRBSUP" }
-                                }
+                                $@"SELECT FILE_PROCEDURE FROM DC_FILE_SCHEDULER_T WHERE file_key = :nrb_sup",
+                                nrpSup
                             );
                             CDbExecProcResult res = await lbcDbOraPg.ExecProcedureAsync(
                                 procName,
@@ -112,44 +110,23 @@ namespace DcTransferFtpNew.Logics {
                                 zipFileName = await lbcDbOraPg.ExecScalarAsync<string>(
                                     $@"
                                         SELECT {(lbc.FLAG_DBPG == "Y" ? "COALESCE" : "NVL")}(q_namazip, q_namafile)
-                                        FROM Q_TRF_CSV
-                                        WHERE q_filename = :q_filename
+                                        FROM Q_TRF_CSV WHERE q_filename = :nrb_sup
                                     ",
-                                    new List<CDbQueryParamBind> {
-                                        new CDbQueryParamBind { NAME = "q_filename", VALUE = "NRBSUP" }
-                                    }
+                                    nrpSup
                                 );
                             }
 
                             string seperator = await lbcDbOraPg.ExecScalarAsync<string>(
-                                $@"
-                                    SELECT q_seperator
-                                    FROM Q_TRF_CSV
-                                    WHERE q_filename = :q_filename
-                                ",
-                                new List<CDbQueryParamBind> {
-                                    new CDbQueryParamBind { NAME = "q_filename", VALUE = "NRBSUP" }
-                                }
+                                $@"SELECT q_seperator FROM Q_TRF_CSV WHERE q_filename = :nrb_sup",
+                                nrpSup
                             );
                             string queryForCSV = await lbcDbOraPg.ExecScalarAsync<string>(
-                                $@"
-                                    SELECT q_query
-                                    FROM Q_TRF_CSV
-                                    WHERE q_filename = :q_filename
-                                ",
-                                new List<CDbQueryParamBind> {
-                                    new CDbQueryParamBind { NAME = "q_filename", VALUE = "NRBSUP" }
-                                }
+                                $@"SELECT q_query FROM Q_TRF_CSV WHERE q_filename = :nrb_sup",
+                                nrpSup
                             );
                             string filename = await lbcDbOraPg.ExecScalarAsync<string>(
-                                $@"
-                                    SELECT q_namafile
-                                    FROM Q_TRF_CSV
-                                    WHERE q_filename = :q_filename
-                                ",
-                                new List<CDbQueryParamBind> {
-                                    new CDbQueryParamBind { NAME = "q_filename", VALUE = "NRBSUP" }
-                                }
+                                $@"SELECT q_namafile FROM Q_TRF_CSV WHERE q_filename = :nrb_sup",
+                                nrpSup
                             );
 
                             if (string.IsNullOrEmpty(seperator) || string.IsNullOrEmpty(queryForCSV) || string.IsNullOrEmpty(filename)) {
