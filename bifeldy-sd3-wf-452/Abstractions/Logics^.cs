@@ -81,12 +81,12 @@ namespace DcTransferFtpNew.Abstractions {
             return dateStart == dateEnd ? true : throw new Exception($"Hanya Bisa Di (1) Hari yang Sama");
         }
 
-        protected async Task<bool> IsDateStartYesterday(int lastDay = 1) {
+        protected async Task<bool> IsDateStartMaxYesterday(int lastDay = 1) {
             DateTime yesterDay = await _db.GetYesterdayDate(lastDay);
             return dateStart <= yesterDay ? true : throw new Exception($"Max Tanggal Awal Adalah Hari Ini - {lastDay} Hari <= {yesterDay:dd-MMM-yyyy}!");
         }
 
-        protected async Task<bool> IsDateEndYesterday(int lastDay = 1) {
+        protected async Task<bool> IsDateEndMaxYesterday(int lastDay = 1) {
             DateTime yesterDay = await _db.GetYesterdayDate(lastDay);
             return dateEnd <= yesterDay ? true : throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari <= {yesterDay:dd-MMM-yyyy}!");
         }
