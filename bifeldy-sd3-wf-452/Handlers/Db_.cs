@@ -37,6 +37,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<string> GetURLWebService(string webType);
         Task<string> GetDcExt();
         Task<string> GetWinFunction();
+        Task<string> GetKodeDCInduk();
         /* Proses Harian Data Irpc */
         Task<DataTable> GetIrpc(DateTime xDate);
         /* Proses Harian Data TaxTemp Full */
@@ -160,6 +161,10 @@ namespace DcTransferFtpNew.Handlers {
 
         public async Task<string> GetWinFunction() {
             return await OraPg.ExecScalarAsync<string>($"SELECT SUBSTR(MAX(PERIODE), 3, 4) AS WINFUNCTION FROM DC_TRNH_HDR_T");
+        }
+
+        public async Task<string> GetKodeDCInduk() {
+            return await OraPg.ExecScalarAsync<string>($"SELECT CASE WHEN TBL_JENIS_DC NOT IN ('INDUK', 'LPG', 'IPLAZA') THEN TBL_DC_INDUK ELSE TBL_DC_KODE END AS KODE_DC FROM DC_TABEL_DC_T");
         }
 
         /* Proses Harian Data Irpc */

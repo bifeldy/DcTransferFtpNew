@@ -125,6 +125,7 @@
     <Compile Include="Logics\ProsesHarianIcho_.cs" />
     <Compile Include="Logics\ProsesHarianIrpc_.cs" />
     <Compile Include="Logics\ProsesHarianNpkBap_.cs" />
+    <Compile Include="Logics\ProsesHarianNrbSup_.cs" />
     <Compile Include="Logics\ProsesHarianPldc_.cs" />
     <Compile Include="Logics\ProsesHarianFingerScan_.cs" />
     <Compile Include="Logics\ProsesHarianRealToc_.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Models\DataDSI_WS.cs" />
     <Compile Include="Models\DCHO_TTF_HDR_LOG.cs" />
     <Compile Include="Models\DC_FTP_T.cs" />
+    <Compile Include="Models\DC_TABEL_V.cs" />
     <Compile Include="Navigations\ProsesBulanan.cs">
       <SubType>UserControl</SubType>
     </Compile>
