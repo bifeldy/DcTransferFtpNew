@@ -63,6 +63,8 @@ namespace DcTransferFtpNew.Handlers {
         Task<CDbExecProcResult> CALL_DataBulananCentralisasiHO(string procName, string tahunBulan);
         Task<bool> BulananDeleteDcDsiWsToko(string fileTimeIdBulanGFormat);
         Task<DataTable> BulananDsiGetDataTable(string periode);
+        Task<bool> InsertNewDcAmtaLog(DateTime xDate);
+        Task<bool> UpdateDcDcAmtaLog(string columnValue, DateTime xDate);
     }
 
     public sealed class CDb : CDbHandler, IDb {
@@ -548,7 +550,39 @@ namespace DcTransferFtpNew.Handlers {
             );
         }
 
-        /* ** */
+        /* Proses Harian Data AMTA */
+
+        public async Task<bool> InsertNewDcAmtaLog(DateTime xDate) {
+            return await OraPg.ExecQueryAsync(
+                $@"
+                    INSERT INTO dc_amta_log (tbl_dc_kode, tgl_proses, type_proses)
+                    VALUES (:kode_dc, :x_date, :app_name)
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate },
+                    new CDbQueryParamBind { NAME = "app_name", VALUE = _app.AppName }
+                }
+            );
+        }
+
+        public async Task<bool> UpdateDcDcAmtaLog(string columnValue, DateTime xDate) {
+            return await OraPg.ExecQueryAsync(
+                $@"
+                    UPDATE dc_amta_log
+                    SET {columnValue}
+                    WHERE
+                        tbl_dc_kode = :kode_dc
+                        AND type_proses = :app_name
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                ",
+                new List<CDbQueryParamBind>() {
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "app_name", VALUE = _app.AppName },
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
+                }
+            );
+        }
 
     }
 

@@ -78,7 +78,7 @@ namespace DcTransferFtpNew.Logics {
                 TargetKirim += JumlahServerKirimZip;
 
                 BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                BerhasilKirim += (await _dcFtpT.KirimFtpDev("MSTXHG", zipFileName, true)).Success.Count; // *.ZIP Sebanyak :: 1
+                BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpDev("MSTXHG", zipFileName, true)).Success.Count; // *.ZIP Sebanyak :: 1
 
                 csvFileName = $"MSTXHGG{fileTimeMSTXHGGFormat}.CSV";
                 await _qTrfCsv.CreateCSVFile("MSTXHGG", csvFileName);

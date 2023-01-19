@@ -116,7 +116,7 @@ namespace DcTransferFtpNew.Logics {
 
                                         if (string.IsNullOrEmpty(seperator) || string.IsNullOrEmpty(queryTax2RE) || string.IsNullOrEmpty(csvFileName)) {
                                             string status_error = "Data CSV (Separator / Query / Nama File) Tidak Lengkap!";
-                                            MessageBox.Show(status_error, $"{button.Text} :: Q_TRF_CSV", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                            MessageBox.Show(status_error, $"{button.Text} :: TAX2RE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                                             await _db.UpdateDcTtfHdrLog($"status_tax = '{status_error}'", xDate);
                                         }

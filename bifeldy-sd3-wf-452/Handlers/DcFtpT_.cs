@@ -38,8 +38,8 @@ namespace DcTransferFtpNew.Handlers {
         Task<CFtpResultInfo> KirimAllZip(string pga_type, string folderPath = null);
         Task<CFtpResultInfo> KirimSelectedCsv(string pga_type, List<string> listCsvFileName, string folderPath = null);
         Task<CFtpResultInfo> KirimSelectedZip(string pga_type, List<string> listZipFileName, string folderPath = null);
-        Task<CFtpResultInfo> KirimFtpDev(string procName, string zipFileName = null, bool reportLogHo = false, string folderPath = null);
-        Task<CFtpResultInfo> KirimFtpWithLog(string pgaType, string zipFileName = null, string folderPath = null);
+        Task<CFtpResultInfo> KirimAllCsvAtauZipFtpDev(string procName, string zipFileName = null, bool reportLogHo = false, string folderPath = null);
+        Task<CFtpResultInfo> KirimAllCsvAtauZipFtpWithLog(string pgaType, string zipFileName = null, string folderPath = null);
     }
 
     public sealed class CDcFtpT : IDcFtpT {
@@ -180,7 +180,7 @@ namespace DcTransferFtpNew.Handlers {
         /// Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
         /// </summary>
 
-        public async Task<CFtpResultInfo> KirimFtpDev(string processName, string zipFileName = null, bool reportLogHo = false, string folderPath = null) {
+        public async Task<CFtpResultInfo> KirimAllCsvAtauZipFtpDev(string processName, string zipFileName = null, bool reportLogHo = false, string folderPath = null) {
             if (folderPath == null) {
                 folderPath = _berkas.TempFolderPath;
             }
@@ -233,7 +233,7 @@ namespace DcTransferFtpNew.Handlers {
             return ftpResultInfo;
         }
 
-        public async Task<CFtpResultInfo> KirimFtpWithLog(string pgaType, string zipFileName = null, string folderPath = null) {
+        public async Task<CFtpResultInfo> KirimAllCsvAtauZipFtpWithLog(string pgaType, string zipFileName = null, string folderPath = null) {
             if (folderPath == null) {
                 folderPath = _berkas.TempFolderPath;
             }
