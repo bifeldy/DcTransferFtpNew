@@ -13,6 +13,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -60,6 +61,9 @@ namespace DcTransferFtpNew.Logics {
                     _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
                     JumlahServerKirimCsv = 2;
 
+                    // { "namafile1", "columnDb1" }, { "namafile2", "columnDb2" }, ..., { "namafile*", "columnDb*" };
+                    IDictionary<string, string> ftpFileKirim = new Dictionary<string, string>();
+
                     // AMTA 30 Hari
                     dateEnd = dateStart.AddDays(30);
 
@@ -95,11 +99,8 @@ namespace DcTransferFtpNew.Logics {
                             // _berkas.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-
-                            await _db.UpdateDcDcAmtaLog($"STATUS_WEEKLY = 'Ok'", dateStart);
+                            ftpFileKirim.Add(filename1, "STATUS_WEEKLY");
+                            await _db.UpdateDcDcAmtaLog($"STATUS_WEEKLY = ''", dateStart);
                         }
                         catch (Exception ex) {
                             MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_JADWAL_WEEKLY", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -130,11 +131,8 @@ namespace DcTransferFtpNew.Logics {
                             // _berkas.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-
-                            await _db.UpdateDcDcAmtaLog($"STATUS_EXCLBULFRAC = 'Ok'", dateStart);
+                            ftpFileKirim.Add(filename2, "STATUS_EXCLBULFRAC");
+                            await _db.UpdateDcDcAmtaLog($"STATUS_EXCLBULFRAC = ''", dateStart);
                         }
                         catch (Exception ex) {
                             MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_JADWAL_WEEKLY_TOKO", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -165,11 +163,8 @@ namespace DcTransferFtpNew.Logics {
                             // _berkas.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-
-                            await _db.UpdateDcDcAmtaLog($"STATUS_PLANO = 'Ok'", dateStart);
+                            ftpFileKirim.Add(filename3, "STATUS_PLANO");
+                            await _db.UpdateDcDcAmtaLog($"STATUS_PLANO = ''", dateStart);
                         }
                         catch (Exception ex) {
                             MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_PLANO", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -200,11 +195,8 @@ namespace DcTransferFtpNew.Logics {
                             // _berkas.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-
-                            await _db.UpdateDcDcAmtaLog($"STATUS_ITEMDEPO = 'Ok'", dateStart);
+                            ftpFileKirim.Add(filename4, "STATUS_ITEMDEPO");
+                            await _db.UpdateDcDcAmtaLog($"STATUS_ITEMDEPO = ''", dateStart);
                         }
                         catch (Exception ex) {
                             MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_ITEM_DEPO", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -235,11 +227,8 @@ namespace DcTransferFtpNew.Logics {
                             // _berkas.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-
-                            await _db.UpdateDcDcAmtaLog($"STATUS_BULFRAC = 'Ok'", dateStart);
+                            ftpFileKirim.Add(filename5, "STATUS_BULFRAC");
+                            await _db.UpdateDcDcAmtaLog($"STATUS_BULFRAC = ''", dateStart);
                         }
                         catch (Exception ex) {
                             MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_JADWAL_BULKY", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -270,11 +259,8 @@ namespace DcTransferFtpNew.Logics {
                             // _berkas.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-
-                            await _db.UpdateDcDcAmtaLog($"STATUS_TOKOKHUSUS = 'Ok'", dateStart);
+                            ftpFileKirim.Add(filename6, "STATUS_TOKOKHUSUS");
+                            await _db.UpdateDcDcAmtaLog($"STATUS_TOKOKHUSUS = ''", dateStart);
                         }
                         catch (Exception ex) {
                             MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_TOKO_KHUSUS", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -305,11 +291,8 @@ namespace DcTransferFtpNew.Logics {
                             // _berkas.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-
-                            await _db.UpdateDcDcAmtaLog($"STATUS_ST = 'Ok'", dateStart);
+                            ftpFileKirim.Add(filename7, "STATUS_ST");
+                            await _db.UpdateDcDcAmtaLog($"STATUS_ST = ''", dateStart);
                         }
                         catch (Exception ex) {
                             MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_ST", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -340,11 +323,8 @@ namespace DcTransferFtpNew.Logics {
                             // _berkas.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
-
-                            await _db.UpdateDcDcAmtaLog($"STATUS_SPLITDPD = 'Ok'", dateStart);
+                            ftpFileKirim.Add(filename8, "STATUS_SPLITDPD");
+                            await _db.UpdateDcDcAmtaLog($"STATUS_SPLITDPD = ''", dateStart);
                         }
                         catch (Exception ex) {
                             MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_SPLITDPD", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -354,6 +334,32 @@ namespace DcTransferFtpNew.Logics {
                     await _db.UpdateDcDcAmtaLog($"END_SPLITDPD = NOW()", dateStart);
 
                     /* ** */
+
+                    CFtpResultInfo ftpResultInfo1 = await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA");
+                    foreach(CFtpResultSendGet fri in ftpResultInfo1.Success) {
+                        string fileName = fri.FileInformation.Name;
+                        string columnDb = ftpFileKirim[fileName];
+                        await _db.UpdateDcDcAmtaLog($"{columnDb} = {columnDb} || 'AMTA Ok'", dateStart);
+                    }
+                    foreach (CFtpResultSendGet fri in ftpResultInfo1.Fail) {
+                        string fileName = fri.FileInformation.Name;
+                        string columnDb = ftpFileKirim[fileName];
+                        await _db.UpdateDcDcAmtaLog($"{columnDb} = {columnDb} || 'AMTA Gagal'", dateStart);
+                    }
+                    BerhasilKirim += ftpResultInfo1.Success.Count; // *.CSV Sebanyak :: TargetKirim
+
+                    CFtpResultInfo ftpResultInfo2 = await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP");
+                    foreach (CFtpResultSendGet fri in ftpResultInfo2.Success) {
+                        string fileName = fri.FileInformation.Name;
+                        string columnDb = ftpFileKirim[fileName];
+                        await _db.UpdateDcDcAmtaLog($"{columnDb} = {columnDb} || ' - ' || 'WEBREKAP Ok'", dateStart);
+                    }
+                    foreach (CFtpResultSendGet fri in ftpResultInfo1.Fail) {
+                        string fileName = fri.FileInformation.Name;
+                        string columnDb = ftpFileKirim[fileName];
+                        await _db.UpdateDcDcAmtaLog($"{columnDb} = {columnDb} || ' - ' || 'WEBREKAP Gagal'", dateStart);
+                    }
+                    BerhasilKirim += ftpResultInfo2.Success.Count; // *.CSV Sebanyak :: TargetKirim
 
                     _berkas.CleanUp();
                 }

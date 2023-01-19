@@ -574,7 +574,7 @@ namespace DcTransferFtpNew.Handlers {
                     WHERE
                         tbl_dc_kode = :kode_dc
                         AND type_proses = :app_name
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                        AND TO_CHAR(tgl_proses, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
                 ",
                 new List<CDbQueryParamBind>() {
                     new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
