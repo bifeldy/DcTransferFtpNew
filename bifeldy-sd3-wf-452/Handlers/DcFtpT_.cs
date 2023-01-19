@@ -146,7 +146,7 @@ namespace DcTransferFtpNew.Handlers {
             return await KirimSingleFileInFolder(pga_type, null, folderPath, reportLog);
         }
 
-        private void previewResult(CFtpResultInfo ftpResultInfo) {
+        private void PreviewResult(CFtpResultInfo ftpResultInfo) {
             string hasilKirim = ".: Berhasil Kirim :." + Environment.NewLine + Environment.NewLine;
             foreach (CFtpResultSendGet result in ftpResultInfo.Success) {
                 hasilKirim += $"[+] {result.FileInformation.Name}" + Environment.NewLine;
@@ -164,25 +164,25 @@ namespace DcTransferFtpNew.Handlers {
 
         public async Task<CFtpResultInfo> KirimSingleCsv(string pga_type, string csvFileName, string folderPath = null, bool reportLog = false) {
             CFtpResultInfo ftpResultInfo = await KirimSingleFileInFolder(pga_type, csvFileName, folderPath ?? _berkas.TempFolderPath, reportLog);
-            previewResult(ftpResultInfo);
+            PreviewResult(ftpResultInfo);
             return ftpResultInfo;
         }
 
         public async Task<CFtpResultInfo> KirimSingleZip(string pga_type, string zipFileName, string folderPath = null, bool reportLog = false) {
             CFtpResultInfo ftpResultInfo = await KirimSingleFileInFolder(pga_type, zipFileName, folderPath ?? _berkas.ZipFolderPath, reportLog);
-            previewResult(ftpResultInfo);
+            PreviewResult(ftpResultInfo);
             return ftpResultInfo;
         }
 
         public async Task<CFtpResultInfo> KirimAllCsv(string pga_type, string folderPath = null, bool reportLog = false) {
             CFtpResultInfo ftpResultInfo = await KirimAllFilesInFolder(pga_type, folderPath ?? _berkas.TempFolderPath, reportLog);
-            previewResult(ftpResultInfo);
+            PreviewResult(ftpResultInfo);
             return ftpResultInfo;
         }
 
         public async Task<CFtpResultInfo> KirimAllZip(string pga_type, string folderPath = null, bool reportLog = false) {
             CFtpResultInfo ftpResultInfo = await KirimAllFilesInFolder(pga_type, folderPath ?? _berkas.ZipFolderPath, reportLog);
-            previewResult(ftpResultInfo);
+            PreviewResult(ftpResultInfo);
             return ftpResultInfo;
         }
 
@@ -197,7 +197,7 @@ namespace DcTransferFtpNew.Handlers {
                     ftpResultInfo.Fail.Add(r);
                 }
             }
-            previewResult(ftpResultInfo);
+            PreviewResult(ftpResultInfo);
             return ftpResultInfo;
         }
 
@@ -212,7 +212,7 @@ namespace DcTransferFtpNew.Handlers {
                     ftpResultInfo.Fail.Add(r);
                 }
             }
-            previewResult(ftpResultInfo);
+            PreviewResult(ftpResultInfo);
             return ftpResultInfo;
         }
 
@@ -278,7 +278,7 @@ namespace DcTransferFtpNew.Handlers {
                     MessageBox.Show(ex.Message, $"Web Service {HO} Tidak Tersedia", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            previewResult(ftpResultInfo);
+            PreviewResult(ftpResultInfo);
             return ftpResultInfo;
         }
 

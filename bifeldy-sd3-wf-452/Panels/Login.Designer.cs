@@ -45,7 +45,7 @@ namespace DcTransferFtpNew.Panels {
             this.btnLogin.TabIndex = 17;
             this.btnLogin.Text = "Masuk";
             this.btnLogin.UseVisualStyleBackColor = true;
-            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
+            this.btnLogin.Click += new System.EventHandler(this.BtnLogin_Click);
             // 
             // label2
             // 
@@ -90,7 +90,7 @@ namespace DcTransferFtpNew.Panels {
             this.txtPassword.TabIndex = 14;
             this.txtPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtPassword.UseSystemPasswordChar = true;
-            this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_KeyDown);
+            this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Txt_KeyDown);
             // 
             // txtUserNameNik
             // 
@@ -106,7 +106,7 @@ namespace DcTransferFtpNew.Panels {
             this.txtUserNameNik.Size = new System.Drawing.Size(150, 20);
             this.txtUserNameNik.TabIndex = 13;
             this.txtUserNameNik.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtUserNameNik.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txt_KeyDown);
+            this.txtUserNameNik.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Txt_KeyDown);
             // 
             // CLogin
             // 

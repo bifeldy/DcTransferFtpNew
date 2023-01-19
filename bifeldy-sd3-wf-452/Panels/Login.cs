@@ -132,7 +132,7 @@ namespace DcTransferFtpNew.Panels {
             }
         }
 
-        private void checkKeyboard(object sender, KeyEventArgs e) {
+        private void CheckKeyboard(object sender, KeyEventArgs e) {
             switch (e.KeyCode) {
                 case Keys.Enter:
                     ProcessLogin();
@@ -142,12 +142,12 @@ namespace DcTransferFtpNew.Panels {
             }
         }
 
-        private void btnLogin_Click(object sender, EventArgs e) {
+        private void BtnLogin_Click(object sender, EventArgs e) {
             ProcessLogin();
         }
 
-        private void txt_KeyDown(object sender, KeyEventArgs e) {
-            checkKeyboard(sender, e);
+        private void Txt_KeyDown(object sender, KeyEventArgs e) {
+            CheckKeyboard(sender, e);
         }
 
     }

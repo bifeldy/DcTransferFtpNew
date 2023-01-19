@@ -84,7 +84,7 @@ namespace DcTransferFtpNew.Panels {
             this.imgDomar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.imgDomar.TabIndex = 14;
             this.imgDomar.TabStop = false;
-            this.imgDomar.Click += new System.EventHandler(this.imgDomar_Click);
+            this.imgDomar.Click += new System.EventHandler(this.ImgDomar_Click);
             // 
             // prgrssBrStatus
             // 
@@ -133,7 +133,7 @@ namespace DcTransferFtpNew.Panels {
             this.lnkLblLogClear.TabIndex = 0;
             this.lnkLblLogClear.TabStop = true;
             this.lnkLblLogClear.Text = "CLEAR";
-            this.lnkLblLogClear.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLblLogClear_LinkClicked);
+            this.lnkLblLogClear.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LnkLblLogClear_LinkClicked);
             // 
             // panel5
             // 

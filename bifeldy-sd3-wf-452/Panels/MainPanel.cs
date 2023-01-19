@@ -59,7 +59,7 @@ namespace DcTransferFtpNew.Panels {
             });
         }
 
-        private void imgDomar_Click(object sender, EventArgs e) {
+        private void ImgDomar_Click(object sender, EventArgs e) {
             //
         }
 
@@ -102,7 +102,7 @@ namespace DcTransferFtpNew.Panels {
             }
         }
 
-        private void lnkLblLogClear_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+        private void LnkLblLogClear_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             textBoxLogInfo.Text = string.Empty;
         }
 

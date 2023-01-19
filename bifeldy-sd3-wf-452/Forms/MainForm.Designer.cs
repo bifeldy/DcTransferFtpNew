@@ -71,7 +71,7 @@ namespace DcTransferFtpNew.Forms {
             this.statusStripIpAddress.Spring = true;
             this.statusStripIpAddress.Text = "0.0.0.0";
             this.statusStripIpAddress.ToolTipText = "Lihat Informasi Alamat IP & MAC";
-            this.statusStripIpAddress.Click += new System.EventHandler(this.statusStripIpAddress_Click);
+            this.statusStripIpAddress.Click += new System.EventHandler(this.StatusStripIpAddress_Click);
             // 
             // statusStripAppVersion
             // 
@@ -122,7 +122,7 @@ namespace DcTransferFtpNew.Forms {
             this.sysTrayToolStripMenuItemNICs.Name = "sysTrayToolStripMenuItemNICs";
             this.sysTrayToolStripMenuItemNICs.Size = new System.Drawing.Size(157, 22);
             this.sysTrayToolStripMenuItemNICs.Text = "Show All NICs";
-            this.sysTrayToolStripMenuItemNICs.Click += new System.EventHandler(this.statusStripIpAddress_Click);
+            this.sysTrayToolStripMenuItemNICs.Click += new System.EventHandler(this.StatusStripIpAddress_Click);
             // 
             // exitApplicationToolStripMenuItem
             // 
@@ -135,7 +135,7 @@ namespace DcTransferFtpNew.Forms {
             // 
             this.timerIpAddress.Enabled = true;
             this.timerIpAddress.Interval = 250;
-            this.timerIpAddress.Tick += new System.EventHandler(this.timerIpAddress_Tick);
+            this.timerIpAddress.Tick += new System.EventHandler(this.TimerIpAddress_Tick);
             // 
             // panelContainer
             // 

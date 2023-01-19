@@ -108,7 +108,7 @@ namespace DcTransferFtpNew.Forms {
             imgLogo.Visible = false;
         }
 
-        private void statusStripIpAddress_Click(object sender, EventArgs e) {
+        private void StatusStripIpAddress_Click(object sender, EventArgs e) {
             string[] ipsMacs = _app.GetIpMacAddress()
                 .Select(d => $"{d.DESCRIPTION}\r\n{d.MAC_ADDRESS}\r\n{d.IP_V4_ADDRESS}\r\n{d.IP_V6_ADDRESS}\r\n\r\n")
                 .ToArray();
@@ -131,7 +131,7 @@ namespace DcTransferFtpNew.Forms {
             _app.Exit();
         }
 
-        private void timerIpAddress_Tick(object sender, EventArgs e) {
+        private void TimerIpAddress_Tick(object sender, EventArgs e) {
             string fullText = statusStripContainer.Items["statusStripIpAddress"].Text;
             string firstLetter = fullText.Substring(0, 1);
             string startText = fullText.Substring(1, fullText.Length - 1);
