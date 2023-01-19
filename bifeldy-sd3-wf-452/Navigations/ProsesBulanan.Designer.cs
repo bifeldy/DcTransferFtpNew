@@ -26,9 +26,9 @@ namespace DcTransferFtpNew.Navigations {
         /// </summary>
         private void InitializeComponent() {
             this.panelProsesBulanan = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.flowLayoutPanelProsesBulanan = new DcTransferFtpNew.Components.FixAutoScrollFlowLayoutPanel();
             this.dtpBulanan = new DcTransferFtpNew.Components.MonthYearPicker();
+            this.label5 = new System.Windows.Forms.Label();
+            this.flowLayoutPanelProsesBulanan = new System.Windows.Forms.FlowLayoutPanel();
             this.panelProsesBulanan.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -43,6 +43,14 @@ namespace DcTransferFtpNew.Navigations {
             this.panelProsesBulanan.Size = new System.Drawing.Size(527, 75);
             this.panelProsesBulanan.TabIndex = 21;
             // 
+            // dtpBulanan
+            // 
+            this.dtpBulanan.CustomFormat = "MMMM yyyy";
+            this.dtpBulanan.Location = new System.Drawing.Point(13, 35);
+            this.dtpBulanan.Name = "dtpBulanan";
+            this.dtpBulanan.Size = new System.Drawing.Size(207, 20);
+            this.dtpBulanan.TabIndex = 19;
+            // 
             // label5
             // 
             this.label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
@@ -56,31 +64,19 @@ namespace DcTransferFtpNew.Navigations {
             // 
             // flowLayoutPanelProsesBulanan
             // 
-            this.flowLayoutPanelProsesBulanan.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanelProsesBulanan.AutoScroll = true;
-            this.flowLayoutPanelProsesBulanan.Location = new System.Drawing.Point(0, 73);
-            this.flowLayoutPanelProsesBulanan.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanelProsesBulanan.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanelProsesBulanan.Location = new System.Drawing.Point(0, 75);
             this.flowLayoutPanelProsesBulanan.Name = "flowLayoutPanelProsesBulanan";
-            this.flowLayoutPanelProsesBulanan.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-            this.flowLayoutPanelProsesBulanan.Size = new System.Drawing.Size(527, 283);
-            this.flowLayoutPanelProsesBulanan.TabIndex = 20;
-            // 
-            // dtpBulanan
-            // 
-            this.dtpBulanan.CustomFormat = "MMMM yyyy";
-            this.dtpBulanan.Location = new System.Drawing.Point(13, 35);
-            this.dtpBulanan.Name = "dtpBulanan";
-            this.dtpBulanan.Size = new System.Drawing.Size(207, 20);
-            this.dtpBulanan.TabIndex = 19;
+            this.flowLayoutPanelProsesBulanan.Size = new System.Drawing.Size(527, 281);
+            this.flowLayoutPanelProsesBulanan.TabIndex = 22;
             // 
             // CProsesBulanan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panelProsesBulanan);
             this.Controls.Add(this.flowLayoutPanelProsesBulanan);
+            this.Controls.Add(this.panelProsesBulanan);
             this.Name = "CProsesBulanan";
             this.Size = new System.Drawing.Size(527, 356);
             this.Load += new System.EventHandler(this.CProsesBulanan_Load);
@@ -93,8 +89,8 @@ namespace DcTransferFtpNew.Navigations {
 
         private System.Windows.Forms.Panel panelProsesBulanan;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelProsesBulanan;
         private Components.MonthYearPicker dtpBulanan;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelProsesBulanan;
     }
 
 }

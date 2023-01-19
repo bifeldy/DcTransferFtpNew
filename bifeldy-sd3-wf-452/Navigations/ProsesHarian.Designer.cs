@@ -25,28 +25,15 @@ namespace DcTransferFtpNew.Navigations {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.flowLayoutPanelProsesHarian = new DcTransferFtpNew.Components.FixAutoScrollFlowLayoutPanel();
             this.panelProsesHarian = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.dateTimePickerHarianAkhir = new System.Windows.Forms.DateTimePicker();
             this.dateTimePickerHarianAwal = new System.Windows.Forms.DateTimePicker();
+            this.flowLayoutPanelProsesHarian = new System.Windows.Forms.FlowLayoutPanel();
             this.panelProsesHarian.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // flowLayoutPanelProsesHarian
-            // 
-            this.flowLayoutPanelProsesHarian.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanelProsesHarian.AutoScroll = true;
-            this.flowLayoutPanelProsesHarian.Location = new System.Drawing.Point(0, 86);
-            this.flowLayoutPanelProsesHarian.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanelProsesHarian.Name = "flowLayoutPanelProsesHarian";
-            this.flowLayoutPanelProsesHarian.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-            this.flowLayoutPanelProsesHarian.Size = new System.Drawing.Size(527, 270);
-            this.flowLayoutPanelProsesHarian.TabIndex = 18;
             // 
             // panelProsesHarian
             // 
@@ -114,12 +101,21 @@ namespace DcTransferFtpNew.Navigations {
             this.dateTimePickerHarianAwal.Value = new System.DateTime(2022, 12, 21, 0, 0, 0, 0);
             this.dateTimePickerHarianAwal.ValueChanged += new System.EventHandler(this.dateTimePickerHarianAwal_ValueChanged);
             // 
+            // flowLayoutPanelProsesHarian
+            // 
+            this.flowLayoutPanelProsesHarian.AutoScroll = true;
+            this.flowLayoutPanelProsesHarian.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanelProsesHarian.Location = new System.Drawing.Point(0, 88);
+            this.flowLayoutPanelProsesHarian.Name = "flowLayoutPanelProsesHarian";
+            this.flowLayoutPanelProsesHarian.Size = new System.Drawing.Size(527, 268);
+            this.flowLayoutPanelProsesHarian.TabIndex = 20;
+            // 
             // CProsesHarian
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panelProsesHarian);
             this.Controls.Add(this.flowLayoutPanelProsesHarian);
+            this.Controls.Add(this.panelProsesHarian);
             this.Name = "CProsesHarian";
             this.Size = new System.Drawing.Size(527, 356);
             this.Load += new System.EventHandler(this.CProsesHarian_Load);
@@ -130,14 +126,13 @@ namespace DcTransferFtpNew.Navigations {
         }
 
         #endregion
-
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelProsesHarian;
         private System.Windows.Forms.Panel panelProsesHarian;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.DateTimePicker dateTimePickerHarianAkhir;
         private System.Windows.Forms.DateTimePicker dateTimePickerHarianAwal;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelProsesHarian;
     }
 
 }
