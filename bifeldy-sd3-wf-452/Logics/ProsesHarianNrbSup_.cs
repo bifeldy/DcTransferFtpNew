@@ -88,13 +88,13 @@ namespace DcTransferFtpNew.Logics {
                                 lbcDbOraPg = _db.NewExternalConnectionOra(lbc.IP_DB, lbc.DB_PORT, lbc.DB_USER_NAME, lbc.DB_PASSWORD, lbc.DB_SID);
                             }
 
-                            List<CDbQueryParamBind> nrpSup = new List<CDbQueryParamBind> {
+                            List<CDbQueryParamBind> nrbSup = new List<CDbQueryParamBind> {
                                 new CDbQueryParamBind { NAME = "nrb_sup", VALUE = "NRBSUP" }
                             };
 
                             string procName = await lbcDbOraPg.ExecScalarAsync<string>(
                                 $@"SELECT FILE_PROCEDURE FROM DC_FILE_SCHEDULER_T WHERE file_key = :nrb_sup",
-                                nrpSup
+                                nrbSup
                             );
                             CDbExecProcResult res = await lbcDbOraPg.ExecProcedureAsync(
                                 procName,
@@ -112,21 +112,21 @@ namespace DcTransferFtpNew.Logics {
                                         SELECT {(lbc.FLAG_DBPG == "Y" ? "COALESCE" : "NVL")}(q_namazip, q_namafile)
                                         FROM Q_TRF_CSV WHERE q_filename = :nrb_sup
                                     ",
-                                    nrpSup
+                                    nrbSup
                                 );
                             }
 
                             string seperator = await lbcDbOraPg.ExecScalarAsync<string>(
                                 $@"SELECT q_seperator FROM Q_TRF_CSV WHERE q_filename = :nrb_sup",
-                                nrpSup
+                                nrbSup
                             );
                             string queryForCSV = await lbcDbOraPg.ExecScalarAsync<string>(
                                 $@"SELECT q_query FROM Q_TRF_CSV WHERE q_filename = :nrb_sup",
-                                nrpSup
+                                nrbSup
                             );
                             string filename = await lbcDbOraPg.ExecScalarAsync<string>(
                                 $@"SELECT q_namafile FROM Q_TRF_CSV WHERE q_filename = :nrb_sup",
-                                nrpSup
+                                nrbSup
                             );
 
                             if (string.IsNullOrEmpty(seperator) || string.IsNullOrEmpty(queryForCSV) || string.IsNullOrEmpty(filename)) {
