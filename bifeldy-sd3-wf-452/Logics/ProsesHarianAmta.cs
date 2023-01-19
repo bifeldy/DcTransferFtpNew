@@ -15,8 +15,11 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using FluentFTP;
 
 using bifeldy_sd3_lib_452.Models;
 using bifeldy_sd3_lib_452.Utilities;
@@ -336,28 +339,22 @@ namespace DcTransferFtpNew.Logics {
                     /* ** */
 
                     CFtpResultInfo ftpResultInfo1 = await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA");
-                    foreach(CFtpResultSendGet fri in ftpResultInfo1.Success) {
-                        string fileName = fri.FileInformation.Name;
+                    List<CFtpResultSendGet> resAll1 = ftpResultInfo1.Success.Concat(ftpResultInfo1.Fail).ToList();
+                    foreach (CFtpResultSendGet resAll in resAll1) {
+                        string fileName = resAll.FileInformation.Name;
                         string columnDb = ftpFileKirim[fileName];
-                        await _db.UpdateDcDcAmtaLog($"{columnDb} = {columnDb} || 'AMTA Ok'", dateStart);
-                    }
-                    foreach (CFtpResultSendGet fri in ftpResultInfo1.Fail) {
-                        string fileName = fri.FileInformation.Name;
-                        string columnDb = ftpFileKirim[fileName];
-                        await _db.UpdateDcDcAmtaLog($"{columnDb} = {columnDb} || 'AMTA Gagal'", dateStart);
+                        bool success = resAll.FtpStatusSendGet == FtpStatus.Success;
+                        await _db.UpdateDcDcAmtaLog($@"{columnDb} = {columnDb} || 'AMTA {(success ? "Ok" : "Gagal")}'", dateStart);
                     }
                     BerhasilKirim += ftpResultInfo1.Success.Count; // *.CSV Sebanyak :: TargetKirim
 
                     CFtpResultInfo ftpResultInfo2 = await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP");
-                    foreach (CFtpResultSendGet fri in ftpResultInfo2.Success) {
-                        string fileName = fri.FileInformation.Name;
+                    List<CFtpResultSendGet> resAll2 = ftpResultInfo2.Success.Concat(ftpResultInfo2.Fail).ToList();
+                    foreach (CFtpResultSendGet resAll in resAll2) {
+                        string fileName = resAll.FileInformation.Name;
                         string columnDb = ftpFileKirim[fileName];
-                        await _db.UpdateDcDcAmtaLog($"{columnDb} = {columnDb} || ' - ' || 'WEBREKAP Ok'", dateStart);
-                    }
-                    foreach (CFtpResultSendGet fri in ftpResultInfo1.Fail) {
-                        string fileName = fri.FileInformation.Name;
-                        string columnDb = ftpFileKirim[fileName];
-                        await _db.UpdateDcDcAmtaLog($"{columnDb} = {columnDb} || ' - ' || 'WEBREKAP Gagal'", dateStart);
+                        bool success = resAll.FtpStatusSendGet == FtpStatus.Success;
+                        await _db.UpdateDcDcAmtaLog($@"{columnDb} = {columnDb} || ' - ' || 'WEBREKAP {(success ? "Ok" : "Gagal")}'", dateStart);
                     }
                     BerhasilKirim += ftpResultInfo2.Success.Count; // *.CSV Sebanyak :: TargetKirim
 
