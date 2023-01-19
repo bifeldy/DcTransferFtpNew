@@ -297,7 +297,7 @@ namespace DcTransferFtpNew.Logics {
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
-                if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd) && await IsDateEndYesterday(dateEnd)) {
+                if (IsDateRangeValid() && IsDateRangeSameMonth() && await IsDateEndYesterday()) {
                     string TaxTempFullFolderPath = Path.Combine(_app.AppLocation, $"TAX-{await _db.GetKodeDc()}");
                     if (!Directory.Exists(TaxTempFullFolderPath)) {
                         Directory.CreateDirectory(TaxTempFullFolderPath);

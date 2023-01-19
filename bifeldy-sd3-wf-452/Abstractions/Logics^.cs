@@ -69,21 +69,26 @@ namespace DcTransferFtpNew.Abstractions {
             datePeriode = prosesBulanan.DateTimePeriodeBulanan.Value.Date;
         }
 
-        protected bool IsDateRangeValid(DateTime dateStart, DateTime dateEnd) {
+        protected bool IsDateRangeValid() {
             return dateStart <= dateEnd ? true : throw new Exception($"Tanggal Mulai Harus Lebih Kecil Dari Tanggal Akhir");
         }
 
-        protected bool IsDateRangeSameMonth(DateTime dateStart, DateTime dateEnd) {
+        protected bool IsDateRangeSameMonth() {
             return dateStart.Month == dateEnd.Month ? true : throw new Exception($"Hanya Bisa Di (1) Bulan yang Sama");
         }
 
-        protected bool IsDateStartEndSame(DateTime dateStart, DateTime dateEnd) {
+        protected bool IsDateStartEndSame() {
             return dateStart == dateEnd ? true : throw new Exception($"Hanya Bisa Di (1) Hari yang Sama");
         }
 
-        protected async Task<bool> IsDateEndYesterday(DateTime dateEnd, int lastDay = 1) {
-            DateTime currentDay = await _db.GetYesterdayDate(lastDay);
-            return dateEnd <= currentDay ? true : throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari <= {currentDay:dd-MMM-yyyy}!");
+        protected async Task<bool> IsDateStartYesterday(int lastDay = 1) {
+            DateTime yesterDay = await _db.GetYesterdayDate(lastDay);
+            return dateStart <= yesterDay ? true : throw new Exception($"Max Tanggal Awal Adalah Hari Ini - {lastDay} Hari <= {yesterDay:dd-MMM-yyyy}!");
+        }
+
+        protected async Task<bool> IsDateEndYesterday(int lastDay = 1) {
+            DateTime yesterDay = await _db.GetYesterdayDate(lastDay);
+            return dateEnd <= yesterDay ? true : throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari <= {yesterDay:dd-MMM-yyyy}!");
         }
 
         protected void CheckHasilKiriman() {

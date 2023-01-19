@@ -55,7 +55,7 @@ namespace DcTransferFtpNew.Logics {
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
-                if (IsDateRangeValid(dateStart, dateEnd) && IsDateRangeSameMonth(dateStart, dateEnd) && await IsDateEndYesterday(dateEnd)) {
+                if (IsDateRangeValid() && IsDateRangeSameMonth() && await IsDateEndYesterday()) {
                     _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
 
                     string csvFileName = null;

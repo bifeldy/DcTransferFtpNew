@@ -60,15 +60,15 @@ namespace DcTransferFtpNew.Logics {
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
-                if (IsDateRangeValid(dateStart, dateEnd)) {
+                if (IsDateRangeValid()) {
                     _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
                     JumlahServerKirimCsv = 2;
 
                     // { "namafile1", "columnDb1" }, { "namafile2", "columnDb2" }, ..., { "namafile*", "columnDb*" };
                     IDictionary<string, string> ftpFileKirim = new Dictionary<string, string>();
 
-                    // AMTA 30 Hari
-                    dateEnd = dateStart.AddDays(30);
+                    // Hanya Proses Data 1 Hari Tanggar Di Pilih
+                    dateEnd = dateStart;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
