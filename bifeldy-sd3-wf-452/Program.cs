@@ -23,12 +23,7 @@ using Autofac;
 using bifeldy_sd3_lib_452;
 
 using DcTransferFtpNew.Forms;
-using DcTransferFtpNew.Handlers;
-using DcTransferFtpNew.Logics;
-using DcTransferFtpNew.Navigations;
-using DcTransferFtpNew.Panels;
 using DcTransferFtpNew.SqlServerTypes;
-using DcTransferFtpNew.Utilities;
 
 namespace DcTransferFtpNew {
 
@@ -57,32 +52,26 @@ namespace DcTransferFtpNew {
                     Bifeldyz = new Bifeldy(args);
 
                     // Classes As Interfaces
+                    // Bifeldyz.RegisterDiClassAsInterface<CClass, IInterface>();
                     Bifeldyz.RegisterDiClassAsInterfaceByNamespace(assembly, new string[] { "Handlers", "Utilities" });
-                    // Bifeldyz.RegisterDiClassAsInterface<CApp, IApp>();
-                    // Bifeldyz.RegisterDiClassAsInterface<CDb, IDb>();
-                    // Bifeldyz.RegisterDiClassAsInterface<CMenuNavigations, IMenuNavigations>();
-                    // Bifeldyz.RegisterDiClassAsInterface<CQTrfCsv, IQTrfCsv>();
-                    // Bifeldyz.RegisterDiClassAsInterface<CDcFtpT, IDcFtpT>();
 
                     // Classes Only -- Named, Access by String
+                    // Bifeldyz.RegisterDiClassNamed<CClass>();
                     Bifeldyz.RegisterDiClassNamedByNamespace(assembly, new string[] { "Logics", "Navigations" });
-                    // Bifeldyz.RegisterDiClassNamed<CProsesHarianDataPldc>();
-                    // Bifeldyz.RegisterDiClassNamed<CProsesHarianDataHarian>();
-                    // Bifeldyz.RegisterDiClassNamed<CProsesHarian>();
 
                     // Classes Only
+                    // Bifeldyz.RegisterDiClass<CClass>();
                     Bifeldyz.RegisterDiClassByNamespace(assembly, new string[] { /* "Forms", */ "Panels" });
-                    // Bifeldyz.RegisterDiClass<CMainPanel>();
-                    // Bifeldyz.RegisterDiClass<CLogin>();
-                    // Bifeldyz.RegisterDiClass<CCekProgram>();
-                    // Bifeldyz.RegisterDiClass<CDbSelector>();
 
                     // Khusus Form Bisa Di Bikin Independen, Jadinya Gak Wajib Masuk Ke DI
+                    //
                     // Misal :: Di Buat Dan Di Panggil Dari From Lain
+                    //
                     //     Form CReportLaporan reportLaporan = new CReportLaporan();
                     //     reportLaporan.SetLaporan(dataTable, paramList, rdlcPath, dataSetName)
                     //     reportLaporan.Show();
                     //     reportLaporan.Close();
+                    //
                     Bifeldyz.RegisterDiClass<CMainForm>();
 
                     using (ILifetimeScope lifetimeScope = Bifeldyz.BeginLifetimeScope()) {
