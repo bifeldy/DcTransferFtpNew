@@ -7,7 +7,7 @@
  * Department   :: IT SD 03
  * Mail         :: bias@indomaret.co.id
  * 
- * Catatan      :: Proses Harian Tax Non-FAD
+ * Catatan      :: Proses Harian NRB Sup
  *              :: Harap Didaftarkan Ke DI Container
  * 
  */
