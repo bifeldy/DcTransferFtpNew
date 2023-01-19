@@ -1,0 +1,366 @@
+﻿/**
+ * 
+ * Author       :: Basilius Bias Astho Christyono
+ * Mail         :: bias@indomaret.co.id
+ * Phone        :: (+62) 889 236 6466
+ * 
+ * Department   :: IT SD 03
+ * Mail         :: bias@indomaret.co.id
+ * 
+ * Catatan      :: Proses Harian AMTA
+ *              :: Harap Didaftarkan Ke DI Container
+ * 
+ */
+
+using System;
+using System.Data;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+using bifeldy_sd3_lib_452.Models;
+using bifeldy_sd3_lib_452.Utilities;
+
+using DcTransferFtpNew.Abstractions;
+using DcTransferFtpNew.Handlers;
+using DcTransferFtpNew.Utilities;
+
+namespace DcTransferFtpNew.Logics {
+
+    public interface IProsesHarianAmta : ILogics { }
+
+    public sealed class CProsesHarianAmta : CLogics, IProsesHarianAmta {
+
+        private readonly IApp _app;
+        private readonly ILogger _logger;
+        private readonly IDb _db;
+        private readonly IBerkas _berkas;
+        private readonly IQTrfCsv _qTrfCsv;
+        private readonly IDcFtpT _dcFtpT;
+
+        public CProsesHarianAmta(
+            IApp app,
+            ILogger logger,
+            IDb db,
+            IBerkas berkas,
+            IQTrfCsv q_trf_csv,
+            IDcFtpT dc_ftp_t
+        ) : base(db) {
+            _app = app;
+            _logger = logger;
+            _db = db;
+            _berkas = berkas;
+            _qTrfCsv = q_trf_csv;
+            _dcFtpT = dc_ftp_t;
+        }
+
+        public override async Task Run(object sender, EventArgs e, Control currentControl) {
+            PrepareHarian(sender, e, currentControl);
+            await Task.Run(async () => {
+                if (IsDateRangeValid(dateStart, dateEnd)) {
+                    _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+                    JumlahServerKirimCsv = 2;
+
+                    // AMTA 30 Hari
+                    dateEnd = dateStart.AddDays(30);
+
+                    int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
+                    _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
+
+                    string procName = "GET_AMTA_EVO";
+                    CDbExecProcResult res = await _db.CALL__P_TGL(procName, dateStart);
+                    if (res == null || !res.STATUS) {
+                        throw new Exception($"Gagal Menjalankan Procedure {procName}");
+                    }
+                    await _db.InsertNewDcAmtaLog(dateStart);
+
+                    /* AMTA_JADWAL_WEEKLY */
+
+                    await _db.UpdateDcDcAmtaLog($"START_WEEKLY = NOW()", dateStart);
+
+                    string seperator1 = await _db.Q_TRF_CSV__GET("q_seperator", "AMTA_JADWAL_WEEKLY");
+                    string queryForCSV1 = await _db.Q_TRF_CSV__GET("q_query", "AMTA_JADWAL_WEEKLY");
+                    string filename1 = await _db.Q_TRF_CSV__GET("q_namafile", "AMTA_JADWAL_WEEKLY");
+
+                    if (string.IsNullOrEmpty(seperator1) || string.IsNullOrEmpty(queryForCSV1) || string.IsNullOrEmpty(filename1)) {
+                        string status_error = "Data CSV (Separator / Query / Nama File) Tidak Lengkap!";
+                        MessageBox.Show(status_error, $"{button.Text} :: AMTA_JADWAL_WEEKLY", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else {
+                        await _db.UpdateDcDcAmtaLog($"FILE_WEEKLY = '{filename1}'", dateStart);
+
+                        try {
+                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV1);
+
+                            _berkas.DataTable2CSV(dtQueryRes, filename1, seperator1);
+                            // _berkas.ListFileForZip.Add(filename);
+                            TargetKirim += JumlahServerKirimCsv;
+
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+
+                            await _db.UpdateDcDcAmtaLog($"STATUS_WEEKLY = 'Ok'", dateStart);
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_JADWAL_WEEKLY", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+
+                    await _db.UpdateDcDcAmtaLog($"END_WEEKLY = NOW()", dateStart);
+
+                    /* AMTA_JADWAL_WEEKLY_TOKO */
+
+                    await _db.UpdateDcDcAmtaLog($"START_EXCLBULFRAC = NOW()", dateStart);
+
+                    string seperator2 = await _db.Q_TRF_CSV__GET("q_seperator", "AMTA_JADWAL_WEEKLY_TOKO");
+                    string queryForCSV2 = await _db.Q_TRF_CSV__GET("q_query", "AMTA_JADWAL_WEEKLY_TOKO");
+                    string filename2 = await _db.Q_TRF_CSV__GET("q_namafile", "AMTA_JADWAL_WEEKLY_TOKO");
+
+                    if (string.IsNullOrEmpty(seperator2) || string.IsNullOrEmpty(queryForCSV2) || string.IsNullOrEmpty(filename2)) {
+                        string status_error = "Data CSV (Separator / Query / Nama File) Tidak Lengkap!";
+                        MessageBox.Show(status_error, $"{button.Text} :: AMTA_JADWAL_WEEKLY_TOKO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else {
+                        await _db.UpdateDcDcAmtaLog($"FILE_EXCLBULFRAC = '{filename2}'", dateStart);
+
+                        try {
+                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV2);
+
+                            _berkas.DataTable2CSV(dtQueryRes, filename2, seperator2);
+                            // _berkas.ListFileForZip.Add(filename);
+                            TargetKirim += JumlahServerKirimCsv;
+
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+
+                            await _db.UpdateDcDcAmtaLog($"STATUS_EXCLBULFRAC = 'Ok'", dateStart);
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_JADWAL_WEEKLY_TOKO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+
+                    await _db.UpdateDcDcAmtaLog($"END_EXCLBULFRAC = NOW()", dateStart);
+
+                    /* AMTA_PLANO */
+
+                    await _db.UpdateDcDcAmtaLog($"START_PLANO = NOW()", dateStart);
+
+                    string seperator3 = await _db.Q_TRF_CSV__GET("q_seperator", "AMTA_PLANO");
+                    string queryForCSV3 = await _db.Q_TRF_CSV__GET("q_query", "AMTA_PLANO");
+                    string filename3 = await _db.Q_TRF_CSV__GET("q_namafile", "AMTA_PLANO");
+
+                    if (string.IsNullOrEmpty(seperator3) || string.IsNullOrEmpty(queryForCSV3) || string.IsNullOrEmpty(filename3)) {
+                        string status_error = "Data CSV (Separator / Query / Nama File) Tidak Lengkap!";
+                        MessageBox.Show(status_error, $"{button.Text} :: AMTA_PLANO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else {
+                        await _db.UpdateDcDcAmtaLog($"FILE_PLANO = '{filename3}'", dateStart);
+
+                        try {
+                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV3);
+
+                            _berkas.DataTable2CSV(dtQueryRes, filename3, seperator3);
+                            // _berkas.ListFileForZip.Add(filename);
+                            TargetKirim += JumlahServerKirimCsv;
+
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+
+                            await _db.UpdateDcDcAmtaLog($"STATUS_PLANO = 'Ok'", dateStart);
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_PLANO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+
+                    await _db.UpdateDcDcAmtaLog($"END_PLANO = NOW()", dateStart);
+
+                    /* AMTA_ITEM_DEPO */
+
+                    await _db.UpdateDcDcAmtaLog($"START_ITEMDEPO = NOW()", dateStart);
+
+                    string seperator4 = await _db.Q_TRF_CSV__GET("q_seperator", "AMTA_ITEM_DEPO");
+                    string queryForCSV4 = await _db.Q_TRF_CSV__GET("q_query", "AMTA_ITEM_DEPO");
+                    string filename4 = await _db.Q_TRF_CSV__GET("q_namafile", "AMTA_ITEM_DEPO");
+
+                    if (string.IsNullOrEmpty(seperator4) || string.IsNullOrEmpty(queryForCSV4) || string.IsNullOrEmpty(filename4)) {
+                        string status_error = "Data CSV (Separator / Query / Nama File) Tidak Lengkap!";
+                        MessageBox.Show(status_error, $"{button.Text} :: AMTA_ITEM_DEPO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else {
+                        await _db.UpdateDcDcAmtaLog($"FILE_ITEMDEPO = '{filename4}'", dateStart);
+
+                        try {
+                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV4);
+
+                            _berkas.DataTable2CSV(dtQueryRes, filename4, seperator4);
+                            // _berkas.ListFileForZip.Add(filename);
+                            TargetKirim += JumlahServerKirimCsv;
+
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+
+                            await _db.UpdateDcDcAmtaLog($"STATUS_ITEMDEPO = 'Ok'", dateStart);
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_ITEM_DEPO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+
+                    await _db.UpdateDcDcAmtaLog($"END_ITEMDEPO = NOW()", dateStart);
+
+                    /* AMTA_JADWAL_BULKY */
+
+                    await _db.UpdateDcDcAmtaLog($"START_BULFRAC = NOW()", dateStart);
+
+                    string seperator5 = await _db.Q_TRF_CSV__GET("q_seperator", "AMTA_JADWAL_BULKY");
+                    string queryForCSV5 = await _db.Q_TRF_CSV__GET("q_query", "AMTA_JADWAL_BULKY");
+                    string filename5 = await _db.Q_TRF_CSV__GET("q_namafile", "AMTA_JADWAL_BULKY");
+
+                    if (string.IsNullOrEmpty(seperator5) || string.IsNullOrEmpty(queryForCSV5) || string.IsNullOrEmpty(filename5)) {
+                        string status_error = "Data CSV (Separator / Query / Nama File) Tidak Lengkap!";
+                        MessageBox.Show(status_error, $"{button.Text} :: AMTA_JADWAL_BULKY", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else {
+                        await _db.UpdateDcDcAmtaLog($"FILE_BULFRAC = '{filename5}'", dateStart);
+
+                        try {
+                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV5);
+
+                            _berkas.DataTable2CSV(dtQueryRes, filename5, seperator5);
+                            // _berkas.ListFileForZip.Add(filename);
+                            TargetKirim += JumlahServerKirimCsv;
+
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+
+                            await _db.UpdateDcDcAmtaLog($"STATUS_BULFRAC = 'Ok'", dateStart);
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_JADWAL_BULKY", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+
+                    await _db.UpdateDcDcAmtaLog($"END_BULFRAC = NOW()", dateStart);
+
+                    /* AMTA_TOKO_KHUSUS */
+
+                    await _db.UpdateDcDcAmtaLog($"START_TOKOKHUSUS = NOW()", dateStart);
+
+                    string seperator6 = await _db.Q_TRF_CSV__GET("q_seperator", "AMTA_TOKO_KHUSUS");
+                    string queryForCSV6 = await _db.Q_TRF_CSV__GET("q_query", "AMTA_TOKO_KHUSUS");
+                    string filename6 = await _db.Q_TRF_CSV__GET("q_namafile", "AMTA_TOKO_KHUSUS");
+
+                    if (string.IsNullOrEmpty(seperator6) || string.IsNullOrEmpty(queryForCSV6) || string.IsNullOrEmpty(filename6)) {
+                        string status_error = "Data CSV (Separator / Query / Nama File) Tidak Lengkap!";
+                        MessageBox.Show(status_error, $"{button.Text} :: AMTA_TOKO_KHUSUS", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else {
+                        await _db.UpdateDcDcAmtaLog($"FILE_TOKOKHUSUS = '{filename6}'", dateStart);
+
+                        try {
+                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV6);
+
+                            _berkas.DataTable2CSV(dtQueryRes, filename6, seperator6);
+                            // _berkas.ListFileForZip.Add(filename);
+                            TargetKirim += JumlahServerKirimCsv;
+
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+
+                            await _db.UpdateDcDcAmtaLog($"STATUS_TOKOKHUSUS = 'Ok'", dateStart);
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_TOKO_KHUSUS", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+
+                    await _db.UpdateDcDcAmtaLog($"END_TOKOKHUSUS = NOW()", dateStart);
+
+                    /* AMTA_ST */
+
+                    await _db.UpdateDcDcAmtaLog($"START_ST = NOW()", dateStart);
+
+                    string seperator7 = await _db.Q_TRF_CSV__GET("q_seperator", "AMTA_ST");
+                    string queryForCSV7 = await _db.Q_TRF_CSV__GET("q_query", "AMTA_ST");
+                    string filename7 = await _db.Q_TRF_CSV__GET("q_namafile", "AMTA_ST");
+
+                    if (string.IsNullOrEmpty(seperator7) || string.IsNullOrEmpty(queryForCSV7) || string.IsNullOrEmpty(filename7)) {
+                        string status_error = "Data CSV (Separator / Query / Nama File) Tidak Lengkap!";
+                        MessageBox.Show(status_error, $"{button.Text} :: AMTA_ST", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else {
+                        await _db.UpdateDcDcAmtaLog($"FILE_ST = '{filename7}'", dateStart);
+
+                        try {
+                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV7);
+
+                            _berkas.DataTable2CSV(dtQueryRes, filename7, seperator7);
+                            // _berkas.ListFileForZip.Add(filename);
+                            TargetKirim += JumlahServerKirimCsv;
+
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+
+                            await _db.UpdateDcDcAmtaLog($"STATUS_ST = 'Ok'", dateStart);
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_ST", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+
+                    await _db.UpdateDcDcAmtaLog($"END_ST = NOW()", dateStart);
+
+                    /* AMTA_SPLITDPD */
+
+                    await _db.UpdateDcDcAmtaLog($"START_SPLITDPD = NOW()", dateStart);
+
+                    string seperator8 = await _db.Q_TRF_CSV__GET("q_seperator", "AMTA_SPLITDPD");
+                    string queryForCSV8 = await _db.Q_TRF_CSV__GET("q_query", "AMTA_SPLITDPD");
+                    string filename8 = await _db.Q_TRF_CSV__GET("q_namafile", "AMTA_SPLITDPD");
+
+                    if (string.IsNullOrEmpty(seperator8) || string.IsNullOrEmpty(queryForCSV8) || string.IsNullOrEmpty(filename8)) {
+                        string status_error = "Data CSV (Separator / Query / Nama File) Tidak Lengkap!";
+                        MessageBox.Show(status_error, $"{button.Text} :: AMTA_SPLITDPD", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else {
+                        await _db.UpdateDcDcAmtaLog($"FILE_SPLITDPD = '{filename8}'", dateStart);
+
+                        try {
+                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV8);
+
+                            _berkas.DataTable2CSV(dtQueryRes, filename8, seperator8);
+                            // _berkas.ListFileForZip.Add(filename);
+                            TargetKirim += JumlahServerKirimCsv;
+
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+
+                            await _db.UpdateDcDcAmtaLog($"STATUS_SPLITDPD = 'Ok'", dateStart);
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show(ex.Message, $"{button.Text} :: AMTA_SPLITDPD", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+
+                    await _db.UpdateDcDcAmtaLog($"END_SPLITDPD = NOW()", dateStart);
+
+                    /* ** */
+
+                    _berkas.CleanUp();
+                }
+            });
+            CheckHasilKiriman();
+        }
+
+    }
+
+}
