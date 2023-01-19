@@ -338,7 +338,7 @@ namespace DcTransferFtpNew.Logics {
 
                     /* ** */
 
-                    CFtpResultInfo ftpResultInfo1 = await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("AMTA");
+                    CFtpResultInfo ftpResultInfo1 = await _dcFtpT.KirimAllCsv("AMTA", reportLog: true);
                     List<CFtpResultSendGet> resAll1 = ftpResultInfo1.Success.Concat(ftpResultInfo1.Fail).ToList();
                     foreach (CFtpResultSendGet resAll in resAll1) {
                         string fileName = resAll.FileInformation.Name;
@@ -348,7 +348,7 @@ namespace DcTransferFtpNew.Logics {
                     }
                     BerhasilKirim += ftpResultInfo1.Success.Count; // *.CSV Sebanyak :: TargetKirim
 
-                    CFtpResultInfo ftpResultInfo2 = await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("WEBREKAP");
+                    CFtpResultInfo ftpResultInfo2 = await _dcFtpT.KirimAllCsv("WEBREKAP", reportLog: true);
                     List<CFtpResultSendGet> resAll2 = ftpResultInfo2.Success.Concat(ftpResultInfo2.Fail).ToList();
                     foreach (CFtpResultSendGet resAll in resAll2) {
                         string fileName = resAll.FileInformation.Name;

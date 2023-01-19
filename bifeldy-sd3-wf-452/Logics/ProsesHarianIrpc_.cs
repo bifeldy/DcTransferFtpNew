@@ -76,7 +76,7 @@ namespace DcTransferFtpNew.Logics {
                     // _berkas.ZipListFileInFolder(zipFileName);
                     // TargetKirim += JumlahServerKirimZip;
 
-                    BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpWithLog("IRPC")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                    BerhasilKirim += (await _dcFtpT.KirimAllCsv("IRPC", reportLog: true)).Success.Count; // *.CSV Sebanyak :: TargetKirim
 
                     _berkas.CleanUp();
                 }
