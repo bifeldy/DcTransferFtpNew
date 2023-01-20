@@ -73,12 +73,16 @@ namespace DcTransferFtpNew.Abstractions {
             return dateStart <= dateEnd ? true : throw new Exception($"Tanggal Mulai Harus Lebih Kecil Dari Tanggal Akhir");
         }
 
+        protected bool IsDateRangeSameDay() {
+            return dateStart == dateEnd ? true : throw new Exception($"Hanya Bisa Di (1) Hari Yang Sama");
+        }
+
         protected bool IsDateRangeSameMonth() {
-            return dateStart.Month == dateEnd.Month ? true : throw new Exception($"Hanya Bisa Di (1) Bulan yang Sama");
+            return dateStart.Month == dateEnd.Month ? true : throw new Exception($"Hanya Bisa Di (1) Bulan Yang Sama");
         }
 
         protected bool IsDateStartEndSame() {
-            return dateStart == dateEnd ? true : throw new Exception($"Hanya Bisa Di (1) Hari yang Sama");
+            return dateStart == dateEnd ? true : throw new Exception($"Hanya Bisa Di (1) Hari Yang Sama");
         }
 
         protected async Task<bool> IsDateStartMaxYesterday(int lastDay = 1) {

@@ -129,6 +129,7 @@
     <Compile Include="Logics\ProsesHarianNrbSup_.cs" />
     <Compile Include="Logics\ProsesHarianPldc_.cs" />
     <Compile Include="Logics\ProsesHarianFingerScan_.cs" />
+    <Compile Include="Logics\ProsesHarianPomGg.cs" />
     <Compile Include="Logics\ProsesHarianRealToc_.cs" />
     <Compile Include="Logics\ProsesHarianTaxFull_.cs" />
     <Compile Include="Logics\ProsesHarianTaxNonFad_.cs" />

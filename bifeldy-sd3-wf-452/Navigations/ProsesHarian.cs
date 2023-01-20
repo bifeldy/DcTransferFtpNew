@@ -36,6 +36,8 @@ namespace DcTransferFtpNew.Navigations {
 
         public DateTimePicker DateTimePickerHarianAkhir => dateTimePickerHarianAkhir;
 
+        public CheckBox ChkPomgg => chkPomgg;
+
         private void OnInit() {
             Dock = DockStyle.Fill;
             InitializeButtonProsesHarian();
@@ -76,6 +78,7 @@ namespace DcTransferFtpNew.Navigations {
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianTaxNonFad", Text = "Data TAX Non-FAD" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianAmta", Text = "Data AMTA" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianNrbSup", Text = "Data NRB Sup" });
+            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianPomGg", Text = "Data POMGG" });
         }
 
     }
