@@ -57,7 +57,7 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
 
             CProsesHarian prosesHarian = (CProsesHarian) currentControl;
-            string usingBulang = prosesHarian.ChkPomgg.Checked ? "Y" : "N";
+            string usingBulanG = prosesHarian.ChkPomgg.Checked ? "Y" : "N";
 
             await Task.Run(async () => {
                 if (IsDateRangeSameDay()) {
@@ -69,7 +69,7 @@ namespace DcTransferFtpNew.Logics {
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
 
                     string procName = "TRF_POMGG_EVO";
-                    CDbExecProcResult res = await _db.CALL_ICHO(procName, dateStart, usingBulang);
+                    CDbExecProcResult res = await _db.CALL_ICHO(procName, dateStart, usingBulanG);
                     if (res == null || !res.STATUS) {
                         throw new Exception($"Gagal Menjalankan Procedure {procName}");
                     }
