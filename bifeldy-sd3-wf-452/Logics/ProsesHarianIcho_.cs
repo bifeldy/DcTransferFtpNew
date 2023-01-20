@@ -72,7 +72,7 @@ namespace DcTransferFtpNew.Logics {
                         DateTime xDate = dateStart.AddDays(i);
 
                         string procName = "TRF_ICHO_NEW_EVO";
-                        CDbExecProcResult res = await _db.CALL__P_TGL(procName, xDate);
+                        CDbExecProcResult res = await _db.CALL_ICHO(procName, xDate, "N");
                         if (res == null || !res.STATUS) {
                             throw new Exception($"Gagal Menjalankan Procedure {procName}");
                         }

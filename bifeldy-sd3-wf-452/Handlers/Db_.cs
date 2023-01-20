@@ -62,6 +62,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<CDbExecProcResult> CALL_NPK_BAP(string procName, string TGLAWALPAR, string TGLAKHIRPAR, string V_RESULT = null);
         Task<CDbExecProcResult> CALL_ID_BULAN_G_EVO(string procName, DateTime dateTime);
         Task<CDbExecProcResult> CALL_DataBulananCentralisasiHO(string procName, string tahunBulan);
+        Task<CDbExecProcResult> CALL_ICHO(string procName, DateTime dateTime, string usingBulan);
         Task<bool> BulananDeleteDcDsiWsToko(string fileTimeIdBulanGFormat);
         Task<DataTable> BulananDsiGetDataTable(string periode);
         Task<bool> InsertNewDcAmtaLog(DateTime xDate);
@@ -519,6 +520,16 @@ namespace DcTransferFtpNew.Handlers {
                 procName,
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "p_tahunbulan", VALUE = tahunBulan }
+                }
+            );
+        }
+
+        public async Task<CDbExecProcResult> CALL_ICHO(string procName, DateTime dateTime, string usingBulan) {
+            return await OraPg.ExecProcedureAsync(
+                procName,
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "p_tgl", VALUE = dateTime },
+                    new CDbQueryParamBind { NAME = "p_tga_bln", VALUE = usingBulan }
                 }
             );
         }
