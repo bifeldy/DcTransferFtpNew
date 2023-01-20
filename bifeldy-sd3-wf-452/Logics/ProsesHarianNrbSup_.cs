@@ -24,6 +24,7 @@ using bifeldy_sd3_lib_452.Utilities;
 
 using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Handlers;
+using DcTransferFtpNew.Models;
 
 namespace DcTransferFtpNew.Logics {
 
@@ -62,7 +63,7 @@ namespace DcTransferFtpNew.Logics {
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
 
                     string kodeDCInduk = await _db.GetKodeDCInduk();
-                    List<DC_TABEL_V> listBranchConnection = _branchCabang.GetListBranchConnection(kodeDCInduk);
+                    List<DC_TABEL_V> listBranchDbInfo = await _branchCabang.GetListBranchDbInformation(kodeDCInduk);
                     List<string> ftpFileKirim = new List<string>();
 
                     for (int i = 0; i < jumlahHari; i++) {
@@ -71,24 +72,24 @@ namespace DcTransferFtpNew.Logics {
 
                         string zipFileName = null;
 
-                        foreach (DC_TABEL_V lbc in listBranchConnection) {
-                            CDatabase lbcDbOraPg = null;
-                            if (lbc.FLAG_DBPG == "Y") {
-                                lbcDbOraPg = _db.NewExternalConnectionPg(lbc.DBPG_IP, lbc.DBPG_PORT, lbc.DBPG_USER, lbc.DBPG_PASS, lbc.DBPG_NAME);
+                        foreach (DC_TABEL_V lbdi in listBranchDbInfo) {
+                            CDatabase lbdiDbOraPg = null;
+                            if (lbdi.FLAG_DBPG == "Y") {
+                                lbdiDbOraPg = _db.NewExternalConnectionPg(lbdi.DBPG_IP, lbdi.DBPG_PORT, lbdi.DBPG_USER, lbdi.DBPG_PASS, lbdi.DBPG_NAME);
                             }
                             else {
-                                lbcDbOraPg = _db.NewExternalConnectionOra(lbc.IP_DB, lbc.DB_PORT, lbc.DB_USER_NAME, lbc.DB_PASSWORD, lbc.DB_SID);
+                                lbdiDbOraPg = _db.NewExternalConnectionOra(lbdi.IP_DB, lbdi.DB_PORT, lbdi.DB_USER_NAME, lbdi.DB_PASSWORD, lbdi.DB_SID);
                             }
 
                             List<CDbQueryParamBind> nrbSup = new List<CDbQueryParamBind> {
                                 new CDbQueryParamBind { NAME = "nrb_sup", VALUE = "NRBSUP" }
                             };
 
-                            string procName = await lbcDbOraPg.ExecScalarAsync<string>(
+                            string procName = await lbdiDbOraPg.ExecScalarAsync<string>(
                                 $@"SELECT FILE_PROCEDURE FROM DC_FILE_SCHEDULER_T WHERE file_key = :nrb_sup",
                                 nrbSup
                             );
-                            CDbExecProcResult res = await lbcDbOraPg.ExecProcedureAsync(
+                            CDbExecProcResult res = await lbdiDbOraPg.ExecProcedureAsync(
                                 procName,
                                 new List<CDbQueryParamBind> {
                                     new CDbQueryParamBind { NAME = "P_TGL", VALUE = xDate }
@@ -98,25 +99,25 @@ namespace DcTransferFtpNew.Logics {
                                 throw new Exception($"Gagal Menjalankan Procedure {procName}");
                             }
 
-                            if (lbc.TBL_DC_KODE == kodeDCInduk) {
-                                zipFileName = await lbcDbOraPg.ExecScalarAsync<string>(
+                            if (lbdi.TBL_DC_KODE == kodeDCInduk) {
+                                zipFileName = await lbdiDbOraPg.ExecScalarAsync<string>(
                                     $@"
-                                        SELECT {(lbc.FLAG_DBPG == "Y" ? "COALESCE" : "NVL")}(q_namazip, q_namafile)
+                                        SELECT {(lbdi.FLAG_DBPG == "Y" ? "COALESCE" : "NVL")}(q_namazip, q_namafile)
                                         FROM Q_TRF_CSV WHERE q_filename = :nrb_sup
                                     ",
                                     nrbSup
                                 );
                             }
 
-                            string seperator = await lbcDbOraPg.ExecScalarAsync<string>(
+                            string seperator = await lbdiDbOraPg.ExecScalarAsync<string>(
                                 $@"SELECT q_seperator FROM Q_TRF_CSV WHERE q_filename = :nrb_sup",
                                 nrbSup
                             );
-                            string queryForCSV = await lbcDbOraPg.ExecScalarAsync<string>(
+                            string queryForCSV = await lbdiDbOraPg.ExecScalarAsync<string>(
                                 $@"SELECT q_query FROM Q_TRF_CSV WHERE q_filename = :nrb_sup",
                                 nrbSup
                             );
-                            string filename = await lbcDbOraPg.ExecScalarAsync<string>(
+                            string filename = await lbdiDbOraPg.ExecScalarAsync<string>(
                                 $@"SELECT q_namafile FROM Q_TRF_CSV WHERE q_filename = :nrb_sup",
                                 nrbSup
                             );
@@ -127,7 +128,7 @@ namespace DcTransferFtpNew.Logics {
                             }
                             else {
                                 try {
-                                    DataTable dtQueryRes = await lbcDbOraPg.GetDataTableAsync(queryForCSV);
+                                    DataTable dtQueryRes = await lbdiDbOraPg.GetDataTableAsync(queryForCSV);
                                     _berkas.DataTable2CSV(dtQueryRes, filename, seperator);
                                     // _berkas.ListFileForZip.Add(filename);
                                 }
