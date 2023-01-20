@@ -28,10 +28,10 @@ namespace DcTransferFtpNew.Navigations {
             this.panelProsesHarian = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.chkPomgg = new System.Windows.Forms.CheckBox();
             this.dateTimePickerHarianAkhir = new System.Windows.Forms.DateTimePicker();
             this.dateTimePickerHarianAwal = new System.Windows.Forms.DateTimePicker();
-            this.flowLayoutPanelProsesHarian = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanelProsesHarian = new DcTransferFtpNew.Components.FixAutoScrollFlowLayoutPanel();
             this.panelProsesHarian.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -40,7 +40,7 @@ namespace DcTransferFtpNew.Navigations {
             this.panelProsesHarian.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelProsesHarian.Controls.Add(this.label3);
             this.panelProsesHarian.Controls.Add(this.label5);
-            this.panelProsesHarian.Controls.Add(this.checkBox1);
+            this.panelProsesHarian.Controls.Add(this.chkPomgg);
             this.panelProsesHarian.Controls.Add(this.dateTimePickerHarianAkhir);
             this.panelProsesHarian.Controls.Add(this.dateTimePickerHarianAwal);
             this.panelProsesHarian.Dock = System.Windows.Forms.DockStyle.Top;
@@ -73,17 +73,17 @@ namespace DcTransferFtpNew.Navigations {
             this.label5.Text = "Tanggal Proses Harian";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // checkBox1
+            // chkPomgg
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(18, 62);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(131, 17);
-            this.checkBox1.TabIndex = 16;
-            this.checkBox1.Text = "Data POMGG 3 Bulan";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.chkPomgg.AutoSize = true;
+            this.chkPomgg.Checked = true;
+            this.chkPomgg.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkPomgg.Location = new System.Drawing.Point(18, 62);
+            this.chkPomgg.Name = "chkPomgg";
+            this.chkPomgg.Size = new System.Drawing.Size(131, 17);
+            this.chkPomgg.TabIndex = 16;
+            this.chkPomgg.Text = "Data POMGG 3 Bulan";
+            this.chkPomgg.UseVisualStyleBackColor = true;
             // 
             // dateTimePickerHarianAkhir
             // 
@@ -129,10 +129,10 @@ namespace DcTransferFtpNew.Navigations {
         private System.Windows.Forms.Panel panelProsesHarian;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox chkPomgg;
         private System.Windows.Forms.DateTimePicker dateTimePickerHarianAkhir;
         private System.Windows.Forms.DateTimePicker dateTimePickerHarianAwal;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelProsesHarian;
+        private Components.FixAutoScrollFlowLayoutPanel flowLayoutPanelProsesHarian;
     }
 
 }

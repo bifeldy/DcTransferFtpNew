@@ -28,7 +28,7 @@ namespace DcTransferFtpNew.Navigations {
             this.panelProsesBulanan = new System.Windows.Forms.Panel();
             this.dtpBulanan = new DcTransferFtpNew.Components.MonthYearPicker();
             this.label5 = new System.Windows.Forms.Label();
-            this.flowLayoutPanelProsesBulanan = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanelProsesBulanan = new DcTransferFtpNew.Components.FixAutoScrollFlowLayoutPanel();
             this.panelProsesBulanan.SuspendLayout();
             this.SuspendLayout();
             // 
