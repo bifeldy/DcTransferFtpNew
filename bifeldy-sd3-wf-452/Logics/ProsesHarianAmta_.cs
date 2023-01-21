@@ -91,7 +91,7 @@ namespace DcTransferFtpNew.Logics {
                         await _db.UpdateDcDcAmtaLog($"FILE_WEEKLY = '{filename1}'", dateStart);
 
                         try {
-                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV1);
+                            DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV1);
 
                             _berkas.DataTable2CSV(dtQueryRes, filename1, seperator1);
                             // _berkas.ListFileForZip.Add(filename);
@@ -123,7 +123,7 @@ namespace DcTransferFtpNew.Logics {
                         await _db.UpdateDcDcAmtaLog($"FILE_EXCLBULFRAC = '{filename2}'", dateStart);
 
                         try {
-                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV2);
+                            DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV2);
 
                             _berkas.DataTable2CSV(dtQueryRes, filename2, seperator2);
                             // _berkas.ListFileForZip.Add(filename);
@@ -155,7 +155,7 @@ namespace DcTransferFtpNew.Logics {
                         await _db.UpdateDcDcAmtaLog($"FILE_PLANO = '{filename3}'", dateStart);
 
                         try {
-                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV3);
+                            DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV3);
 
                             _berkas.DataTable2CSV(dtQueryRes, filename3, seperator3);
                             // _berkas.ListFileForZip.Add(filename);
@@ -187,7 +187,7 @@ namespace DcTransferFtpNew.Logics {
                         await _db.UpdateDcDcAmtaLog($"FILE_ITEMDEPO = '{filename4}'", dateStart);
 
                         try {
-                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV4);
+                            DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV4);
 
                             _berkas.DataTable2CSV(dtQueryRes, filename4, seperator4);
                             // _berkas.ListFileForZip.Add(filename);
@@ -219,7 +219,7 @@ namespace DcTransferFtpNew.Logics {
                         await _db.UpdateDcDcAmtaLog($"FILE_BULFRAC = '{filename5}'", dateStart);
 
                         try {
-                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV5);
+                            DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV5);
 
                             _berkas.DataTable2CSV(dtQueryRes, filename5, seperator5);
                             // _berkas.ListFileForZip.Add(filename);
@@ -251,7 +251,7 @@ namespace DcTransferFtpNew.Logics {
                         await _db.UpdateDcDcAmtaLog($"FILE_TOKOKHUSUS = '{filename6}'", dateStart);
 
                         try {
-                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV6);
+                            DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV6);
 
                             _berkas.DataTable2CSV(dtQueryRes, filename6, seperator6);
                             // _berkas.ListFileForZip.Add(filename);
@@ -283,7 +283,7 @@ namespace DcTransferFtpNew.Logics {
                         await _db.UpdateDcDcAmtaLog($"FILE_ST = '{filename7}'", dateStart);
 
                         try {
-                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV7);
+                            DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV7);
 
                             _berkas.DataTable2CSV(dtQueryRes, filename7, seperator7);
                             // _berkas.ListFileForZip.Add(filename);
@@ -315,7 +315,7 @@ namespace DcTransferFtpNew.Logics {
                         await _db.UpdateDcDcAmtaLog($"FILE_SPLITDPD = '{filename8}'", dateStart);
 
                         try {
-                            DataTable dtQueryRes = await _db.GetDataTable(queryForCSV8);
+                            DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV8);
 
                             _berkas.DataTable2CSV(dtQueryRes, filename8, seperator8);
                             // _berkas.ListFileForZip.Add(filename);

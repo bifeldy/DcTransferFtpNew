@@ -82,17 +82,17 @@ namespace DcTransferFtpNew.Abstractions {
         }
 
         protected async Task<bool> IsDateRangeToday() {
-            DateTime toDay = await _db.GetCurrentDate();
+            DateTime toDay = await _db.OraPg_GetCurrentDate();
             return (dateStart == toDay && dateEnd == toDay) ? true : throw new Exception($"Hanya Bisa Proses Tanggal Hari Ini = {toDay:dd-MMM-yyyy}");
         }
 
         protected async Task<bool> IsDateStartMaxYesterday(int lastDay = 1) {
-            DateTime yesterDay = await _db.GetYesterdayDate(lastDay);
+            DateTime yesterDay = await _db.OraPg_GetYesterdayDate(lastDay);
             return dateStart <= yesterDay ? true : throw new Exception($"Max Tanggal Awal Adalah Hari Ini - {lastDay} Hari <= {yesterDay:dd-MMM-yyyy}");
         }
 
         protected async Task<bool> IsDateEndMaxYesterday(int lastDay = 1) {
-            DateTime yesterDay = await _db.GetYesterdayDate(lastDay);
+            DateTime yesterDay = await _db.OraPg_GetYesterdayDate(lastDay);
             return dateEnd <= yesterDay ? true : throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari <= {yesterDay:dd-MMM-yyyy}");
         }
 

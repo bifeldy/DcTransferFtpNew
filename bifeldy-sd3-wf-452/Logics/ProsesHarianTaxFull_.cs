@@ -93,7 +93,7 @@ namespace DcTransferFtpNew.Logics {
                     await _db.UpdateDcTtfHdrLog($"FILE_TAX = '{filename}'", xDate);
 
                     try {
-                        DataTable dtQueryRes = await _db.GetDataTable(queryForCSV);
+                        DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV);
 
                         if (dtQueryRes.Rows.Count > 0) {
                             await _db.UpdateDcTtfHdrLog($"status_tax = 'OK'", xDate);
@@ -135,7 +135,7 @@ namespace DcTransferFtpNew.Logics {
 
                 try {
                     string queryTaxBPB = await _db.Q_TRF_CSV__GET("q_query", "TAXBPB");
-                    DataTable dtTaxBPB = await _db.GetDataTable(queryTaxBPB);
+                    DataTable dtTaxBPB = await _db.OraPg_GetDataTable(queryTaxBPB);
 
                     await _db.UpdateDcTtfHdrLog($"JML_BPB_TAX = {dtTaxBPB.Rows.Count}", xDate);
 
@@ -189,7 +189,7 @@ namespace DcTransferFtpNew.Logics {
 
                 try {
                     string queryTaxNRB = await _db.Q_TRF_CSV__GET("q_query", "TAXNRB");
-                    DataTable dtTaxNRB = await _db.GetDataTable(queryTaxNRB);
+                    DataTable dtTaxNRB = await _db.OraPg_GetDataTable(queryTaxNRB);
 
                     await _db.UpdateDcTtfHdrLog($"JML_NRB_TAX = {dtTaxNRB.Rows.Count}", xDate);
 

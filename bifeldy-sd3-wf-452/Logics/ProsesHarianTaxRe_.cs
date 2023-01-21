@@ -122,7 +122,7 @@ namespace DcTransferFtpNew.Logics {
                                         }
                                         else {
                                             try {
-                                                DataTable dtTax2RE = await _db.GetDataTable(queryTax2RE);
+                                                DataTable dtTax2RE = await _db.OraPg_GetDataTable(queryTax2RE);
 
                                                 if (dtTax2RE.Rows.Count > 0) {
                                                     await _db.UpdateDcTtfHdrLog($"status_tax = 'OK'", xDate);
@@ -153,7 +153,7 @@ namespace DcTransferFtpNew.Logics {
 
                                         try {
                                             string queryTaxBPBRe = await _db.Q_TRF_CSV__GET("q_query", "TAXBPBRE");
-                                            DataTable dtTaxBPBRe = await _db.GetDataTable(queryTaxBPBRe);
+                                            DataTable dtTaxBPBRe = await _db.OraPg_GetDataTable(queryTaxBPBRe);
 
                                             int countBPBok = 0;
                                             int countBPBfail = 0;
@@ -216,7 +216,7 @@ namespace DcTransferFtpNew.Logics {
 
                                         try {
                                             string queryTaxNRBRe = await _db.Q_TRF_CSV__GET("q_query", "TAXNRBRE");
-                                            DataTable dtTaxNRBRe = await _db.GetDataTable(queryTaxNRBRe);
+                                            DataTable dtTaxNRBRe = await _db.OraPg_GetDataTable(queryTaxNRBRe);
 
                                             await _db.UpdateDcTtfHdrLog($"JML_NRB_TAX = {dtTaxNRBRe.Rows.Count}", xDate);
 

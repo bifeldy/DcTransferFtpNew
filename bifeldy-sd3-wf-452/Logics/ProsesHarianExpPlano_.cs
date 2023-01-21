@@ -72,7 +72,7 @@ namespace DcTransferFtpNew.Logics {
                     }
 
                     string procName = await _db.DC_FILE_SCHEDULER_T__GET("FILE_PROCEDURE", "EXPPLANO") ?? "TRF_EXPPLANO_EVO";
-                    CDbExecProcResult res = await _db.CALL_(procName);
+                    CDbExecProcResult res = await _db.OraPg_CALL_(procName);
                     if (res == null || !res.STATUS) {
                         throw new Exception($"Gagal Menjalankan Procedure {procName}");
                     }
