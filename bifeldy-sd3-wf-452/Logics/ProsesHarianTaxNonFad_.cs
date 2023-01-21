@@ -39,7 +39,7 @@ namespace DcTransferFtpNew.Logics {
             IDb db,
             IBerkas berkas,
             IQTrfCsv q_trf_csv
-        ) : base(db) {
+        ) : base(db, berkas) {
             _logger = logger;
             _db = db;
             _berkas = berkas;

@@ -45,7 +45,7 @@ namespace DcTransferFtpNew.Logics {
             IBerkas berkas,
             IDcFtpT dc_ftp_t,
             IBranchCabang branchCabang
-        ) : base(db) {
+        ) : base(db, berkas) {
             _logger = logger;
             _db = db;
             _berkas = berkas;

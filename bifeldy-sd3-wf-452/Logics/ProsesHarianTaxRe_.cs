@@ -44,7 +44,7 @@ namespace DcTransferFtpNew.Logics {
             IDb db,
             IBerkas berkas,
             IProsesHarianTaxFull prosesHarianTaxFull
-        ) : base(db) {
+        ) : base(db, berkas) {
             _app = app;
             _logger = logger;
             _db = db;

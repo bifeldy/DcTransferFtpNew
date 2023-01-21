@@ -43,7 +43,7 @@ namespace DcTransferFtpNew.Logics {
             IBerkas berkas,
             IDcFtpT dc_ftp_t,
             IQTrfCsv qTrfCsv
-        ) : base(db) {
+        ) : base(db, berkas) {
             _app = app;
             _logger = logger;
             _db = db;
@@ -77,8 +77,8 @@ namespace DcTransferFtpNew.Logics {
                     _berkas.ZipListFileInFolder(zipFileName);
                     TargetKirim += JumlahServerKirimZip;
 
-                    BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                    BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpDev("POU", zipFileName, true)).Success.Count; // *.ZIP Sebanyak :: 1
+                    // BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                    // BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpDev("POU", zipFileName, true)).Success.Count; // *.ZIP Sebanyak :: 1
 
                     _berkas.CleanUp();
                 }

@@ -14,9 +14,12 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using bifeldy_sd3_lib_452.Utilities;
 
 using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Navigations;
@@ -30,6 +33,7 @@ namespace DcTransferFtpNew.Abstractions {
     public abstract class CLogics : ILogics {
 
         private readonly IDb _db;
+        private readonly IBerkas _berkas;
 
         protected int TargetKirim = 0;
         protected int BerhasilKirim = 0;
@@ -45,8 +49,9 @@ namespace DcTransferFtpNew.Abstractions {
         protected DateTime dateEnd = DateTime.MinValue;
         protected DateTime datePeriode = DateTime.MinValue;
 
-        public CLogics(IDb db) {
+        public CLogics(IDb db, IBerkas berkas) {
             _db = db;
+            _berkas = berkas;
         }
 
         public abstract Task Run(object sender, EventArgs e, Control currentControl);
@@ -119,6 +124,18 @@ namespace DcTransferFtpNew.Abstractions {
                 }
             }
             MessageBox.Show(InfoMessage, button.Text, MessageBoxButtons.OK, msgBxIco);
+
+            DialogResult dialogResult = MessageBox.Show(
+                $"Buka Folder Lokasi Penyimpanan ?{Environment.NewLine}{Environment.NewLine}{_berkas.TempFolderPath}{Environment.NewLine}{Environment.NewLine}{_berkas.ZipFolderPath}",
+                "File Pengiriman",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+            if (dialogResult == DialogResult.Yes) {
+                string proc = "explorer.exe";
+                Process.Start(new ProcessStartInfo { Arguments = _berkas.TempFolderPath, FileName = proc });
+                Process.Start(new ProcessStartInfo { Arguments = _berkas.ZipFolderPath, FileName = proc });
+            }
         }
 
     }

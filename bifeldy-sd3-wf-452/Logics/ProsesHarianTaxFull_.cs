@@ -56,7 +56,7 @@ namespace DcTransferFtpNew.Logics {
             IDcFtpT dc_ftp_t,
             IConverter converter,
             IStream stream
-        ) : base(db) {
+        ) : base(db, berkas) {
             _app = app;
             _logger = logger;
             _db = db;
