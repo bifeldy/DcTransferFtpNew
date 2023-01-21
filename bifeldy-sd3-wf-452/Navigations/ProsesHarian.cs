@@ -53,7 +53,7 @@ namespace DcTransferFtpNew.Navigations {
             AddButtonToMainPanel(Parent.Parent, ButtonMenuHarianList, flowLayoutPanelProsesHarian);
         }
 
-        private void dateTimePickerHarianAwal_ValueChanged(object sender, EventArgs e) {
+        private void DateTimePickerHarianAwal_ValueChanged(object sender, EventArgs e) {
             if (dateTimePickerHarianAwal.Value > dateTimePickerHarianAkhir.Value) {
                 dateTimePickerHarianAkhir.Value = dateTimePickerHarianAwal.Value;
             }

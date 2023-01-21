@@ -99,7 +99,7 @@ namespace DcTransferFtpNew.Navigations {
             this.dateTimePickerHarianAwal.Size = new System.Drawing.Size(207, 20);
             this.dateTimePickerHarianAwal.TabIndex = 10;
             this.dateTimePickerHarianAwal.Value = new System.DateTime(2022, 12, 21, 0, 0, 0, 0);
-            this.dateTimePickerHarianAwal.ValueChanged += new System.EventHandler(this.dateTimePickerHarianAwal_ValueChanged);
+            this.dateTimePickerHarianAwal.ValueChanged += new System.EventHandler(this.DateTimePickerHarianAwal_ValueChanged);
             // 
             // flowLayoutPanelProsesHarian
             // 
