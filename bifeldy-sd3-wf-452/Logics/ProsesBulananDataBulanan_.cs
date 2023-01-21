@@ -251,6 +251,8 @@ namespace DcTransferFtpNew.Logics {
                 await _qTrfCsv.CreateCSVFile("NBRMRBREAD", nbrMrBread, addToQueueForZip: false);
                 TargetKirim += 1;
 
+                _berkas.BackupAllFilesInTempFolder();
+
                 string zipFileName = $"{VAR_KODE_DC}_SENTRAL_{datePeriode:MMM-yy}.ZIP";
                 List<string> listFileNameToZip = await _qTrfCsv.GetFileNameMulti(lsCsvToZip);
                 _berkas.ZipListFileInFolder(zipFileName, listFileNameToZip);
