@@ -246,10 +246,6 @@ namespace DcTransferFtpNew.Logics {
 
             await _db.UpdateDcTtfHdrLog($"FILE_ZIP = {zipFileName}", xDate);
 
-            if (Directory.Exists(folderPath)) {
-                Directory.Delete(folderPath, true);
-            }
-
             return totalFileInZip;
         }
 
@@ -298,14 +294,11 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid() && IsDateRangeSameMonth() && await IsDateEndMaxYesterday()) {
-                    string TaxTempFullFolderPath = Path.Combine(_app.AppLocation, $"TAX-{await _db.GetKodeDc()}");
-                    if (!Directory.Exists(TaxTempFullFolderPath)) {
-                        Directory.CreateDirectory(TaxTempFullFolderPath);
-                    }
-
+                    _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
                     JumlahServerKirimCsv = 1;
                     JumlahServerKirimZip = 1;
-                    string csvFileName = null;
+
+                    string zipFileName = null;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
@@ -313,17 +306,22 @@ namespace DcTransferFtpNew.Logics {
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
 
+                        string TaxTempFullFolderPath = Path.Combine(_berkas.TempFolderPath, $"TAXFULL_{xDate:yyyy-MM-dd}");
+                        if (!Directory.Exists(TaxTempFullFolderPath)) {
+                            Directory.CreateDirectory(TaxTempFullFolderPath);
+                        }
                         _berkas.DeleteOldFilesInFolder(TaxTempFullFolderPath, 0);
-                        csvFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}.ZIP";
+
+                        zipFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}.ZIP";
 
                         int cekLog = await _db.TaxTempCekLog(xDate);
                         if (cekLog == 0) {
                             await FullCreate(button, xDate, TaxTempFullFolderPath);
 
-                            await FromZip(csvFileName, xDate, TaxTempFullFolderPath);
+                            await FromZip(zipFileName, xDate, TaxTempFullFolderPath);
                             TargetKirim += JumlahServerKirimZip;
 
-                            (int csvTerkirim, int zipTerkirim) = await FromTransfer(csvFileName, button, xDate, TaxTempFullFolderPath);
+                            (int csvTerkirim, int zipTerkirim) = await FromTransfer(zipFileName, button, xDate, TaxTempFullFolderPath);
                             BerhasilKirim += (csvTerkirim + zipTerkirim);
                         }
                         else {
@@ -344,10 +342,10 @@ namespace DcTransferFtpNew.Logics {
 
                                     await FullCreate(button, xDate, TaxTempFullFolderPath);
 
-                                    await FromZip(csvFileName, xDate, TaxTempFullFolderPath);
+                                    await FromZip(zipFileName, xDate, TaxTempFullFolderPath);
                                     TargetKirim += JumlahServerKirimZip;
 
-                                    (int csvTerkirim, int zipTerkirim) = await FromTransfer(csvFileName, button, xDate, TaxTempFullFolderPath);
+                                    (int csvTerkirim, int zipTerkirim) = await FromTransfer(zipFileName, button, xDate, TaxTempFullFolderPath);
                                     BerhasilKirim += (csvTerkirim + zipTerkirim);
                                 }
                             }

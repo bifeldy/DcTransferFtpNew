@@ -56,13 +56,10 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid() && IsDateRangeSameMonth() && await IsDateEndMaxYesterday()) {
-                    string TaxTempReFolderPath = Path.Combine(_app.AppLocation, $"TAXRE-{await _db.GetKodeDc()}");
-                    if (!Directory.Exists(TaxTempReFolderPath)) {
-                        Directory.CreateDirectory(TaxTempReFolderPath);
-                    }
-
+                    _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
                     JumlahServerKirimCsv = 1;
                     JumlahServerKirimZip = 1;
+
                     string csvFileName = null;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
@@ -71,6 +68,10 @@ namespace DcTransferFtpNew.Logics {
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
 
+                        string TaxTempReFolderPath = Path.Combine(_berkas.TempFolderPath, $"TAXRE_{xDate:yyyy-MM-dd}");
+                        if (!Directory.Exists(TaxTempReFolderPath)) {
+                            Directory.CreateDirectory(TaxTempReFolderPath);
+                        }
                         _berkas.DeleteOldFilesInFolder(TaxTempReFolderPath, 0);
 
                         int statusOk = await _db.TaxTempStatusOk(xDate);
@@ -279,13 +280,13 @@ namespace DcTransferFtpNew.Logics {
                                         string tempName = await _db.TaxTempFileZipName(xDate);
                                         int countSeq = tempName.IndexOf("_") > -1 ? int.Parse(tempName.Substring(tempName.LastIndexOf("_") + 1, 1)) + 1 : 1;
 
-                                        csvFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}_{countSeq}.ZIP";
+                                        string zipFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}_{countSeq}.ZIP";
 
                                         // Sama Persis Dari Yang Full
-                                        await _prosesHarianTaxFull.FromZip(csvFileName, xDate, TaxTempReFolderPath);
+                                        await _prosesHarianTaxFull.FromZip(zipFileName, xDate, TaxTempReFolderPath);
                                         TargetKirim += JumlahServerKirimZip;
 
-                                        (int csvTerkirim, int zipTerkirim) = await _prosesHarianTaxFull.FromTransfer(csvFileName, button, xDate, TaxTempReFolderPath);
+                                        (int csvTerkirim, int zipTerkirim) = await _prosesHarianTaxFull.FromTransfer(zipFileName, button, xDate, TaxTempReFolderPath);
                                         BerhasilKirim += (csvTerkirim + zipTerkirim);
                                     }
                                     else {
