@@ -63,6 +63,7 @@ namespace DcTransferFtpNew.Logics {
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
 
+                    // Hanya Dc Tertentu
                     List<string> allowedJenisDc = new List<string> { "INDUK", "DEPO" };
                     if (!allowedJenisDc.Contains(await _db.GetJenisDc())) {
                         throw new Exception($"{button.Text} Hanya Dapat Di Jalankan Di DC {Environment.NewLine}{string.Join(", ", allowedJenisDc.ToArray())}");
