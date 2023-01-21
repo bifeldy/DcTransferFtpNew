@@ -30,7 +30,6 @@ namespace DcTransferFtpNew.Logics {
 
     public sealed class CProsesHarianExpPlano : CLogics, IProsesHarianExpPlano {
 
-        private readonly IApp _app;
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
@@ -38,14 +37,12 @@ namespace DcTransferFtpNew.Logics {
         private readonly IQTrfCsv _qTrfCsv;
 
         public CProsesHarianExpPlano(
-            IApp app,
             ILogger logger,
             IDb db,
             IBerkas berkas,
             IDcFtpT dc_ftp_t,
             IQTrfCsv qTrfCsv
         ) : base(db) {
-            _app = app;
             _logger = logger;
             _db = db;
             _berkas = berkas;
