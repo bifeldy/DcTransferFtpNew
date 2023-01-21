@@ -114,6 +114,7 @@ namespace DcTransferFtpNew.Abstractions {
                 }
                 else if (BerhasilKirim < TargetKirim && TargetKirim > 0) {
                     InfoMessage = $"Ada Beberapa Proses {button.Text} Yang Gagal !!";
+                    msgBxIco = MessageBoxIcon.Error;
                 }
                 else if (BerhasilKirim == TargetKirim && TargetKirim > 0) {
                     InfoMessage = $"{button.Text} Sukses !!";
@@ -121,20 +122,23 @@ namespace DcTransferFtpNew.Abstractions {
                 }
                 else {
                     InfoMessage = $"{button.Text} Error !!";
+                    msgBxIco = MessageBoxIcon.Error;
                 }
             }
             MessageBox.Show(InfoMessage, button.Text, MessageBoxButtons.OK, msgBxIco);
 
-            DialogResult dialogResult = MessageBox.Show(
-                $"Buka Folder Lokasi Penyimpanan ?{Environment.NewLine}{Environment.NewLine}{_berkas.TempFolderPath}{Environment.NewLine}{Environment.NewLine}{_berkas.ZipFolderPath}",
-                "File Pengiriman",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
-            if (dialogResult == DialogResult.Yes) {
-                string proc = "explorer.exe";
-                Process.Start(new ProcessStartInfo { Arguments = _berkas.TempFolderPath, FileName = proc });
-                Process.Start(new ProcessStartInfo { Arguments = _berkas.ZipFolderPath, FileName = proc });
+            if (msgBxIco == MessageBoxIcon.Error) {
+                DialogResult dialogResult = MessageBox.Show(
+                    $"Buka Folder Lokasi Penyimpanan ?{Environment.NewLine}{Environment.NewLine}{_berkas.TempFolderPath}{Environment.NewLine}{Environment.NewLine}{_berkas.ZipFolderPath}",
+                    "File Pengiriman",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+                if (dialogResult == DialogResult.Yes) {
+                    string proc = "explorer.exe";
+                    Process.Start(new ProcessStartInfo { Arguments = _berkas.TempFolderPath, FileName = proc });
+                    Process.Start(new ProcessStartInfo { Arguments = _berkas.ZipFolderPath, FileName = proc });
+                }
             }
 
             button.BackColor = SystemColors.ControlLight;
