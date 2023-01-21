@@ -7,7 +7,7 @@
  * Department   :: IT SD 03
  * Mail         :: bias@indomaret.co.id
  * 
- * Catatan      :: Proses Harian Data IRPC
+ * Catatan      :: Proses Harian Data POMGG
  *              :: Harap Didaftarkan Ke DI Container
  * 
  */
@@ -88,6 +88,7 @@ namespace DcTransferFtpNew.Logics {
                     _berkas.CleanUp();
                 }
             });
+
             CheckHasilKiriman();
         }
 

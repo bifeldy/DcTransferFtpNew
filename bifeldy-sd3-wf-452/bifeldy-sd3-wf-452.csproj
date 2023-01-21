@@ -118,7 +118,7 @@
     <Compile Include="Handlers\QTrfCsv_.cs" />
     <Compile Include="Logics\ProsesBulananDataBulanan_.cs" />
     <Compile Include="Logics\ProsesBulananTransferMstxhg_.cs" />
-    <Compile Include="Logics\ProsesHarianAmta.cs" />
+    <Compile Include="Logics\ProsesHarianAmta_.cs" />
     <Compile Include="Logics\ProsesHarianBpbProc_.cs" />
     <Compile Include="Logics\ProsesHarianBrdRekon_.cs" />
     <Compile Include="Logics\ProsesHarianEndorsement_.cs" />
@@ -129,7 +129,7 @@
     <Compile Include="Logics\ProsesHarianNrbSup_.cs" />
     <Compile Include="Logics\ProsesHarianPldc_.cs" />
     <Compile Include="Logics\ProsesHarianFingerScan_.cs" />
-    <Compile Include="Logics\ProsesHarianPom.cs" />
+    <Compile Include="Logics\ProsesHarianPom_.cs" />
     <Compile Include="Logics\ProsesHarianPomGg_.cs" />
     <Compile Include="Logics\ProsesHarianRealToc_.cs" />
     <Compile Include="Logics\ProsesHarianTaxFull_.cs" />
