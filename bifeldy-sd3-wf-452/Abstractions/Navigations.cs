@@ -73,6 +73,7 @@ namespace DcTransferFtpNew.Abstractions {
                             // _logger.WriteError(ex);
                             MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
+                        buttonSender.BackColor = SystemColors.ControlLight;
 
                         mainPanel.SetIdleBusyStatus(true);
                     };

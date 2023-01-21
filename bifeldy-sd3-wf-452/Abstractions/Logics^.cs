@@ -140,8 +140,6 @@ namespace DcTransferFtpNew.Abstractions {
                     Process.Start(new ProcessStartInfo { Arguments = _berkas.ZipFolderPath, FileName = proc });
                 }
             }
-
-            button.BackColor = SystemColors.ControlLight;
         }
 
     }
