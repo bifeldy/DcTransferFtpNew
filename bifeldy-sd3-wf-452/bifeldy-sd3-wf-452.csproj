@@ -122,6 +122,7 @@
     <Compile Include="Logics\ProsesHarianBpbProc_.cs" />
     <Compile Include="Logics\ProsesHarianBrdRekon_.cs" />
     <Compile Include="Logics\ProsesHarianBtb_.cs" />
+    <Compile Include="Logics\ProsesHarianDpo_.cs" />
     <Compile Include="Logics\ProsesHarianEndorsement_.cs" />
     <Compile Include="Logics\ProsesHarianDataHarian_.cs" />
     <Compile Include="Logics\ProsesHarianExpPlano_.cs" />
