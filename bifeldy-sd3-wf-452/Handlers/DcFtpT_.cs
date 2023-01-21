@@ -84,16 +84,17 @@ namespace DcTransferFtpNew.Handlers {
             Exception exception = null;
             try {
                 dbDataReader = await _db.GetFtpInfo(pga_type);
-                if (dbDataReader != null) {
-                    await dbDataReader.ReadAsync();
-                    ftpObject = new DC_FTP_T {
-                        PGA_IPADDRESS = dbDataReader["PGA_IPADDRESS"].ToString(),
-                        PGA_PORTNUMBER = dbDataReader["PGA_PORTNUMBER"].ToString(),
-                        PGA_USERNAME = dbDataReader["PGA_USERNAME"].ToString(),
-                        PGA_PASSWORD = dbDataReader["PGA_PASSWORD"].ToString(),
-                        PGA_FOLDER = dbDataReader["PGA_FOLDER"].ToString()
-                    };
+                if (dbDataReader == null) {
+                    throw new Exception($"Alamat FTP {pga_type} Belum Terdaftar");
                 }
+                await dbDataReader.ReadAsync();
+                ftpObject = new DC_FTP_T {
+                    PGA_IPADDRESS = dbDataReader["PGA_IPADDRESS"].ToString(),
+                    PGA_PORTNUMBER = dbDataReader["PGA_PORTNUMBER"].ToString(),
+                    PGA_USERNAME = dbDataReader["PGA_USERNAME"].ToString(),
+                    PGA_PASSWORD = dbDataReader["PGA_PASSWORD"].ToString(),
+                    PGA_FOLDER = dbDataReader["PGA_FOLDER"].ToString()
+                };
             }
             catch (Exception ex) {
                 _logger.WriteError(ex);
