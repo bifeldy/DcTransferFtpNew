@@ -86,10 +86,6 @@ namespace DcTransferFtpNew.Abstractions {
             return (dateStart == toDay && dateEnd == toDay) ? true : throw new Exception($"Hanya Bisa Proses Tanggal Hari Ini = {toDay:dd-MMM-yyyy}");
         }
 
-        protected bool IsDateStartEndSame() {
-            return dateStart == dateEnd ? true : throw new Exception($"Hanya Bisa Di (1) Hari Yang Sama");
-        }
-
         protected async Task<bool> IsDateStartMaxYesterday(int lastDay = 1) {
             DateTime yesterDay = await _db.GetYesterdayDate(lastDay);
             return dateStart <= yesterDay ? true : throw new Exception($"Max Tanggal Awal Adalah Hari Ini - {lastDay} Hari <= {yesterDay:dd-MMM-yyyy}");
