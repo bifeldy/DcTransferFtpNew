@@ -137,6 +137,7 @@
     <Compile Include="Logics\ProsesHarianPomGg_.cs" />
     <Compile Include="Logics\ProsesHarianPou_.cs" />
     <Compile Include="Logics\ProsesHarianRealToc_.cs" />
+    <Compile Include="Logics\ProsesHarianRegSto02_.cs" />
     <Compile Include="Logics\ProsesHarianTaxFull_.cs" />
     <Compile Include="Logics\ProsesHarianTaxNonFad_.cs" />
     <Compile Include="Logics\ProsesHarianTaxRe_.cs" />
