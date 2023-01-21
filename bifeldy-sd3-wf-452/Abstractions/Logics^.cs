@@ -59,14 +59,14 @@ namespace DcTransferFtpNew.Abstractions {
         protected void PrepareHarian(object sender, EventArgs e, Control currentControl) {
             SetBtnSenderSelected(sender);
             CProsesHarian prosesHarian = (CProsesHarian) currentControl;
-            dateStart = prosesHarian.DateTimePickerHarianAwal.Value.Date;
-            dateEnd = prosesHarian.DateTimePickerHarianAkhir.Value.Date;
+            dateStart = prosesHarian.DateTimePickerHarianAwal.Value.Date; // Without Time
+            dateEnd = prosesHarian.DateTimePickerHarianAkhir.Value.Date; // Without Time
         }
 
         protected void PrepareBulanan(object sender, EventArgs e, Control currentControl) {
             SetBtnSenderSelected(sender);
             CProsesBulanan prosesBulanan = (CProsesBulanan) currentControl;
-            datePeriode = prosesBulanan.DateTimePeriodeBulanan.Value.Date;
+            datePeriode = prosesBulanan.DateTimePeriodeBulanan.Value.Date; // Always Using Current Day, Without Time
         }
 
         protected bool IsDateRangeValid() {
@@ -81,18 +81,23 @@ namespace DcTransferFtpNew.Abstractions {
             return dateStart.Month == dateEnd.Month ? true : throw new Exception($"Hanya Bisa Di (1) Bulan Yang Sama");
         }
 
+        protected async Task<bool> IsDateRangeToday() {
+            DateTime toDay = await _db.GetCurrentDate();
+            return (dateStart == toDay && dateEnd == toDay) ? true : throw new Exception($"Hanya Bisa Proses Tanggal Hari Ini = {toDay:dd-MMM-yyyy}");
+        }
+
         protected bool IsDateStartEndSame() {
             return dateStart == dateEnd ? true : throw new Exception($"Hanya Bisa Di (1) Hari Yang Sama");
         }
 
         protected async Task<bool> IsDateStartMaxYesterday(int lastDay = 1) {
             DateTime yesterDay = await _db.GetYesterdayDate(lastDay);
-            return dateStart <= yesterDay ? true : throw new Exception($"Max Tanggal Awal Adalah Hari Ini - {lastDay} Hari <= {yesterDay:dd-MMM-yyyy}!");
+            return dateStart <= yesterDay ? true : throw new Exception($"Max Tanggal Awal Adalah Hari Ini - {lastDay} Hari <= {yesterDay:dd-MMM-yyyy}");
         }
 
         protected async Task<bool> IsDateEndMaxYesterday(int lastDay = 1) {
             DateTime yesterDay = await _db.GetYesterdayDate(lastDay);
-            return dateEnd <= yesterDay ? true : throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari <= {yesterDay:dd-MMM-yyyy}!");
+            return dateEnd <= yesterDay ? true : throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari <= {yesterDay:dd-MMM-yyyy}");
         }
 
         protected void CheckHasilKiriman() {

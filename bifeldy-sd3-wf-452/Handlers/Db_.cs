@@ -30,6 +30,7 @@ namespace DcTransferFtpNew.Handlers {
     public interface IDb : IDbHandler {
         Task<DataTable> GetDataTable(string sqlQuery);
         Task<DateTime> GetYesterdayDate(int lastDay);
+        Task<DateTime> GetCurrentDate();
         Task<CDbExecProcResult> CALL__P_TGL(string procedureName, DateTime P_TGL);
         Task<string> Q_TRF_CSV__GET(string kolom, string q_filename);
         Task<string> DC_FILE_SCHEDULER_T__GET(string kolom, string file_key);
@@ -84,14 +85,19 @@ namespace DcTransferFtpNew.Handlers {
         public async Task<DateTime> GetYesterdayDate(int lastDay) {
             return await OraPg.ExecScalarAsync<DateTime>(
                 $@"
-                    SELECT
-                        {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")} - :last_day
+                    SELECT {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")} - :last_day
                     {(_app.IsUsingPostgres ? "" : "FROM DUAL")}
                 ",
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "last_day", VALUE = lastDay }
                 }
             );
+        }
+
+        public async Task<DateTime> GetCurrentDate() {
+            return await OraPg.ExecScalarAsync<DateTime>($@"
+                SELECT {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE) FROM DUAL")}
+            ");
         }
 
         public async Task<CDbExecProcResult> CALL__P_TGL(string procedureName, DateTime P_TGL) {
