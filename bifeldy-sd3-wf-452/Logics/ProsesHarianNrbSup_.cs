@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -68,7 +69,12 @@ namespace DcTransferFtpNew.Logics {
 
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
-                        _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+
+                        string tempFolder = Path.Combine(_berkas.TempFolderPath, $"NRBSUP_{xDate:yyyy-MM-dd}");
+                        if (!Directory.Exists(tempFolder)) {
+                            Directory.CreateDirectory(tempFolder);
+                        }
+                        _berkas.DeleteOldFilesInFolder(tempFolder, 0);
 
                         string zipFileName = null;
 
@@ -129,8 +135,8 @@ namespace DcTransferFtpNew.Logics {
                             else {
                                 try {
                                     DataTable dtQueryRes = await lbdiDbOraPg.GetDataTableAsync(queryForCSV);
-                                    _berkas.DataTable2CSV(dtQueryRes, filename, seperator);
-                                    // _berkas.ListFileForZip.Add(filename);
+                                    _berkas.DataTable2CSV(dtQueryRes, filename, seperator, tempFolder);
+                                    _berkas.ListFileForZip.Add(filename);
                                 }
                                 catch (Exception ex) {
                                     MessageBox.Show(ex.Message, $"{button.Text} :: NRBSUP", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -138,8 +144,7 @@ namespace DcTransferFtpNew.Logics {
                             }
                         }
 
-                        // _berkas.ZipListFileInFolder(zipFileName);
-                        _berkas.ZipAllFileInFolder(zipFileName);
+                        _berkas.ZipListFileInFolder(zipFileName, folderPath: tempFolder);
                         TargetKirim += JumlahServerKirimZip;
 
                         ftpFileKirim.Add(zipFileName);
