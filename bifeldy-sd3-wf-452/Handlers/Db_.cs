@@ -31,6 +31,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<DataTable> GetDataTable(string sqlQuery);
         Task<DateTime> GetYesterdayDate(int lastDay);
         Task<DateTime> GetCurrentDate();
+        Task<CDbExecProcResult> CALL_(string procName);
         Task<CDbExecProcResult> CALL__P_TGL(string procedureName, DateTime P_TGL);
         Task<string> Q_TRF_CSV__GET(string kolom, string q_filename);
         Task<string> DC_FILE_SCHEDULER_T__GET(string kolom, string file_key);
@@ -68,6 +69,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<DataTable> BulananDsiGetDataTable(string periode);
         Task<bool> InsertNewDcAmtaLog(DateTime xDate);
         Task<bool> UpdateDcDcAmtaLog(string columnValue, DateTime xDate);
+        Task<int> GetJumlahPluExpired();
     }
 
     public sealed class CDb : CDbHandler, IDb {
@@ -98,6 +100,10 @@ namespace DcTransferFtpNew.Handlers {
             return await OraPg.ExecScalarAsync<DateTime>($@"
                 SELECT {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE) FROM DUAL")}
             ");
+        }
+
+        public async Task<CDbExecProcResult> CALL_(string procedureName) {
+            return await OraPg.ExecProcedureAsync(procedureName);
         }
 
         public async Task<CDbExecProcResult> CALL__P_TGL(string procedureName, DateTime P_TGL) {
@@ -604,6 +610,12 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
                 }
             );
+        }
+
+        /* ** */
+
+        public async Task<int> GetJumlahPluExpired() {
+            return await OraPg.ExecScalarAsync<int>("SELECT COUNT(1) FROM DC_PLU_EXPIRED_T");
         }
 
     }
