@@ -13,11 +13,14 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using bifeldy_sd3_lib_452.Utilities;
 
+using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Forms;
 using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Utilities;
@@ -62,7 +65,21 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private void ImgDomar_Click(object sender, EventArgs e) {
-            //
+            List<Control> ctrls = new List<Control>();
+            foreach(Control ctrl in NavContent.Controls) {
+                if (ctrl is CNavigations) {
+                    ctrls.Add(ctrl);
+                }
+            }
+            foreach(Control ctrl in ctrls) {
+                NavContent.Controls.Remove(ctrl);
+            }
+            foreach (Control navMenuItem in NavMenu.Controls) {
+                if (navMenuItem is Button) {
+                    navMenuItem.BackColor = SystemColors.ControlLight;
+                }
+            }
+            LnkLblLogClear_LinkClicked(sender, EventArgs.Empty);
         }
 
         private async void CMainPanel_Load(object sender, EventArgs e) {
@@ -104,7 +121,7 @@ namespace DcTransferFtpNew.Panels {
             }
         }
 
-        private void LnkLblLogClear_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+        private void LnkLblLogClear_LinkClicked(object sender, EventArgs e) {
             textBoxLogInfo.Text = string.Empty;
         }
 
