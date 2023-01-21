@@ -43,7 +43,16 @@ namespace DcTransferFtpNew.Handlers {
             seperator = await _db.Q_TRF_CSV__GET("q_seperator", q_filename) ?? seperator;
             string queryForCSV = await _db.Q_TRF_CSV__GET("q_query", q_filename);
             if (string.IsNullOrEmpty(seperator) || string.IsNullOrEmpty(queryForCSV) || string.IsNullOrEmpty(filename)) {
-                MessageBox.Show("Data CSV (Separator / Query / Nama File) Dari Tabel Q_TRF_CSV Tidak Lengkap!", $"{q_filename} :: {filename}");
+                string dataTidakLengkap = $"Data CSV (Separator / Query / Nama File) Tidak Tersedia";
+                DialogResult dr = MessageBox.Show(
+                    $"{dataTidakLengkap}, Ingin Melanjutkan ?",
+                    $"Gagal Membuat CSV {q_filename}",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+                if (dr == DialogResult.No) {
+                    throw new Exception($"Data {q_filename} Pada Tabel Q_TRF_CSV Tidak Lengkap");
+                }
             }
             else {
                 if (appendTargetName != null) {
