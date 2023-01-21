@@ -229,11 +229,11 @@ namespace DcTransferFtpNew.Logics {
 
                         }
 
-                        _berkas.ZipAllFileInFolder(zipFileNameSt, folderPath: stFolder);
+                        _berkas.ZipAllFileInFolder(zipFileNameSt, stFolder);
                         TargetKirim += 2;
                         ftpFileKirimSt.Add(zipFileNameSt);
 
-                        _berkas.ZipAllFileInFolder(zipFileNameSl, folderPath: slFolder);
+                        _berkas.ZipAllFileInFolder(zipFileNameSl, slFolder);
                         TargetKirim += 1;
                         ftpFileKirimSl.Add(zipFileNameSl);
                     }
