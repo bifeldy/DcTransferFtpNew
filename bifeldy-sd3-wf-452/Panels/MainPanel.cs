@@ -108,8 +108,18 @@ namespace DcTransferFtpNew.Panels {
             textBoxLogInfo.Text = string.Empty;
         }
 
-        private void ChkDebugSimulasi_CheckedChanged(object sender, EventArgs e) {
+        private async void ChkDebugSimulasi_CheckedChanged(object sender, EventArgs e) {
             _app.DebugMode = chkDebugSimulasi.Checked;
+            await Task.Run(() => {
+                if (_app.DebugMode) {
+                    MessageBox.Show(
+                        "File Yang Di Kirim Akan Memiliki Prefix _SIMULASI__filename.ext",
+                        "Mode Debug &/ Simulasi",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
+                }
+            });
         }
 
     }
