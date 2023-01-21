@@ -57,6 +57,8 @@ namespace DcTransferFtpNew.Panels {
             LogInfoReporter = new Progress<string>(log => {
                 textBoxLogInfo.Text = log + textBoxLogInfo.Text;
             });
+
+            chkDebugSimulasi.Checked = _app.DebugMode;
         }
 
         private void ImgDomar_Click(object sender, EventArgs e) {
@@ -104,6 +106,10 @@ namespace DcTransferFtpNew.Panels {
 
         private void LnkLblLogClear_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             textBoxLogInfo.Text = string.Empty;
+        }
+
+        private void ChkDebugSimulasi_CheckedChanged(object sender, EventArgs e) {
+            _app.DebugMode = chkDebugSimulasi.Checked;
         }
 
     }

@@ -26,7 +26,7 @@ namespace DcTransferFtpNew.Panels {
         /// </summary>
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CMainPanel));
-            this.chkSemuaKolom = new System.Windows.Forms.CheckBox();
+            this.chkDebugSimulasi = new System.Windows.Forms.CheckBox();
             this.userInfo = new System.Windows.Forms.Label();
             this.imgDomar = new System.Windows.Forms.PictureBox();
             this.prgrssBrStatus = new System.Windows.Forms.ProgressBar();
@@ -38,7 +38,6 @@ namespace DcTransferFtpNew.Panels {
             this.btnMiscLogErrorProses = new System.Windows.Forms.Button();
             this.btnMiscLogErrorTransfer = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.navMenu = new DcTransferFtpNew.Components.FixAutoScrollFlowLayoutPanel();
             this.textBoxLogInfo = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -46,21 +45,23 @@ namespace DcTransferFtpNew.Panels {
             this.label2 = new System.Windows.Forms.Label();
             this.navContent = new System.Windows.Forms.Panel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.navMenu = new DcTransferFtpNew.Components.FixAutoScrollFlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.imgDomar)).BeginInit();
             this.navContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
-            // chkSemuaKolom
+            // chkDebugSimulasi
             // 
-            this.chkSemuaKolom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkSemuaKolom.AutoSize = true;
-            this.chkSemuaKolom.Location = new System.Drawing.Point(576, 66);
-            this.chkSemuaKolom.Name = "chkSemuaKolom";
-            this.chkSemuaKolom.Size = new System.Drawing.Size(143, 17);
-            this.chkSemuaKolom.TabIndex = 12;
-            this.chkSemuaKolom.Text = "Tampilkan Semua Kolom";
-            this.chkSemuaKolom.UseVisualStyleBackColor = true;
+            this.chkDebugSimulasi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkDebugSimulasi.AutoSize = true;
+            this.chkDebugSimulasi.Location = new System.Drawing.Point(577, 66);
+            this.chkDebugSimulasi.Name = "chkDebugSimulasi";
+            this.chkDebugSimulasi.Size = new System.Drawing.Size(143, 17);
+            this.chkDebugSimulasi.TabIndex = 12;
+            this.chkDebugSimulasi.Text = "Mode Debug &&/ Simulasi";
+            this.chkDebugSimulasi.UseVisualStyleBackColor = true;
+            this.chkDebugSimulasi.CheckedChanged += new System.EventHandler(this.ChkDebugSimulasi_CheckedChanged);
             // 
             // userInfo
             // 
@@ -198,16 +199,6 @@ namespace DcTransferFtpNew.Panels {
             this.panel3.Size = new System.Drawing.Size(1, 350);
             this.panel3.TabIndex = 5;
             // 
-            // navMenu
-            // 
-            this.navMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.navMenu.AutoScroll = true;
-            this.navMenu.Location = new System.Drawing.Point(27, 145);
-            this.navMenu.Name = "navMenu";
-            this.navMenu.Size = new System.Drawing.Size(190, 186);
-            this.navMenu.TabIndex = 6;
-            // 
             // textBoxLogInfo
             // 
             this.textBoxLogInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -286,6 +277,16 @@ namespace DcTransferFtpNew.Panels {
             this.pictureBox.TabIndex = 19;
             this.pictureBox.TabStop = false;
             // 
+            // navMenu
+            // 
+            this.navMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.navMenu.AutoScroll = true;
+            this.navMenu.Location = new System.Drawing.Point(27, 145);
+            this.navMenu.Name = "navMenu";
+            this.navMenu.Size = new System.Drawing.Size(190, 186);
+            this.navMenu.TabIndex = 6;
+            // 
             // CMainPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -303,7 +304,7 @@ namespace DcTransferFtpNew.Panels {
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.chkSemuaKolom);
+            this.Controls.Add(this.chkDebugSimulasi);
             this.Controls.Add(this.userInfo);
             this.Controls.Add(this.imgDomar);
             this.Controls.Add(this.prgrssBrStatus);
@@ -322,7 +323,7 @@ namespace DcTransferFtpNew.Panels {
 
         #endregion
 
-        private System.Windows.Forms.CheckBox chkSemuaKolom;
+        private System.Windows.Forms.CheckBox chkDebugSimulasi;
         private System.Windows.Forms.Label userInfo;
         private System.Windows.Forms.PictureBox imgDomar;
         private System.Windows.Forms.ProgressBar prgrssBrStatus;
@@ -334,7 +335,6 @@ namespace DcTransferFtpNew.Panels {
         private System.Windows.Forms.Button btnMiscLogErrorProses;
         private System.Windows.Forms.Button btnMiscLogErrorTransfer;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.FlowLayoutPanel navMenu;
         private System.Windows.Forms.TextBox textBoxLogInfo;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Panel panel4;
@@ -342,6 +342,7 @@ namespace DcTransferFtpNew.Panels {
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel navContent;
         private System.Windows.Forms.PictureBox pictureBox;
+        private Components.FixAutoScrollFlowLayoutPanel navMenu;
     }
 
 }
