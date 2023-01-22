@@ -19,6 +19,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Panels;
 using DcTransferFtpNew.Utilities;
 
@@ -29,11 +30,13 @@ namespace DcTransferFtpNew.Forms {
         private delegate void DelegateFunction();
 
         private readonly IApp _app;
+        private readonly IDb _db;
 
         private FormWindowState lastFormWindowState;
 
-        public CMainForm(IApp app) {
+        public CMainForm(IApp app, IDb db) {
             _app = app;
+            _db = db;
 
             InitializeComponent();
             OnInit();
@@ -60,6 +63,7 @@ namespace DcTransferFtpNew.Forms {
 
             sysTrayToolStripMenuItemApp.Text = $"{_app.CurrentProcess.Id} (0x{_app.CurrentProcess.MainModule.BaseAddress}) :: BIAS";
             sysTrayToolStripMenuItemNICs.Image = SystemIcons.Question.ToBitmap();
+            sysTrayToolStripMenuItemDatabases.Image = SystemIcons.Warning.ToBitmap();
         }
 
         private void CMainForm_Load(object sender, EventArgs e) {
@@ -157,6 +161,15 @@ namespace DcTransferFtpNew.Forms {
                 }
                 Location = original;
             }
+        }
+
+        private void StatusStripDbName_Click(object sender, EventArgs e) {
+            MessageBox.Show(
+                _db.GetAllAvailableDbConnectionsString(),
+                "Koneksi Database",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
         }
 
     }

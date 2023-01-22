@@ -36,6 +36,7 @@ namespace DcTransferFtpNew.Forms {
             this.sysTrayContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.sysTrayToolStripMenuItemApp = new System.Windows.Forms.ToolStripMenuItem();
             this.sysTrayToolStripMenuItemNICs = new System.Windows.Forms.ToolStripMenuItem();
+            this.sysTrayToolStripMenuItemDatabases = new System.Windows.Forms.ToolStripMenuItem();
             this.exitApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timerIpAddress = new System.Windows.Forms.Timer(this.components);
             this.panelContainer = new System.Windows.Forms.Panel();
@@ -63,6 +64,7 @@ namespace DcTransferFtpNew.Forms {
             this.statusStripDbName.Size = new System.Drawing.Size(79, 17);
             this.statusStripDbName.Text = "Disconnected";
             this.statusStripDbName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.statusStripDbName.Click += new System.EventHandler(this.StatusStripDbName_Click);
             // 
             // statusStripIpAddress
             // 
@@ -105,29 +107,37 @@ namespace DcTransferFtpNew.Forms {
             this.sysTrayContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sysTrayToolStripMenuItemApp,
             this.sysTrayToolStripMenuItemNICs,
+            this.sysTrayToolStripMenuItemDatabases,
             this.exitApplicationToolStripMenuItem});
             this.sysTrayContextMenuStrip.Name = "sysTrayContextMenuStrip";
-            this.sysTrayContextMenuStrip.Size = new System.Drawing.Size(158, 70);
+            this.sysTrayContextMenuStrip.Size = new System.Drawing.Size(160, 92);
             // 
             // sysTrayToolStripMenuItemApp
             // 
             this.sysTrayToolStripMenuItemApp.Enabled = false;
             this.sysTrayToolStripMenuItemApp.Image = ((System.Drawing.Image)(resources.GetObject("sysTrayToolStripMenuItemApp.Image")));
             this.sysTrayToolStripMenuItemApp.Name = "sysTrayToolStripMenuItemApp";
-            this.sysTrayToolStripMenuItemApp.Size = new System.Drawing.Size(157, 22);
+            this.sysTrayToolStripMenuItemApp.Size = new System.Drawing.Size(180, 22);
             this.sysTrayToolStripMenuItemApp.Text = "_app.AppName";
             // 
             // sysTrayToolStripMenuItemNICs
             // 
             this.sysTrayToolStripMenuItemNICs.Name = "sysTrayToolStripMenuItemNICs";
-            this.sysTrayToolStripMenuItemNICs.Size = new System.Drawing.Size(157, 22);
+            this.sysTrayToolStripMenuItemNICs.Size = new System.Drawing.Size(180, 22);
             this.sysTrayToolStripMenuItemNICs.Text = "Show All NICs";
             this.sysTrayToolStripMenuItemNICs.Click += new System.EventHandler(this.StatusStripIpAddress_Click);
+            // 
+            // sysTrayToolStripMenuItemDatabases
+            // 
+            this.sysTrayToolStripMenuItemDatabases.Name = "sysTrayToolStripMenuItemDatabases";
+            this.sysTrayToolStripMenuItemDatabases.Size = new System.Drawing.Size(159, 22);
+            this.sysTrayToolStripMenuItemDatabases.Text = "Show Databases";
+            this.sysTrayToolStripMenuItemDatabases.Click += new System.EventHandler(this.StatusStripDbName_Click);
             // 
             // exitApplicationToolStripMenuItem
             // 
             this.exitApplicationToolStripMenuItem.Name = "exitApplicationToolStripMenuItem";
-            this.exitApplicationToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exitApplicationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitApplicationToolStripMenuItem.Text = "Exit Application";
             this.exitApplicationToolStripMenuItem.Click += new System.EventHandler(this.SysTray_MenuExit);
             // 
@@ -185,6 +195,7 @@ namespace DcTransferFtpNew.Forms {
         private System.Windows.Forms.ToolStripMenuItem exitApplicationToolStripMenuItem;
         private System.Windows.Forms.Timer timerIpAddress;
         private System.Windows.Forms.Panel panelContainer;
+        private System.Windows.Forms.ToolStripMenuItem sysTrayToolStripMenuItemDatabases;
     }
 
 }
