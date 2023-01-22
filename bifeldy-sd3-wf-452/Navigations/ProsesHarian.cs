@@ -87,6 +87,7 @@ namespace DcTransferFtpNew.Navigations {
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianDpo", Text = "Data DPO" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianRegSto02", Text = "Data REGSTO02" });
             ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianBo", Text = "Data BO" });
+            ButtonMenuHarianList.Add(new Button() { Name = "CProsesHarianNrbkPrimeBread", Text = "NRBK Prime Bread" });
         }
 
     }
