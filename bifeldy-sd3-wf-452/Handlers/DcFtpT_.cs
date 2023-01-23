@@ -147,7 +147,7 @@ namespace DcTransferFtpNew.Handlers {
             return await KirimSingleFileInFolder(pga_type, null, folderPath, reportLog);
         }
 
-        private void PreviewResult(CFtpResultInfo ftpResultInfo) {
+        private void PreviewResult(string pga_type, CFtpResultInfo ftpResultInfo) {
             string hasilKirim = ".: Berhasil Kirim :." + Environment.NewLine + Environment.NewLine;
             foreach (CFtpResultSendGet result in ftpResultInfo.Success) {
                 hasilKirim += $"[+] {result.FileInformation.Name}" + Environment.NewLine;
@@ -157,7 +157,7 @@ namespace DcTransferFtpNew.Handlers {
                 hasilKirim += $"[-] {result.FileInformation.Name}" + Environment.NewLine;
             }
             if (ftpResultInfo.Success.Count + ftpResultInfo.Fail.Count > 0) {
-                MessageBox.Show(hasilKirim, "Send With Log", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(hasilKirim, $"Pengiriman Ke :: {pga_type}", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -165,25 +165,25 @@ namespace DcTransferFtpNew.Handlers {
 
         public async Task<CFtpResultInfo> KirimSingleCsv(string pga_type, string csvFileName, string folderPath = null, bool reportLog = false) {
             CFtpResultInfo ftpResultInfo = await KirimSingleFileInFolder(pga_type, csvFileName, folderPath ?? _berkas.TempFolderPath, reportLog);
-            PreviewResult(ftpResultInfo);
+            PreviewResult(pga_type, ftpResultInfo);
             return ftpResultInfo;
         }
 
         public async Task<CFtpResultInfo> KirimSingleZip(string pga_type, string zipFileName, string folderPath = null, bool reportLog = false) {
             CFtpResultInfo ftpResultInfo = await KirimSingleFileInFolder(pga_type, zipFileName, folderPath ?? _berkas.ZipFolderPath, reportLog);
-            PreviewResult(ftpResultInfo);
+            PreviewResult(pga_type, ftpResultInfo);
             return ftpResultInfo;
         }
 
         public async Task<CFtpResultInfo> KirimAllCsv(string pga_type, string folderPath = null, bool reportLog = false) {
             CFtpResultInfo ftpResultInfo = await KirimAllFilesInFolder(pga_type, folderPath ?? _berkas.TempFolderPath, reportLog);
-            PreviewResult(ftpResultInfo);
+            PreviewResult(pga_type, ftpResultInfo);
             return ftpResultInfo;
         }
 
         public async Task<CFtpResultInfo> KirimAllZip(string pga_type, string folderPath = null, bool reportLog = false) {
             CFtpResultInfo ftpResultInfo = await KirimAllFilesInFolder(pga_type, folderPath ?? _berkas.ZipFolderPath, reportLog);
-            PreviewResult(ftpResultInfo);
+            PreviewResult(pga_type, ftpResultInfo);
             return ftpResultInfo;
         }
 
@@ -198,7 +198,7 @@ namespace DcTransferFtpNew.Handlers {
                     ftpResultInfo.Fail.Add(r);
                 }
             }
-            PreviewResult(ftpResultInfo);
+            PreviewResult(pga_type, ftpResultInfo);
             return ftpResultInfo;
         }
 
@@ -213,7 +213,7 @@ namespace DcTransferFtpNew.Handlers {
                     ftpResultInfo.Fail.Add(r);
                 }
             }
-            PreviewResult(ftpResultInfo);
+            PreviewResult(pga_type, ftpResultInfo);
             return ftpResultInfo;
         }
 
@@ -279,7 +279,7 @@ namespace DcTransferFtpNew.Handlers {
                     MessageBox.Show(ex.Message, $"Web Service {HO} Tidak Tersedia", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            PreviewResult(ftpResultInfo);
+            PreviewResult("DEV", ftpResultInfo);
             return ftpResultInfo;
         }
 

@@ -43,6 +43,7 @@ namespace DcTransferFtpNew.Handlers {
         /* Proses Harian Data Irpc */
         Task<DataTable> GetIrpc(DateTime xDate);
         /* Proses Harian Data TaxTemp Full */
+        Task<CDbExecProcResult> CALL_TRF_BAKP_EVO(string procedureName, DateTime P_TGL);
         Task<int> TaxTempCekLog(DateTime xDate);
         Task<string> TaxTempCekRun(DateTime xDate);
         Task<bool> TaxTempDeleteDtl(DateTime xDate);
@@ -210,6 +211,16 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         /* Proses Harian Data TaxTemp Full */
+
+        public async Task<CDbExecProcResult> CALL_TRF_BAKP_EVO(string procedureName, DateTime P_TGL) {
+            return await OraPg.ExecProcedureAsync(
+                procedureName,
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "p_dckode", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "p_tgl", VALUE = P_TGL }
+                }
+            );
+        }
 
         public async Task<int> TaxTempCekLog(DateTime xDate) {
             return await OraPg.ExecScalarAsync<int>(

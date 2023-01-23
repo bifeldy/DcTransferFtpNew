@@ -122,7 +122,7 @@ namespace DcTransferFtpNew.Logics {
             await _qTrfCsv.CreateCSVFile("REKTAX", outputFolderPath: TaxTempFullFolderPath);
 
             string procName2 = "TRF_BAKP_EVO";
-            CDbExecProcResult res2 = await _db.CALL__P_TGL(procName2, xDate);
+            CDbExecProcResult res2 = await _db.CALL_TRF_BAKP_EVO(procName2, xDate);
             if (res2 == null || !res2.STATUS) {
                 throw new Exception($"Gagal Menjalankan Procedure {procName2}");
             }
@@ -244,7 +244,7 @@ namespace DcTransferFtpNew.Logics {
         public async Task<int> FromZip(string zipFileName, DateTime xDate, string folderPath) {
             int totalFileInZip = _berkas.ZipAllFileInFolder(zipFileName, folderPath);
 
-            await _db.UpdateDcTtfHdrLog($"FILE_ZIP = {zipFileName}", xDate);
+            await _db.UpdateDcTtfHdrLog($"FILE_ZIP = '{zipFileName}'", xDate);
 
             return totalFileInZip;
         }

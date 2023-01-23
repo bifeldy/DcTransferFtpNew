@@ -23,6 +23,7 @@ using Autofac;
 using bifeldy_sd3_lib_452;
 
 using DcTransferFtpNew.Forms;
+using DcTransferFtpNew.Logics;
 using DcTransferFtpNew.SqlServerTypes;
 
 namespace DcTransferFtpNew {
@@ -58,6 +59,9 @@ namespace DcTransferFtpNew {
                     // Classes Only -- Named, Access by String
                     // Bifeldyz.RegisterDiClassNamed<CClass>();
                     Bifeldyz.RegisterDiClassNamedByNamespace(assembly, new string[] { "Logics", "Navigations" });
+
+                    // Pendaftaran Manual Secara Paksa
+                    Bifeldyz.RegisterDiClassAsInterface<CProsesHarianTaxFull, IProsesHarianTaxFull>();
 
                     // Classes Only
                     // Bifeldyz.RegisterDiClass<CClass>();
