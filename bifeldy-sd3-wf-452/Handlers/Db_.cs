@@ -66,7 +66,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<CDbExecProcResult> CALL_DataBulananCentralisasiHO(string procName, string tahunBulan);
         Task<CDbExecProcResult> CALL_ICHO(string procName, DateTime dateTime, string usingBulan);
         Task<bool> BulananDeleteDcDsiWsToko(string fileTimeIdBulanGFormat);
-        Task<DataTable> BulananDsiGetDataTable(string periode);
+        Task<DataTable> BulananDsiGetDataTable(int periode);
         Task<bool> InsertNewDcAmtaLog(DateTime xDate);
         Task<bool> UpdateDcDcAmtaLog(string columnValue, DateTime xDate);
         Task<int> GetJumlahPluExpired();
@@ -557,7 +557,7 @@ namespace DcTransferFtpNew.Handlers {
             );
         }
 
-        public async Task<DataTable> BulananDsiGetDataTable(string periode) {
+        public async Task<DataTable> BulananDsiGetDataTable(int periode) {
             return await OraPg.GetDataTableAsync(
                 $@"
                     SELECT

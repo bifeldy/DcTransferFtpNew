@@ -230,7 +230,7 @@ namespace DcTransferFtpNew.Logics {
                     GetAnalisaDSIHO.Service dsi_ho = new GetAnalisaDSIHO.Service {
                         Url = await _db.GetURLWebService(dsiWsDc) // ?? _app.GetConfig("ws_dsi_ho")
                     };
-                    DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable($"{datePeriode:yyyyMM}");
+                    DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable(int.Parse($"{datePeriode:yyyyMM}"));
 
                     List<DataDSI_ANALISA> lsDCAnalisa = _converter.DataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
                     string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
