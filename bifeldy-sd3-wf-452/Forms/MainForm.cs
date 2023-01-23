@@ -66,12 +66,12 @@ namespace DcTransferFtpNew.Forms {
             sysTrayToolStripMenuItemDatabases.Image = SystemIcons.Warning.ToBitmap();
         }
 
-        private void CMainForm_Load(object sender, EventArgs e) {
+        private async void CMainForm_Load(object sender, EventArgs e) {
             statusStripContainer.Items["statusStripIpAddress"].Text = "- .: " + string.Join(", ", _app.GetAllIpAddress()) + " :. -";
             statusStripContainer.Items["statusStripAppVersion"].Text = $"v{_app.AppVersion}";
 
             ShowCheckProgramPanel();
-            Task.Run(ShakeForm);
+            await Task.Run((Action) ShakeForm);
         }
 
         private void CMainForm_FormClosing(object sender, FormClosingEventArgs e) {
