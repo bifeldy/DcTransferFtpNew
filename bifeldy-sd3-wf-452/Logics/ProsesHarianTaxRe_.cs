@@ -97,7 +97,7 @@ namespace DcTransferFtpNew.Logics {
 
                                         string tempName = await _db.TaxTempFileTaxName(xDate);
                                         int countSeq = 0;
-                                        string tempNameDepan = "";
+                                        string tempNameDepan = string.Empty;
 
                                         if (tempName.IndexOf("_") > -1) {
                                             countSeq = int.Parse(tempName.Substring(tempName.LastIndexOf("_") + 1, 1)) + 1;
