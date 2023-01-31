@@ -61,6 +61,7 @@ namespace DcTransferFtpNew {
                     Bifeldyz.RegisterDiClassNamedByNamespace(assembly, new string[] { "Logics", "Navigations" });
 
                     // Pendaftaran Manual Secara Paksa
+                    // Atau Tambahin Saja Semua "Logics" Ke "RegisterDiClassAsInterfaceByNamespace(...)" Di Atas
                     Bifeldyz.RegisterDiClassAsInterface<CProsesHarianTaxFull, IProsesHarianTaxFull>();
 
                     // Classes Only
