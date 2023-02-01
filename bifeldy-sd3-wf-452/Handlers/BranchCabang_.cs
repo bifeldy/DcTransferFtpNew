@@ -54,7 +54,7 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<List<DC_TABEL_V>> GetListBranchDbInformation(string kodeDcInduk) {
-            string url = await _db.GetURLWebService("SYNCHO"); // ?? _app.GetConfig("ws_syncho");
+            string url = await _db.GetURLWebService("SYNCHO"); // ?? _config.Get<string>("WsSyncHo", _app.GetConfig("ws_syncho"));
             url += kodeDcInduk;
 
             HttpResponseMessage httpResponse = await _api.PostData(url, null);

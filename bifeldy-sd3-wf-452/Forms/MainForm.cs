@@ -19,6 +19,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using bifeldy_sd3_lib_452.Utilities;
+
 using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Panels;
 using DcTransferFtpNew.Utilities;
@@ -31,12 +33,14 @@ namespace DcTransferFtpNew.Forms {
 
         private readonly IApp _app;
         private readonly IDb _db;
+        private readonly IConfig _config;
 
         private FormWindowState lastFormWindowState;
 
-        public CMainForm(IApp app, IDb db) {
+        public CMainForm(IApp app, IDb db, IConfig config) {
             _app = app;
             _db = db;
+            _config = config;
 
             InitializeComponent();
             OnInit();
@@ -76,7 +80,8 @@ namespace DcTransferFtpNew.Forms {
 
         private void CMainForm_FormClosing(object sender, FormClosingEventArgs e) {
             if (e.CloseReason == CloseReason.UserClosing) {
-                if (!bool.Parse(_app.GetConfig("minimize_on_close"))) {
+                bool minimizeOnClose = _config.Get<bool>("MinimizeOnClose", bool.Parse(_app.GetConfig("minimize_on_close")));
+                if (!minimizeOnClose) {
                     SysTray_MenuExit(sender, EventArgs.Empty);
                 }
                 else {

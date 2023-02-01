@@ -78,7 +78,7 @@ namespace DcTransferFtpNew.Logics {
                 // string listAntarDc = "LISTANTARDC";
                 // try {
                 //     GetDataAntarDC.Service wsGetAntarDC = new GetDataAntarDC.Service {
-                //         Url = await _db.GetURLWebService(listAntarDc) // ?? _app.GetConfig("ws_list_antar_dc")
+                //         Url = await _db.GetURLWebService(listAntarDc) // ?? _config.Get<string>("WsListAntarDc", _app.GetConfig("ws_list_antar_dc"));
                 //     };
                 //     string sValueGet = wsGetAntarDC.GetDataAntarDC();
                 // 
@@ -202,7 +202,7 @@ namespace DcTransferFtpNew.Logics {
                 string dsiWsToko = "DSI_WSTOKO";
                 try {
                     DSI_WS.DSI_WS dsi_ws = new DSI_WS.DSI_WS {
-                        Url = await _db.GetURLWebService(dsiWsToko) // ?? _app.GetConfig("ws_dsi")
+                        Url = await _db.GetURLWebService(dsiWsToko) // ?? _config.Get<string>("WsDsi", _app.GetConfig("ws_dsi"));
                     };
                     string responseDsiDetail = dsi_ws.Get_DSIDetail(datePeriode);
 
@@ -228,7 +228,7 @@ namespace DcTransferFtpNew.Logics {
                 string dsiWsDc = "DSI_WSDC";
                 try {
                     GetAnalisaDSIHO.Service dsi_ho = new GetAnalisaDSIHO.Service {
-                        Url = await _db.GetURLWebService(dsiWsDc) // ?? _app.GetConfig("ws_dsi_ho")
+                        Url = await _db.GetURLWebService(dsiWsDc) // ?? _config.Get<string>("WsDsiHo", _app.GetConfig("ws_dsi_ho"));
                     };
                     DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable(int.Parse($"{datePeriode:yyyyMM}"));
 
