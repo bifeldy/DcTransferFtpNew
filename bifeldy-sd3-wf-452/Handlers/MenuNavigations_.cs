@@ -40,8 +40,7 @@ namespace DcTransferFtpNew.Handlers {
             // Button Buat UI Panel Ex. `\Navigations\***_.cs`, Name => Gunakan Nama `class` Dan Di `sealed`
             ButtonMenuNavList.Add(new Button() { Name = "CProsesHarian", Text = "PROSES HARIAN" });
             ButtonMenuNavList.Add(new Button() { Name = "CProsesBulanan", Text = "PROSES BULANAN" });
-            ButtonMenuNavList.Add(new Button() { Name = "CTransfer", Text = "TRANSFER SETTINGS" });
-            ButtonMenuNavList.Add(new Button() { Name = "CHapus", Text = "HAPUS BERKAS" });
+            ButtonMenuNavList.Add(new Button() { Name = "CSettings", Text = "PENGATURAN" });
         }
 
         public void AddButtonToPanel(Control currentControl) {

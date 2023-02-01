@@ -162,6 +162,12 @@
     <Compile Include="Navigations\ProsesHarian.Designer.cs">
       <DependentUpon>ProsesHarian.cs</DependentUpon>
     </Compile>
+    <Compile Include="Navigations\Settings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Navigations\Settings.Designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Panels\CekProgram.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -222,6 +228,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Navigations\ProsesHarian.resx">
       <DependentUpon>ProsesHarian.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Navigations\Settings.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Panels\CekProgram.resx">
       <DependentUpon>CekProgram.cs</DependentUpon>
