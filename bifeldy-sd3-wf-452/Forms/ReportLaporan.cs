@@ -51,6 +51,13 @@ namespace DcTransferFtpNew.Forms {
             return isReady;
         }
 
+        private void CReportLaporan_FormClosing(object sender, FormClosingEventArgs e) {
+            rptViewer.LocalReport.ReportPath = null;
+            rptViewer.LocalReport.DataSources.Clear();
+            rptViewer.RefreshReport();
+            Dispose();
+        }
+
     }
 
 }
