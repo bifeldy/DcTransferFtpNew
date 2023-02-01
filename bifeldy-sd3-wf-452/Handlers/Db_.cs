@@ -32,6 +32,8 @@ namespace DcTransferFtpNew.Handlers {
         Task<DateTime> OraPg_GetYesterdayDate(int lastDay);
         Task<DateTime> OraPg_GetCurrentDate();
         Task<CDbExecProcResult> OraPg_CALL_(string procName);
+        Task<DataTable> GetLogErrorTransfer();
+        Task<DataTable> GetLogErrorProses();
         Task<CDbExecProcResult> CALL__P_TGL(string procedureName, DateTime P_TGL);
         Task<string> Q_TRF_CSV__GET(string kolom, string q_filename);
         Task<string> DC_FILE_SCHEDULER_T__GET(string kolom, string file_key);
@@ -108,6 +110,44 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         /* ** */
+
+        public async Task<DataTable> GetLogErrorTransfer() {
+            return await OraPg.GetDataTableAsync(
+                $@"
+                    SELECT
+                        ERROR_TIME AS err_tme,
+                        ERROR_MSG AS err_msg
+                    FROM
+                        FTP_ERROR_LOG
+                    WHERE
+                        TO_CHAR(ERROR_TIME, 'MM/dd/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                    ORDER BY
+                        ERROR_TIME DESC
+                ",
+                new List<CDbQueryParamBind>() {
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = DateTime.Now }
+                }
+            );
+        }
+
+        public async Task<DataTable> GetLogErrorProses() {
+            return await OraPg.GetDataTableAsync(
+                $@"
+                    SELECT
+                        TAXTEMP_TGL AS err_tme2,
+                        STATUS AS err_msg2
+                    FROM
+                        TAXTEMP_LOG
+                    WHERE
+                        TO_CHAR(TAXTEMP_TGL, 'MM/dd/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                    ORDER BY
+                        TAXTEMP_TGL DESC
+                ",
+                new List<CDbQueryParamBind>() {
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = DateTime.Now }
+                }
+            );
+        }
 
         public async Task<CDbExecProcResult> CALL__P_TGL(string procedureName, DateTime P_TGL) {
             return await OraPg.ExecProcedureAsync(

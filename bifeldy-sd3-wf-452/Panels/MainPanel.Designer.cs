@@ -172,6 +172,7 @@ namespace DcTransferFtpNew.Panels {
             this.btnMiscLogErrorProses.Text = "Proses Error Logs";
             this.btnMiscLogErrorProses.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnMiscLogErrorProses.UseVisualStyleBackColor = false;
+            this.btnMiscLogErrorProses.Click += new System.EventHandler(this.BtnMiscLogErrorProses_Click);
             // 
             // btnMiscLogErrorTransfer
             // 
@@ -188,6 +189,7 @@ namespace DcTransferFtpNew.Panels {
             this.btnMiscLogErrorTransfer.Text = "Transfer Error Logs";
             this.btnMiscLogErrorTransfer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnMiscLogErrorTransfer.UseVisualStyleBackColor = false;
+            this.btnMiscLogErrorTransfer.Click += new System.EventHandler(this.BtnMiscLogErrorTransfer_Click);
             // 
             // panel3
             // 

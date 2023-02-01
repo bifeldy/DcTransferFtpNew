@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,6 +25,7 @@ using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Forms;
 using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Utilities;
+using Microsoft.Reporting.WinForms;
 
 namespace DcTransferFtpNew.Panels {
 
@@ -137,6 +139,30 @@ namespace DcTransferFtpNew.Panels {
                     );
                 }
             });
+        }
+
+        private async void BtnMiscLogErrorTransfer_Click(object sender, EventArgs e) {
+            CReportLaporan logErrorTransfer = new CReportLaporan();
+            DataTable dt = null;
+            List<ReportParameter> rps = new List<ReportParameter> {
+                new ReportParameter("parTglPrint", $"{DateTime.Now}")
+            };
+            await Task.Run(async () => {
+                dt = await _db.GetLogErrorTransfer();
+            });
+            logErrorTransfer.SetLaporan(dt, rps, "Rdlcs/Transfer.rdlc", "DCTransferFTP_DS_DCTransferFTP_DT");
+        }
+
+        private async void BtnMiscLogErrorProses_Click(object sender, EventArgs e) {
+            CReportLaporan logErrorTransfer = new CReportLaporan();
+            DataTable dt = null;
+            List<ReportParameter> rps = new List<ReportParameter> {
+                new ReportParameter("parTglPrint2", $"{DateTime.Now}")
+            };
+            await Task.Run(async () => {
+                dt = await _db.GetLogErrorProses();
+            });
+            logErrorTransfer.SetLaporan(dt, rps, "Rdlcs/Proses.rdlc", "DCTransferFTP_DS_DCTransferFTP_DT2");
         }
 
     }

@@ -254,6 +254,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="Rdlcs\Proses.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Rdlcs\Transfer.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -322,9 +328,7 @@
     <None Include="Web References\GetDataAntarDC\Service.disco" />
     <None Include="Web References\localhost\Service.disco" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Rdlcs\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
