@@ -28,13 +28,16 @@ namespace DcTransferFtpNew.Navigations {
 
         private readonly ILogger _logger;
         private readonly IBerkas _berkas;
+        private readonly IConfig _config;
 
         public CSettings(
             ILogger logger,
-            IBerkas berkas
+            IBerkas berkas,
+            IConfig config
         ) {
             _logger = logger;
             _berkas = berkas;
+            _config = config;
 
             InitializeComponent();
             OnInit();
@@ -49,8 +52,9 @@ namespace DcTransferFtpNew.Navigations {
             txtBxOpenFolderBackup.Text = _berkas.BackupFolderPath;
         }
 
-        private void txtBxDaysRetentionFiles_ValueChanged(object sender, EventArgs e) {
+        private void TxtBxDaysRetentionFiles_ValueChanged(object sender, EventArgs e) {
             _berkas.MaxOldRetentionDay = (int) txtBxDaysRetentionFiles.Value;
+            _config.Set("MaxOldRetentionDay", _berkas.MaxOldRetentionDay);
         }
 
         private void BtnOpenFolderTempCsv_Click(object sender, EventArgs e) {

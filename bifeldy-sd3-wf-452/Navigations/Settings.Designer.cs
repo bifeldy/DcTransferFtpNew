@@ -113,7 +113,7 @@ namespace DcTransferFtpNew.Navigations {
             0,
             0,
             0});
-            this.txtBxDaysRetentionFiles.ValueChanged += new System.EventHandler(this.txtBxDaysRetentionFiles_ValueChanged);
+            this.txtBxDaysRetentionFiles.ValueChanged += new System.EventHandler(this.TxtBxDaysRetentionFiles_ValueChanged);
             // 
             // label4
             // 
