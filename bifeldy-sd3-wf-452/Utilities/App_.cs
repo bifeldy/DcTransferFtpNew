@@ -12,6 +12,7 @@
  * 
  */
 
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Windows.Forms;
@@ -41,7 +42,7 @@ namespace DcTransferFtpNew.Utilities {
         public CApp() {
             ScreenWidth = Screen.PrimaryScreen.WorkingArea.Width;
             ScreenHeight = Screen.PrimaryScreen.WorkingArea.Height;
-            Author = "B. Bias A. Ch. :: bias@indomaret.co.id";
+            Author = "B. Bias A. Ch. :: bias@indomaret.co.id" + Environment.NewLine + "Sulistyo C. :: chandrianto@indomaret.co.id";
             ListDcCanUse = new List<string> { "INDUK", "DEPO", "SEWA" };
         }
 
