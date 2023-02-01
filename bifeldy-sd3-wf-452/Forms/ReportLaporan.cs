@@ -40,13 +40,9 @@ namespace DcTransferFtpNew.Forms {
                 rptViewer.LocalReport.ReportPath = rdlcPath;
                 rptViewer.LocalReport.DataSources.Add(new ReportDataSource(dsName, dtReport));
                 rptViewer.LocalReport.SetParameters(paramList);
-                rptViewer.RefreshReport();
-                Show();
-                Activate();
             }
             else {
                 MessageBox.Show("Tidak Ada Data", $"Report Viewer :: {dsName}", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Close();
             }
             return isReady;
         }
@@ -56,6 +52,10 @@ namespace DcTransferFtpNew.Forms {
             rptViewer.LocalReport.DataSources.Clear();
             rptViewer.RefreshReport();
             Dispose();
+        }
+
+        private void CReportLaporan_Load(object sender, System.EventArgs e) {
+            rptViewer.RefreshReport();
         }
 
     }
