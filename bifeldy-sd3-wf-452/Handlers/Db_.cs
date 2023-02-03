@@ -30,6 +30,7 @@ namespace DcTransferFtpNew.Handlers {
     public interface IDb : IDbHandler {
         Task<DataTable> OraPg_GetDataTable(string sqlQuery);
         Task<DateTime> OraPg_GetYesterdayDate(int lastDay);
+        Task<DateTime> OraPg_GetLastMonth(int lastMonth);
         Task<DateTime> OraPg_GetCurrentDate();
         Task<CDbExecProcResult> OraPg_CALL_(string procName);
         Task<DataTable> GetLogErrorTransfer();
@@ -99,6 +100,18 @@ namespace DcTransferFtpNew.Handlers {
             );
         }
 
+        public async Task<DateTime> OraPg_GetLastMonth(int lastMonth) {
+            return await OraPg.ExecScalarAsync<DateTime>(
+                $@"
+                    SELECT TRUNC(add_months({(_app.IsUsingPostgres ? "CURRENT_DATE" : "SYSDATE")}, - :last_month))
+                    {(_app.IsUsingPostgres ? "" : "FROM DUAL")}
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "last_month", VALUE = lastMonth }
+                }
+            );
+        }
+
         public async Task<DateTime> OraPg_GetCurrentDate() {
             return await OraPg.ExecScalarAsync<DateTime>($@"
                 SELECT {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE) FROM DUAL")}
@@ -120,7 +133,7 @@ namespace DcTransferFtpNew.Handlers {
                     FROM
                         FTP_ERROR_LOG
                     WHERE
-                        TO_CHAR(ERROR_TIME, 'MM/dd/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                        TO_CHAR(ERROR_TIME, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
                     ORDER BY
                         ERROR_TIME DESC
                 ",
@@ -139,7 +152,7 @@ namespace DcTransferFtpNew.Handlers {
                     FROM
                         TAXTEMP_LOG
                     WHERE
-                        TO_CHAR(TAXTEMP_TGL, 'MM/dd/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                        TO_CHAR(TAXTEMP_TGL, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
                     ORDER BY
                         TAXTEMP_TGL DESC
                 ",

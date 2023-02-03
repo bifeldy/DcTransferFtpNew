@@ -101,6 +101,11 @@ namespace DcTransferFtpNew.Abstractions {
             return dateEnd <= yesterDay ? true : throw new Exception($"Max Tanggal Akhir Adalah Hari Ini - {lastDay} Hari <= {yesterDay:dd-MMM-yyyy}");
         }
 
+        protected async Task<bool> IsPeriodeLastMonth(int lastMonth = 1) {
+            DateTime lastPeriode = await _db.OraPg_GetLastMonth(lastMonth);
+            return datePeriode.Month <= lastPeriode.Month ? true : throw new Exception($"Max Periode Adalah Bulan Ini - {lastMonth} Bulan <= {lastPeriode:MMMM}");
+        }
+
         protected void CheckHasilKiriman() {
             MessageBoxIcon msgBxIco = MessageBoxIcon.Error;
             if (string.IsNullOrEmpty(InfoMessage)) {
