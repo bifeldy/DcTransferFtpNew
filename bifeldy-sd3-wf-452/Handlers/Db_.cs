@@ -409,13 +409,13 @@ namespace DcTransferFtpNew.Handlers {
                 dataRow["FILE_NAME"].ToString(),
                 $@"
                     SELECT a.HDR_DOC_BLOB
-                    FROM dc_header_blob_t a, dc_header_transaksi_t b
+                    FROM {(_app.IsUsingPostgres ? "dc_header_blob_t a," : "")} dc_header_transaksi_t b
                     WHERE
-                        a.hdr_hdr_id = b.hdr_hdr_id
-                        AND b.HDR_TYPE_TRANS = :type_trans
-                        AND b.HDR_NO_DOC = :no_doc
-                        AND TO_CHAR(b.HDR_TGL_DOC, 'MM/dd/yyyy') = TO_CHAR(:tgl_doc, 'MM/dd/yyyy')
-                        AND a.HDR_DOC_BLOB IS NOT NULL
+                        {(_app.IsUsingPostgres ? "a.hdr_hdr_id = b.hdr_hdr_id AND" : "")}
+                        b.HDR_TYPE_TRANS = :type_trans AND
+                        b.HDR_NO_DOC = :no_doc AND
+                        TO_CHAR(b.HDR_TGL_DOC, 'MM/dd/yyyy') = TO_CHAR(:tgl_doc, 'MM/dd/yyyy') AND
+                        {(_app.IsUsingPostgres ? "a" : "b")}.HDR_DOC_BLOB IS NOT NULL
                 ",
                 new List<CDbQueryParamBind>() {
                     new CDbQueryParamBind { NAME = "type_trans", VALUE = typeTrans },
@@ -478,15 +478,15 @@ namespace DcTransferFtpNew.Handlers {
             return await OraPg.ExecScalarAsync<int>(
                 $@"
                     SELECT COUNT(*)
-                    FROM DC_TTF_DTL_LOG a, DC_HEADER_TRANSAKSI_T b, dc_header_blob_t c
+                    FROM DC_TTF_DTL_LOG a, DC_HEADER_TRANSAKSI_T b{(_app.IsUsingPostgres ? ", dc_header_blob_t c" : "")}
                     WHERE
-                        a.no_doc = b.hdr_no_doc
-                        AND a.tgl_doc = TRUNC(b.hdr_tgl_doc)
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
-                        AND TYPE_TRANS IN ('BPB SUPPLIER', 'NRB SUPPLIER')
-                        AND STATUS <> 'OK'
-                        AND b.hdr_hdr_id = c.hdr_hdr_id
-                        AND c.hdr_doc_blob IS NOT NULL
+                        {(_app.IsUsingPostgres ? "c.hdr_hdr_id = b.hdr_hdr_id AND" : "")}
+                        a.no_doc = b.hdr_no_doc AND
+                        a.tgl_doc = TRUNC(b.hdr_tgl_doc) AND
+                        TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy') AND
+                        TYPE_TRANS IN ('BPB SUPPLIER', 'NRB SUPPLIER') AND
+                        STATUS <> 'OK' AND
+                        {(_app.IsUsingPostgres ? "c" : "b")}.HDR_DOC_BLOB IS NOT NULL
                 ",
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
