@@ -112,8 +112,7 @@ namespace DcTransferFtpNew.Handlers {
             return ftpObject;
         }
 
-        private async Task<CFtpResultInfo> KirimSingleFileInFolder(string pga_type, string fileName, string folderPath, bool reportLog = false) {
-            DC_FTP_T ftpInfo = await GetFtpInfo(pga_type);
+        private async Task<CFtpResultInfo> KirimSingleFileInFolder(DC_FTP_T ftpInfo, string fileName, string folderPath, bool reportLog = false) {
             CFtpResultInfo ftpResultInfo = await _ftp.CreateFtpConnectionAndSendFtpFiles(
                 ftpInfo.PGA_IPADDRESS,
                 int.Parse(ftpInfo.PGA_PORTNUMBER),
@@ -143,11 +142,11 @@ namespace DcTransferFtpNew.Handlers {
             return ftpResultInfo;
         }
 
-        private async Task<CFtpResultInfo> KirimAllFilesInFolder(string pga_type, string folderPath, bool reportLog = false) {
-            return await KirimSingleFileInFolder(pga_type, null, folderPath, reportLog);
+        private async Task<CFtpResultInfo> KirimAllFilesInFolder(DC_FTP_T ftpInfo, string folderPath, bool reportLog = false) {
+            return await KirimSingleFileInFolder(ftpInfo, null, folderPath, reportLog);
         }
 
-        private void PreviewResult(string pga_type, CFtpResultInfo ftpResultInfo) {
+        private void PreviewResult(DC_FTP_T ftpInfo, CFtpResultInfo ftpResultInfo) {
             string hasilKirim = ".: Berhasil Kirim :." + Environment.NewLine + Environment.NewLine;
             foreach (CFtpResultSendGet result in ftpResultInfo.Success) {
                 hasilKirim += $"[+] {result.FileInformation.Name}" + Environment.NewLine;
@@ -157,40 +156,45 @@ namespace DcTransferFtpNew.Handlers {
                 hasilKirim += $"[-] {result.FileInformation.Name}" + Environment.NewLine;
             }
             if (ftpResultInfo.Success.Count + ftpResultInfo.Fail.Count > 0) {
-                MessageBox.Show(hasilKirim, $"Pengiriman Ke :: {pga_type}", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(hasilKirim, $"Pengiriman Ke :: {ftpInfo.PGA_TYPE} ({ftpInfo.PGA_IPADDRESS}:{ftpInfo.PGA_PORTNUMBER})", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         /* ** */
 
         public async Task<CFtpResultInfo> KirimSingleCsv(string pga_type, string csvFileName, string folderPath = null, bool reportLog = false) {
-            CFtpResultInfo ftpResultInfo = await KirimSingleFileInFolder(pga_type, csvFileName, folderPath ?? _berkas.TempFolderPath, reportLog);
-            PreviewResult(pga_type, ftpResultInfo);
+            DC_FTP_T ftpInfo = await GetFtpInfo(pga_type);
+            CFtpResultInfo ftpResultInfo = await KirimSingleFileInFolder(ftpInfo, csvFileName, folderPath ?? _berkas.TempFolderPath, reportLog);
+            PreviewResult(ftpInfo, ftpResultInfo);
             return ftpResultInfo;
         }
 
         public async Task<CFtpResultInfo> KirimSingleZip(string pga_type, string zipFileName, string folderPath = null, bool reportLog = false) {
-            CFtpResultInfo ftpResultInfo = await KirimSingleFileInFolder(pga_type, zipFileName, folderPath ?? _berkas.ZipFolderPath, reportLog);
-            PreviewResult(pga_type, ftpResultInfo);
+            DC_FTP_T ftpInfo = await GetFtpInfo(pga_type);
+            CFtpResultInfo ftpResultInfo = await KirimSingleFileInFolder(ftpInfo, zipFileName, folderPath ?? _berkas.ZipFolderPath, reportLog);
+            PreviewResult(ftpInfo, ftpResultInfo);
             return ftpResultInfo;
         }
 
         public async Task<CFtpResultInfo> KirimAllCsv(string pga_type, string folderPath = null, bool reportLog = false) {
-            CFtpResultInfo ftpResultInfo = await KirimAllFilesInFolder(pga_type, folderPath ?? _berkas.TempFolderPath, reportLog);
-            PreviewResult(pga_type, ftpResultInfo);
+            DC_FTP_T ftpInfo = await GetFtpInfo(pga_type);
+            CFtpResultInfo ftpResultInfo = await KirimAllFilesInFolder(ftpInfo, folderPath ?? _berkas.TempFolderPath, reportLog);
+            PreviewResult(ftpInfo, ftpResultInfo);
             return ftpResultInfo;
         }
 
         public async Task<CFtpResultInfo> KirimAllZip(string pga_type, string folderPath = null, bool reportLog = false) {
-            CFtpResultInfo ftpResultInfo = await KirimAllFilesInFolder(pga_type, folderPath ?? _berkas.ZipFolderPath, reportLog);
-            PreviewResult(pga_type, ftpResultInfo);
+            DC_FTP_T ftpInfo = await GetFtpInfo(pga_type);
+            CFtpResultInfo ftpResultInfo = await KirimAllFilesInFolder(ftpInfo, folderPath ?? _berkas.ZipFolderPath, reportLog);
+            PreviewResult(ftpInfo, ftpResultInfo);
             return ftpResultInfo;
         }
 
         public async Task<CFtpResultInfo> KirimSelectedCsv(string pga_type, List<string> listCsvFileName, string folderPath = null, bool reportLog = false) {
+            DC_FTP_T ftpInfo = await GetFtpInfo(pga_type);
             CFtpResultInfo ftpResultInfo = new CFtpResultInfo();
             foreach (string fn in listCsvFileName) {
-                CFtpResultInfo res = await KirimSingleFileInFolder(pga_type, fn, folderPath ?? _berkas.TempFolderPath, reportLog);
+                CFtpResultInfo res = await KirimSingleFileInFolder(ftpInfo, fn, folderPath ?? _berkas.TempFolderPath, reportLog);
                 foreach (CFtpResultSendGet r in res.Success) {
                     ftpResultInfo.Success.Add(r);
                 }
@@ -198,14 +202,15 @@ namespace DcTransferFtpNew.Handlers {
                     ftpResultInfo.Fail.Add(r);
                 }
             }
-            PreviewResult(pga_type, ftpResultInfo);
+            PreviewResult(ftpInfo, ftpResultInfo);
             return ftpResultInfo;
         }
 
         public async Task<CFtpResultInfo> KirimSelectedZip(string pga_type, List<string> listZipFileName, string folderPath = null, bool reportLog = false) {
+            DC_FTP_T ftpInfo = await GetFtpInfo(pga_type); 
             CFtpResultInfo ftpResultInfo = new CFtpResultInfo();
             foreach (string fn in listZipFileName) {
-                CFtpResultInfo res = await KirimSingleFileInFolder(pga_type, fn, folderPath ?? _berkas.ZipFolderPath, reportLog);
+                CFtpResultInfo res = await KirimSingleFileInFolder(ftpInfo, fn, folderPath ?? _berkas.ZipFolderPath, reportLog);
                 foreach (CFtpResultSendGet r in res.Success) {
                     ftpResultInfo.Success.Add(r);
                 }
@@ -213,7 +218,7 @@ namespace DcTransferFtpNew.Handlers {
                     ftpResultInfo.Fail.Add(r);
                 }
             }
-            PreviewResult(pga_type, ftpResultInfo);
+            PreviewResult(ftpInfo, ftpResultInfo);
             return ftpResultInfo;
         }
 
@@ -279,7 +284,7 @@ namespace DcTransferFtpNew.Handlers {
                     MessageBox.Show(ex.Message, $"Web Service {HO} Tidak Tersedia", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            PreviewResult("DEV", ftpResultInfo);
+            PreviewResult(ftpInfo, ftpResultInfo);
             return ftpResultInfo;
         }
 
