@@ -93,7 +93,9 @@ namespace DcTransferFtpNew.Handlers {
                     PGA_PORTNUMBER = dbDataReader["PGA_PORTNUMBER"].ToString(),
                     PGA_USERNAME = dbDataReader["PGA_USERNAME"].ToString(),
                     PGA_PASSWORD = dbDataReader["PGA_PASSWORD"].ToString(),
-                    PGA_FOLDER = dbDataReader["PGA_FOLDER"].ToString()
+                    PGA_FOLDER = dbDataReader["PGA_FOLDER"].ToString(),
+                    PGA_GD_CODE = dbDataReader["PGA_GD_CODE"].ToString(),
+                    PGA_TYPE = dbDataReader["PGA_TYPE"].ToString()
                 };
             }
             catch (Exception ex) {
