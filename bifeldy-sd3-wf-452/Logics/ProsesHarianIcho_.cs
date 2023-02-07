@@ -78,8 +78,9 @@ namespace DcTransferFtpNew.Logics {
                         }
 
                         csvFileName = $"PAR{fileTimeICHOFormat}{xDate:dd}G.CSV";
-                        await _qTrfCsv.CreateCSVFile("PAR", csvFileName);
-                        TargetKirim += JumlahServerKirimCsv;
+                        if (await _qTrfCsv.CreateCSVFile("PAR", csvFileName, required: false)) {
+                            TargetKirim += JumlahServerKirimCsv;
+                        }
                     }
 
                     csvFileName = "SUPMAST.CSV";

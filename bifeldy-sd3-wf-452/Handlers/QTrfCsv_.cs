@@ -23,7 +23,7 @@ using bifeldy_sd3_lib_452.Utilities;
 namespace DcTransferFtpNew.Handlers {
 
     public interface IQTrfCsv {
-        Task<bool> CreateCSVFile(string q_filename, string filename = null, string seperator = null, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true);
+        Task<bool> CreateCSVFile(string q_filename, string filename = null, string seperator = null, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true, bool required = true);
         Task<List<string>> GetFileNameMulti(List<string> q_filename);
     }
 
@@ -37,21 +37,23 @@ namespace DcTransferFtpNew.Handlers {
             _berkas = berkas;
         }
 
-        public async Task<bool> CreateCSVFile(string q_filename, string filename = null, string seperator = null, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true) {
+        public async Task<bool> CreateCSVFile(string q_filename, string filename = null, string seperator = null, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true, bool required = true) {
             bool res = false;
             filename = await _db.Q_TRF_CSV__GET("q_namafile", q_filename) ?? filename;
             seperator = await _db.Q_TRF_CSV__GET("q_seperator", q_filename) ?? seperator;
             string queryForCSV = await _db.Q_TRF_CSV__GET("q_query", q_filename);
             if (string.IsNullOrEmpty(seperator) || string.IsNullOrEmpty(queryForCSV) || string.IsNullOrEmpty(filename)) {
-                string dataTidakLengkap = $"Data CSV (Separator / Query / Nama File) Tidak Tersedia";
-                DialogResult dr = MessageBox.Show(
-                    $"{dataTidakLengkap}, Ingin Melanjutkan ?",
-                    $"Gagal Membuat CSV {q_filename}",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
-                if (dr == DialogResult.No) {
-                    throw new Exception($"Data {q_filename} Pada Tabel Q_TRF_CSV Tidak Lengkap");
+                if (required) {
+                    string dataTidakLengkap = $"Data CSV (Separator / Query / Nama File) Tidak Tersedia";
+                    DialogResult dr = MessageBox.Show(
+                        $"{dataTidakLengkap}, Ingin Melanjutkan ?",
+                        $"Gagal Membuat CSV {q_filename}",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question
+                    );
+                    if (dr == DialogResult.No) {
+                        throw new Exception($"Data {q_filename} Pada Tabel Q_TRF_CSV Tidak Lengkap");
+                    }
                 }
             }
             else {
