@@ -79,8 +79,8 @@ namespace DcTransferFtpNew.Logics {
                         }
 
                         csvFileName = $"PAR{fileTimeICHOFormat}{xDate:dd}G.CSV";
-                        List<string> requiredPAR = new List<string> { "INDUK", "DEPO" };
-                        if (await _qTrfCsv.CreateCSVFile("PAR", csvFileName, required: requiredPAR.Contains(await _db.GetJenisDc()))) {
+                        List<string> reqPAR = new List<string> { "INDUK", "DEPO" };
+                        if (await _qTrfCsv.CreateCSVFile("PAR", csvFileName, required: reqPAR.Contains(await _db.GetJenisDc()))) {
                             TargetKirim += JumlahServerKirimCsv;
                         }
                     }
