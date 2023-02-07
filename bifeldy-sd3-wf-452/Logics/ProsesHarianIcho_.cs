@@ -13,6 +13,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -78,7 +79,8 @@ namespace DcTransferFtpNew.Logics {
                         }
 
                         csvFileName = $"PAR{fileTimeICHOFormat}{xDate:dd}G.CSV";
-                        if (await _qTrfCsv.CreateCSVFile("PAR", csvFileName, required: false)) {
+                        List<string> requiredPAR = new List<string> { "INDUK", "DEPO" };
+                        if (await _qTrfCsv.CreateCSVFile("PAR", csvFileName, required: requiredPAR.Contains(await _db.GetJenisDc()))) {
                             TargetKirim += JumlahServerKirimCsv;
                         }
                     }
