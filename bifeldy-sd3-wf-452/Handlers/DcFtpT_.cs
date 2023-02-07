@@ -250,7 +250,7 @@ namespace DcTransferFtpNew.Handlers {
                     ftpInfo.PGA_USERNAME,
                     ftpInfo.PGA_PASSWORD,
                     fi.FullName,
-                    remotePath
+                    $"{remotePath}/{(_app.DebugMode ? "_SIMULASI__" : "")}{fi.Name}"
                 );
                 CFtpResultSendGet resultGet = new CFtpResultSendGet() {
                     FtpStatusSendGet = statusTransfer ? FtpStatus.Success : FtpStatus.Failed,

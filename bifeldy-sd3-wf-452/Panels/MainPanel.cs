@@ -62,8 +62,6 @@ namespace DcTransferFtpNew.Panels {
             LogInfoReporter = new Progress<string>(log => {
                 textBoxLogInfo.Text = log + textBoxLogInfo.Text;
             });
-
-            chkDebugSimulasi.Checked = _app.DebugMode;
         }
 
         private void ImgDomar_Click(object sender, EventArgs e) {
@@ -103,6 +101,11 @@ namespace DcTransferFtpNew.Panels {
 
             _logger.SetReportInfo(LogInfoReporter);
 
+            chkDebugSimulasi.Checked = _app.DebugMode;
+            #if !DEBUG
+                chkDebugSimulasi.Enabled = false;
+            #endif
+
             SetIdleBusyStatus(true);
         }
 
@@ -115,7 +118,9 @@ namespace DcTransferFtpNew.Panels {
         private void EnableDisableControl(ControlCollection controls, bool isIdle) {
             foreach (Control control in controls) {
                 if (control is Button || control is CheckBox || control is DateTimePicker) {
-                    control.Enabled = isIdle;
+                    if (control.Name != chkDebugSimulasi.Name) {
+                        control.Enabled = isIdle;
+                    }
                 }
                 else {
                     EnableDisableControl(control.Controls, isIdle);
@@ -127,18 +132,16 @@ namespace DcTransferFtpNew.Panels {
             textBoxLogInfo.Text = string.Empty;
         }
 
-        private async void ChkDebugSimulasi_CheckedChanged(object sender, EventArgs e) {
+        private void ChkDebugSimulasi_CheckedChanged(object sender, EventArgs e) {
             _app.DebugMode = chkDebugSimulasi.Checked;
-            await Task.Run(() => {
-                if (_app.DebugMode) {
-                    MessageBox.Show(
-                        "File Yang Di Kirim Akan Memiliki Prefix _SIMULASI__filename.ext",
-                        "Mode Debug &/ Simulasi",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information
-                    );
-                }
-            });
+            if (_app.DebugMode) {
+                MessageBox.Show(
+                    "File Yang Di Kirim Akan Memiliki Prefix _SIMULASI__filename.ext",
+                    "Mode Debug &/ Simulasi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+            }
         }
 
         private async void BtnMiscLogErrorTransfer_Click(object sender, EventArgs e) {
