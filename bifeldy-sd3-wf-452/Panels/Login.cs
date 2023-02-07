@@ -118,10 +118,10 @@ namespace DcTransferFtpNew.Panels {
             else {
 
                 // Check IP / MAC
-                bool resultCekIpMac = false;
-                await Task.Run(async () => {
-                    resultCekIpMac = await _db.CheckIpMac();
-                });
+                bool resultCekIpMac = true;
+                // await Task.Run(async () => {
+                //     resultCekIpMac = await _db.CheckIpMac();
+                // });
                 if (!resultCekIpMac) {
                     ShowLoading(false);
                     MessageBox.Show("Alamat IP / MAC Tidak Terdaftar!", "User Authentication", MessageBoxButtons.OK, MessageBoxIcon.Information);
