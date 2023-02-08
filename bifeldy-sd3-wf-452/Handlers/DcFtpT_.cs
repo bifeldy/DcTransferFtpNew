@@ -124,12 +124,12 @@ namespace DcTransferFtpNew.Handlers {
                 folderPath,
                 fileName
             );
-            if (reportLog && !_app.DebugMode) {
+            if (reportLog) {
                 LogTrf.LogTrf logTrf = new LogTrf.LogTrf();
                 foreach (CFtpResultSendGet result in ftpResultInfo.Success) {
                     try {
                         logTrf.CatatStartTransfer(
-                            result.FileInformation.Name,
+                            _app.DebugMode ? $"_SIMULASI__{result.FileInformation.Name}" : result.FileInformation.Name,
                             _app.AppName,
                             ftpInfo.PGA_IPADDRESS,
                             ftpInfo.PGA_FOLDER,
