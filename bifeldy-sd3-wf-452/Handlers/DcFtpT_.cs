@@ -264,7 +264,7 @@ namespace DcTransferFtpNew.Handlers {
                 }
                 logs.Add(
                     await CreateFileLogToHO(
-                        fi.Name,
+                        _app.DebugMode ? $"_SIMULASI__{fi.Name}" : fi.Name,
                         processName,
                         ftpInfo,
                         remotePath,
