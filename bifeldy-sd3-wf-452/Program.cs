@@ -23,7 +23,6 @@ using Autofac;
 using bifeldy_sd3_lib_452;
 
 using DcTransferFtpNew.Forms;
-using DcTransferFtpNew.Logics;
 using DcTransferFtpNew.SqlServerTypes;
 
 namespace DcTransferFtpNew {
@@ -49,26 +48,36 @@ namespace DcTransferFtpNew {
                     CLoader.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
 
                     // Dependency Injection
-                    Assembly assembly = Assembly.GetExecutingAssembly();
                     Bifeldyz = new Bifeldy(args);
 
                     // Classes As Interfaces
                     // Bifeldyz.RegisterDiClassAsInterface<CClass, IInterface>();
-                    Bifeldyz.RegisterDiClassAsInterfaceByNamespace(assembly, new string[] { "Handlers", "Utilities" });
+                    Bifeldyz.RegisterDiClassAsInterfaceByNamespace(Assembly.GetExecutingAssembly(), new string[] {
+                        "DcTransferFtpNew.Handlers",
+                        "DcTransferFtpNew.Logics",
+                        "DcTransferFtpNew.Utilities"
+                    });
 
                     // Classes Only -- Named, Access by String
                     // Bifeldyz.RegisterDiClassNamed<CClass>();
-                    Bifeldyz.RegisterDiClassNamedByNamespace(assembly, new string[] { "Logics", "Navigations" });
+                    Bifeldyz.RegisterDiClassNamedByNamespace(Assembly.GetExecutingAssembly(), new string[] {
+                        "DcTransferFtpNew.Logics",
+                        "DcTransferFtpNew.Navigations"
+                    });
 
-                    // Pendaftaran Manual Secara Paksa
+                    // Pendaftaran Manual Secara Paksa Karena Mau Di Pakai Dari Constructor Juga Sebagai Interface
                     // Atau Tambahin Saja Semua "Logics" Ke "RegisterDiClassAsInterfaceByNamespace(...)" Di Atas
-                    Bifeldyz.RegisterDiClassAsInterface<CProsesHarianTaxFull, IProsesHarianTaxFull>();
+                    // Bifeldyz.RegisterDiClassAsInterface<CProsesHarianTaxFull, IProsesHarianTaxFull>();
 
                     // Classes Only
                     // Bifeldyz.RegisterDiClass<CClass>();
-                    Bifeldyz.RegisterDiClassByNamespace(assembly, new string[] { /* "Forms", */ "Panels" });
+                    Bifeldyz.RegisterDiClassByNamespace(Assembly.GetExecutingAssembly(), new string[] {
+                        /* "DcTransferFtpNew.Forms", */
+                        "DcTransferFtpNew.Panels"
+                    });
 
-                    // Khusus Form Bisa Di Bikin Independen, Jadinya Gak Wajib Masuk Ke DI
+                    // Khusus Form Bisa Di Bikin Independen, Jadinya Gak Wajib Masuk Ke DI, Form Utama Yang Wajib DI
+                    // Kalau Form Di Panggil Via Resolve DI, Saat Di Close Kena Dispose GC, Tidak Bisa Resolve Lagi
                     //
                     // Misal :: Di Buat Dan Di Panggil Dari From Lain
                     //
