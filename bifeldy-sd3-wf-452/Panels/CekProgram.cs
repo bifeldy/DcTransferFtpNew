@@ -52,35 +52,48 @@ namespace DcTransferFtpNew.Panels {
         private async void CheckProgram() {
             mainForm.StatusStripContainer.Items["statusStripDbName"].Text = _db.DbName;
 
+            // First DB Run + Check Connection
+            bool dbAvailable = false;
             // Check Jenis DC
-            bool allowed = false;
+            string jenisDc = null;
             await Task.Run(async () => {
-                allowed = _app.ListDcCanUse.Contains(await _db.GetJenisDc());
+                try {
+                    jenisDc = await _db.GetJenisDc();
+                    dbAvailable = true;
+                }
+                catch (Exception ex) {
+                    MessageBox.Show(ex.Message, "Program Checker", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             });
-            if (allowed) {
+            if (dbAvailable) {
+                if (_app.ListDcCanUse.Contains(jenisDc)) {
 
-                // Check Version
-                string responseCekProgram = null;
-                await Task.Run(async () => {
-                    responseCekProgram = await _db.CekVersi();
-                });
-                if (responseCekProgram == "OKE") {
-                    ShowLoginPanel();
-                    return;
+                    // Check Version
+                    string responseCekProgram = null;
+                    await Task.Run(async () => {
+                        responseCekProgram = await _db.CekVersi();
+                    });
+                    if (responseCekProgram == "OKE") {
+                        ShowLoginPanel();
+                    }
+                    else {
+                        MessageBox.Show(responseCekProgram, "Program Checker", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        _app.Exit();
+                    }
                 }
                 else {
-                    MessageBox.Show(responseCekProgram, "Program Checker", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(
+                        $"Program Hanya Dapat Di Jalankan Di DC {Environment.NewLine}{string.Join(", ", _app.ListDcCanUse.ToArray())}",
+                        "Program Checker",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    _app.Exit();
                 }
             }
             else {
-                MessageBox.Show(
-                    $"Program Hanya Dapat Di Jalankan Di DC {Environment.NewLine}{string.Join(", ", _app.ListDcCanUse.ToArray())}",
-                    "Program Checker",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                _app.Exit();
             }
-            _app.Exit();
         }
 
         private void ShowLoginPanel() {
