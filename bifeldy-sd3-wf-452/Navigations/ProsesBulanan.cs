@@ -37,13 +37,19 @@ namespace DcTransferFtpNew.Navigations {
         private void OnInit() {
             Dock = DockStyle.Fill;
             InitializeButtonProsesBulanan();
+            RefreshKalender();
+        }
 
+        private void RefreshKalender() {
             dtpBulanan.MaxDate = DateTime.Now;
-            dtpBulanan.Value = DateTime.Now;
         }
 
         private void CProsesBulanan_Load(object sender, EventArgs e) {
             AddButtonToMainPanel(Parent.Parent, ButtonMenuBulananList, flowLayoutPanelProsesBulanan);
+        }
+
+        private void DtpBulanan_ValueChanged(object sender, EventArgs e) {
+            RefreshKalender();
         }
 
         private void InitializeButtonProsesBulanan() {

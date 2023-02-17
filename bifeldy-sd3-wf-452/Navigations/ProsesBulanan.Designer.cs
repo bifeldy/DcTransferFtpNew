@@ -50,6 +50,7 @@ namespace DcTransferFtpNew.Navigations {
             this.dtpBulanan.Name = "dtpBulanan";
             this.dtpBulanan.Size = new System.Drawing.Size(207, 20);
             this.dtpBulanan.TabIndex = 19;
+            this.dtpBulanan.ValueChanged += new System.EventHandler(this.DtpBulanan_ValueChanged);
             // 
             // label5
             // 
@@ -90,7 +91,7 @@ namespace DcTransferFtpNew.Navigations {
         private System.Windows.Forms.Panel panelProsesBulanan;
         private System.Windows.Forms.Label label5;
         private Components.MonthYearPicker dtpBulanan;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelProsesBulanan;
+        private Components.FixAutoScrollFlowLayoutPanel flowLayoutPanelProsesBulanan;
     }
 
 }

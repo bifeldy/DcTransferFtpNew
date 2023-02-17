@@ -41,11 +41,12 @@ namespace DcTransferFtpNew.Navigations {
         private void OnInit() {
             Dock = DockStyle.Fill;
             InitializeButtonProsesHarian();
+            RefreshKalender();
+        }
 
-            dateTimePickerHarianAwal.MaxDate = DateTime.Now;
-            dateTimePickerHarianAwal.Value = DateTime.Now;
-
+        private void RefreshKalender() {
             dateTimePickerHarianAkhir.MaxDate = DateTime.Now;
+            dateTimePickerHarianAwal.MaxDate = dateTimePickerHarianAkhir.MaxDate;
             dateTimePickerHarianAkhir.MinDate = dateTimePickerHarianAwal.Value;
         }
 
@@ -57,7 +58,11 @@ namespace DcTransferFtpNew.Navigations {
             if (dateTimePickerHarianAwal.Value > dateTimePickerHarianAkhir.Value) {
                 dateTimePickerHarianAkhir.Value = dateTimePickerHarianAwal.Value;
             }
-            dateTimePickerHarianAkhir.MinDate = dateTimePickerHarianAwal.Value;
+            RefreshKalender();
+        }
+
+        private void DateTimePickerHarianAkhir_ValueChanged(object sender, EventArgs e) {
+            RefreshKalender();
         }
 
         private void InitializeButtonProsesHarian() {
