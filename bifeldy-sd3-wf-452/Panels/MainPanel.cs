@@ -65,21 +65,23 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private void ImgDomar_Click(object sender, EventArgs e) {
-            List<Control> ctrls = new List<Control>();
-            foreach(Control ctrl in NavContent.Controls) {
-                if (ctrl is CNavigations) {
-                    ctrls.Add(ctrl);
+            if (_app.IsIdle) {
+                List<Control> ctrls = new List<Control>();
+                foreach (Control ctrl in NavContent.Controls) {
+                    if (ctrl is CNavigations) {
+                        ctrls.Add(ctrl);
+                    }
                 }
-            }
-            foreach(Control ctrl in ctrls) {
-                NavContent.Controls.Remove(ctrl);
-            }
-            foreach (Control navMenuItem in NavMenu.Controls) {
-                if (navMenuItem is Button) {
-                    navMenuItem.BackColor = SystemColors.ControlLight;
+                foreach (Control ctrl in ctrls) {
+                    NavContent.Controls.Remove(ctrl);
                 }
+                foreach (Control navMenuItem in NavMenu.Controls) {
+                    if (navMenuItem is Button) {
+                        navMenuItem.BackColor = SystemColors.ControlLight;
+                    }
+                }
+                LnkLblLogClear_LinkClicked(sender, EventArgs.Empty);
             }
-            LnkLblLogClear_LinkClicked(sender, EventArgs.Empty);
         }
 
         private async void CMainPanel_Load(object sender, EventArgs e) {
@@ -110,20 +112,21 @@ namespace DcTransferFtpNew.Panels {
         }
 
         public void SetIdleBusyStatus(bool isIdle) {
+            _app.IsIdle = isIdle;
             lblStatus.Text = $"Program {(isIdle ? "Idle" : "Sibuk")} ...";
             prgrssBrStatus.Style = isIdle ? ProgressBarStyle.Continuous : ProgressBarStyle.Marquee;
-            EnableDisableControl(Controls, isIdle);
+            EnableDisableControl(Controls);
         }
 
-        private void EnableDisableControl(ControlCollection controls, bool isIdle) {
+        private void EnableDisableControl(ControlCollection controls) {
             foreach (Control control in controls) {
                 if (control is Button || control is CheckBox || control is DateTimePicker) {
                     if (control.Name != chkDebugSimulasi.Name) {
-                        control.Enabled = isIdle;
+                        control.Enabled = _app.IsIdle;
                     }
                 }
                 else {
-                    EnableDisableControl(control.Controls, isIdle);
+                    EnableDisableControl(control.Controls);
                 }
             }
         }
