@@ -116,19 +116,7 @@ namespace DcTransferFtpNew.Panels {
                 MessageBox.Show("Login Gagal, Kredensial Salah!", "User Authentication", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else {
-
-                // Check IP / MAC
-                bool resultCekIpMac = true;
-                // await Task.Run(async () => {
-                //     resultCekIpMac = await _db.CheckIpMac();
-                // });
-                if (!resultCekIpMac) {
-                    ShowLoading(false);
-                    MessageBox.Show("Alamat IP / MAC Tidak Terdaftar!", "User Authentication", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else {
-                    ShowMainPanel();
-                }
+                ShowMainPanel();
             }
         }
 
