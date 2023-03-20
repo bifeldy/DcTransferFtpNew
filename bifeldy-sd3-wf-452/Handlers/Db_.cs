@@ -31,6 +31,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<DataTable> OraPg_GetDataTable(string sqlQuery);
         Task<DateTime> OraPg_GetYesterdayDate(int lastDay);
         Task<DateTime> OraPg_GetLastMonth(int lastMonth);
+        Task<DateTime> OraPg_GetCurrentTimestamp();
         Task<DateTime> OraPg_GetCurrentDate();
         Task<CDbExecProcResult> OraPg_CALL_(string procName);
         Task<DataTable> GetLogErrorTransfer();
@@ -110,6 +111,12 @@ namespace DcTransferFtpNew.Handlers {
                     new CDbQueryParamBind { NAME = "last_month", VALUE = lastMonth }
                 }
             );
+        }
+
+        public async Task<DateTime> OraPg_GetCurrentTimestamp() {
+            return await OraPg.ExecScalarAsync<DateTime>($@"
+                SELECT {(_app.IsUsingPostgres ? "CURRENT_TIMESTAMP" : "SYSDATE FROM DUAL")}
+            ");
         }
 
         public async Task<DateTime> OraPg_GetCurrentDate() {
