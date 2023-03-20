@@ -91,6 +91,7 @@ namespace DcTransferFtpNew.Navigations {
             this.dateTimePickerHarianAkhir.Name = "dateTimePickerHarianAkhir";
             this.dateTimePickerHarianAkhir.Size = new System.Drawing.Size(207, 20);
             this.dateTimePickerHarianAkhir.TabIndex = 9;
+            this.dateTimePickerHarianAkhir.ValueChanged += new System.EventHandler(this.DateTimePickerHarianAkhir_ValueChanged);
             // 
             // dateTimePickerHarianAwal
             // 
@@ -98,7 +99,6 @@ namespace DcTransferFtpNew.Navigations {
             this.dateTimePickerHarianAwal.Name = "dateTimePickerHarianAwal";
             this.dateTimePickerHarianAwal.Size = new System.Drawing.Size(207, 20);
             this.dateTimePickerHarianAwal.TabIndex = 10;
-            this.dateTimePickerHarianAwal.Value = new System.DateTime(2022, 12, 21, 0, 0, 0, 0);
             this.dateTimePickerHarianAwal.ValueChanged += new System.EventHandler(this.DateTimePickerHarianAwal_ValueChanged);
             // 
             // flowLayoutPanelProsesHarian
