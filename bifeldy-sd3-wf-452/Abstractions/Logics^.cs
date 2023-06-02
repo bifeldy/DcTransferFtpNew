@@ -122,11 +122,11 @@ namespace DcTransferFtpNew.Abstractions {
                     msgBxIco = MessageBoxIcon.Error;
                 }
                 else if (BerhasilKirim == TargetKirim && TargetKirim > 0) {
-                    InfoMessage = $"{button.Text} Sukses !!";
+                    InfoMessage = $"{button.Text} Berhasil !!";
                     msgBxIco = MessageBoxIcon.Information;
                 }
                 else {
-                    InfoMessage = $"{button.Text} Error !!";
+                    InfoMessage = $"{button.Text} Selesai Dengan Sedikit Kendala !!";
                     msgBxIco = MessageBoxIcon.Error;
                 }
             }

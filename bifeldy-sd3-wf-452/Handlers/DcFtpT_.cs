@@ -237,7 +237,7 @@ namespace DcTransferFtpNew.Handlers {
             List<FTP_FILE_LOG_CUSTOM> logs = new List<FTP_FILE_LOG_CUSTOM>();
             DC_FTP_T ftpInfo = await GetFtpInfo("DEV");
             string dirPath = zipFileName == null ? folderPath : _berkas.ZipFolderPath;
-            string remotePath = $"/u01/ftp/DC/{ftpInfo.PGA_FOLDER}/{await _db.GetKodeDc()}";
+            string remotePath = $"/u01/ftp/DC{ftpInfo.PGA_FOLDER}/{await _db.GetKodeDc()}";
             DirectoryInfo directoryInfo = new DirectoryInfo(dirPath);
             FileInfo[] fileInfos = directoryInfo.GetFiles();
             if (zipFileName != null) {
