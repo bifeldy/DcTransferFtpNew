@@ -56,14 +56,18 @@ namespace DcTransferFtpNew.Panels {
             }
         }
 
-        private void btnOracle_Click(object sender, EventArgs e) {
+        private void BtnOracle_Click(object sender, EventArgs e) {
             _app.IsUsingPostgres = false;
             ShowCheckProgramPanel();
         }
 
-        private void btnPostgre_Click(object sender, EventArgs e) {
+        private void BtnPostgre_Click(object sender, EventArgs e) {
             _app.IsUsingPostgres = true;
             ShowCheckProgramPanel();
+        }
+
+        public void DchoOnlyBypass(object sender, EventArgs e) {
+            BtnOracle_Click(sender, e);
         }
 
     }

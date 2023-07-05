@@ -45,7 +45,7 @@ namespace DcTransferFtpNew.Panels {
             this.btnPostgre.TabIndex = 0;
             this.btnPostgre.Text = "Postgre";
             this.btnPostgre.UseVisualStyleBackColor = true;
-            this.btnPostgre.Click += new System.EventHandler(this.btnPostgre_Click);
+            this.btnPostgre.Click += new System.EventHandler(this.BtnPostgre_Click);
             // 
             // btnOracle
             // 
@@ -61,7 +61,7 @@ namespace DcTransferFtpNew.Panels {
             this.btnOracle.TabIndex = 1;
             this.btnOracle.Text = "Oracle";
             this.btnOracle.UseVisualStyleBackColor = true;
-            this.btnOracle.Click += new System.EventHandler(this.btnOracle_Click);
+            this.btnOracle.Click += new System.EventHandler(this.BtnOracle_Click);
             // 
             // tableLayoutPanel1
             // 

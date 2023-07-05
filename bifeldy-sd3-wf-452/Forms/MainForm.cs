@@ -103,10 +103,15 @@ namespace DcTransferFtpNew.Forms {
 
             // Create And Show `DbSelector` Panel
             try {
+                CDbSelector dbSelector = null;
                 if (!panelContainer.Controls.ContainsKey("CDbSelector")) {
-                    panelContainer.Controls.Add(CProgram.Bifeldyz.ResolveClass<CDbSelector>());
+                    dbSelector = CProgram.Bifeldyz.ResolveClass<CDbSelector>();
+                    panelContainer.Controls.Add(dbSelector);
                 }
                 panelContainer.Controls["CDbSelector"].BringToFront();
+                if (_app.ListDcCanUse.Count == 1 && _app.ListDcCanUse.Contains("HO")) {
+                    dbSelector.DchoOnlyBypass(this, EventArgs.Empty);
+                }
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
