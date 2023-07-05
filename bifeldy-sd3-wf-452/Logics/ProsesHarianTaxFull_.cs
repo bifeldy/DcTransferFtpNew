@@ -38,6 +38,7 @@ namespace DcTransferFtpNew.Logics {
 
     public sealed class CProsesHarianTaxFull : CLogics, IProsesHarianTaxFull {
 
+        private readonly IConfig _config;
         private readonly IApp _app;
         private readonly ILogger _logger;
         private readonly IDb _db;
@@ -48,6 +49,7 @@ namespace DcTransferFtpNew.Logics {
         private readonly IStream _stream;
 
         public CProsesHarianTaxFull(
+            IConfig config,
             IApp app,
             ILogger logger,
             IDb db,
@@ -57,6 +59,7 @@ namespace DcTransferFtpNew.Logics {
             IConverter converter,
             IStream stream
         ) : base(db, berkas) {
+            _config = config;
             _app = app;
             _logger = logger;
             _db = db;
@@ -271,7 +274,7 @@ namespace DcTransferFtpNew.Logics {
 
             try {
                 TTFLOGService ws = new TTFLOGService();
-                ws.Url = await _db.GetURLWebService("DCHO"); // ?? _config.Get<string>("WsDcHo", _app.GetConfig("ws_dcho"));
+                ws.Url = await _db.GetURLWebService("TTFHO") ?? _config.Get<string>("WsTtfHo", _app.GetConfig("ws_ttf_ho"));
 
                 DataTable dtRettok = await _db.TaxTempGetDataTable(xDate);
 

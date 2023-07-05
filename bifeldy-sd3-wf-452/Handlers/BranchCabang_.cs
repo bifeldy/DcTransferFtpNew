@@ -21,6 +21,7 @@ using bifeldy_sd3_lib_452.Abstractions;
 using bifeldy_sd3_lib_452.Utilities;
 
 using DcTransferFtpNew.Models;
+using DcTransferFtpNew.Utilities;
 
 namespace DcTransferFtpNew.Handlers {
 
@@ -31,6 +32,8 @@ namespace DcTransferFtpNew.Handlers {
 
     public sealed class CBranchCabang : IBranchCabang {
 
+        private readonly IConfig _config;
+        private readonly IApp _app;
         private readonly IApi _api;
         private readonly IDb _db;
         private readonly ILogger _logger;
@@ -46,7 +49,9 @@ namespace DcTransferFtpNew.Handlers {
             >
         >();
 
-        public CBranchCabang(IApi api, IDb db, ILogger logger, IConverter converter) {
+        public CBranchCabang(IConfig config, IApp app, IApi api, IDb db, ILogger logger, IConverter converter) {
+            _config = config;
+            _app = app;
             _api = api;
             _db = db;
             _logger = logger;
@@ -54,7 +59,7 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<List<DC_TABEL_V>> GetListBranchDbInformation(string kodeDcInduk) {
-            string url = await _db.GetURLWebService("SYNCHO"); // ?? _config.Get<string>("WsSyncHo", _app.GetConfig("ws_syncho"));
+            string url = await _db.GetURLWebService("SYNCHO") ?? _config.Get<string>("WsSyncHo", _app.GetConfig("ws_syncho"));
             url += kodeDcInduk;
 
             HttpResponseMessage httpResponse = await _api.PostData(url, null);

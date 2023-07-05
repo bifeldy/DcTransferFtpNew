@@ -44,6 +44,7 @@ namespace DcTransferFtpNew.Handlers {
 
     public sealed class CDcFtpT : IDcFtpT {
 
+        private readonly IConfig _config;
         private readonly IApp _app;
         private readonly IDb _db;
         private readonly ILogger _logger;
@@ -51,7 +52,8 @@ namespace DcTransferFtpNew.Handlers {
         private readonly IBerkas _berkas;
         private readonly ISftp _sftp;
 
-        public CDcFtpT(IApp app, IDb db, ILogger logger, IFtp ftp, IBerkas berkas, ISftp sftp) {
+        public CDcFtpT(IConfig config, IApp app, IDb db, ILogger logger, IFtp ftp, IBerkas berkas, ISftp sftp) {
+            _config = config;
             _app = app;
             _db = db;
             _logger = logger;
@@ -277,7 +279,7 @@ namespace DcTransferFtpNew.Handlers {
                 string HO = "HO";
                 try {
                     // Transfer log ke HO (Sulis, v1054, 22/08/2019)
-                    string urlWebServiceHO = await _db.GetURLWebService(HO); // ?? _config.Get<string>("WsHo", _app.GetConfig("ws_ho"));
+                    string urlWebServiceHO = await _db.GetURLWebService(HO) ?? _config.Get<string>("WsHo", _app.GetConfig("ws_ho"));
                     SenderLog senderLog = new SenderLog(urlWebServiceHO);
                     senderLog.CatatTransferLogToHO(logs);
                 }
