@@ -28,12 +28,6 @@ using DcTransferFtpNew.Utilities;
 namespace DcTransferFtpNew.Handlers {
 
     public interface IDb : IDbHandler {
-        Task<DataTable> OraPg_GetDataTable(string sqlQuery);
-        Task<DateTime> OraPg_GetYesterdayDate(int lastDay);
-        Task<DateTime> OraPg_GetLastMonth(int lastMonth);
-        Task<DateTime> OraPg_GetCurrentTimestamp();
-        Task<DateTime> OraPg_GetCurrentDate();
-        Task<CDbExecProcResult> OraPg_CALL_(string procName);
         Task<DataTable> GetLogErrorTransfer();
         Task<DataTable> GetLogErrorProses();
         Task<CDbExecProcResult> CALL__P_TGL(string procedureName, DateTime P_TGL);
@@ -85,52 +79,6 @@ namespace DcTransferFtpNew.Handlers {
             _app = app;
         }
 
-        public async Task<DataTable> OraPg_GetDataTable(string sqlQuery) {
-            return await OraPg.GetDataTableAsync(sqlQuery);
-        }
-
-        public async Task<DateTime> OraPg_GetYesterdayDate(int lastDay) {
-            return await OraPg.ExecScalarAsync<DateTime>(
-                $@"
-                    SELECT {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE)")} - :last_day
-                    {(_app.IsUsingPostgres ? "" : "FROM DUAL")}
-                ",
-                new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "last_day", VALUE = lastDay }
-                }
-            );
-        }
-
-        public async Task<DateTime> OraPg_GetLastMonth(int lastMonth) {
-            return await OraPg.ExecScalarAsync<DateTime>(
-                $@"
-                    SELECT TRUNC(add_months({(_app.IsUsingPostgres ? "CURRENT_DATE" : "SYSDATE")}, - :last_month))
-                    {(_app.IsUsingPostgres ? "" : "FROM DUAL")}
-                ",
-                new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "last_month", VALUE = lastMonth }
-                }
-            );
-        }
-
-        public async Task<DateTime> OraPg_GetCurrentTimestamp() {
-            return await OraPg.ExecScalarAsync<DateTime>($@"
-                SELECT {(_app.IsUsingPostgres ? "CURRENT_TIMESTAMP" : "SYSDATE FROM DUAL")}
-            ");
-        }
-
-        public async Task<DateTime> OraPg_GetCurrentDate() {
-            return await OraPg.ExecScalarAsync<DateTime>($@"
-                SELECT {(_app.IsUsingPostgres ? "CURRENT_DATE" : "TRUNC(SYSDATE) FROM DUAL")}
-            ");
-        }
-
-        public async Task<CDbExecProcResult> OraPg_CALL_(string procedureName) {
-            return await OraPg.ExecProcedureAsync(procedureName);
-        }
-
-        /* ** */
-
         public async Task<DataTable> GetLogErrorTransfer() {
             return await OraPg.GetDataTableAsync(
                 $@"
@@ -170,7 +118,7 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<CDbExecProcResult> CALL__P_TGL(string procedureName, DateTime P_TGL) {
-            return await OraPg.ExecProcedureAsync(
+            return await OraPg_CALL_(
                 procedureName,
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "P_TGL", VALUE = P_TGL }
@@ -273,7 +221,7 @@ namespace DcTransferFtpNew.Handlers {
         /* Proses Harian Data TaxTemp Full */
 
         public async Task<CDbExecProcResult> CALL_TRF_BAKP_EVO(string procedureName, DateTime P_TGL) {
-            return await OraPg.ExecProcedureAsync(
+            return await OraPg_CALL_(
                 procedureName,
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "p_dckode", VALUE = await GetKodeDc() },
@@ -564,7 +512,7 @@ namespace DcTransferFtpNew.Handlers {
         /* ** */
 
         public async Task<CDbExecProcResult> CALL_ENDORSEMENT(DateTime P_TGL, string P_QUERY = null, string P_FILENAME = null, string P_QUERY2 = null, string P_FILENAME2 = null, string P_MSG = null) {
-            return await OraPg.ExecProcedureAsync(
+            return await OraPg_CALL_(
                 "CREATE_ENDORSMENT_CSV",
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "P_TGL", VALUE = P_TGL },
@@ -578,7 +526,7 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<CDbExecProcResult> CALL_NPK_BAP(string procName, string TGLAWALPAR, string TGLAKHIRPAR, string V_RESULT = null) {
-            return await OraPg.ExecProcedureAsync(
+            return await OraPg_CALL_(
                 procName,
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "TGLAWALPAR", VALUE = TGLAWALPAR },
@@ -591,7 +539,7 @@ namespace DcTransferFtpNew.Handlers {
         /* Data Bulanan */
 
         public async Task<CDbExecProcResult> CALL_ID_BULAN_G_EVO(string procName, DateTime dateTime) {
-            return await OraPg.ExecProcedureAsync(
+            return await OraPg_CALL_(
                 procName,
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "p_tgl", VALUE = dateTime },
@@ -601,7 +549,7 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<CDbExecProcResult> CALL_DataBulananCentralisasiHO(string procName, string tahunBulan) {
-            return await OraPg.ExecProcedureAsync(
+            return await OraPg_CALL_(
                 procName,
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "p_tahunbulan", VALUE = tahunBulan }
@@ -610,7 +558,7 @@ namespace DcTransferFtpNew.Handlers {
         }
 
         public async Task<CDbExecProcResult> CALL_ICHO(string procName, DateTime dateTime, string usingBulan) {
-            return await OraPg.ExecProcedureAsync(
+            return await OraPg_CALL_(
                 procName,
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "p_tgl", VALUE = dateTime },

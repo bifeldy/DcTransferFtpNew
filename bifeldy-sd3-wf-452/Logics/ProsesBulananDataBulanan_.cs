@@ -218,7 +218,7 @@ namespace DcTransferFtpNew.Logics {
                             string tabel = $"DC_{dsiWsToko}";
                             DataTable dtInsert = _converter.ListToDataTable(objListDataDSIWS, tabel);
                             await _db.BulananDeleteDcDsiWsToko(fileTimeIdBulanGFormat);
-                            await _db.BulkInsertIntoOraPg(tabel, dtInsert);
+                            await _db.OraPg_BulkInsertInto(tabel, dtInsert);
                         }
                     }
                     catch (Exception ex2) {
