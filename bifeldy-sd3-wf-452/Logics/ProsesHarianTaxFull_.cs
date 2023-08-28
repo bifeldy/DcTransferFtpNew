@@ -280,7 +280,7 @@ namespace DcTransferFtpNew.Logics {
 
                 List<DCHO_TTF_HDR_LOG> listTTF = _converter.DataTableToList<DCHO_TTF_HDR_LOG>(dtRettok);
                 string sTTF = _converter.ObjectToJson(listTTF);
-                byte[] byteOfData = _stream.MemStream(sTTF);
+                byte[] byteOfData = _stream.GZipCompressString(sTTF);
                 string tempHasil = ws.SendLogTTF(byteOfData);
             }
             catch (Exception ex2) {
