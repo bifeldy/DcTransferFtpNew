@@ -37,14 +37,14 @@ namespace DcTransferFtpNew.Logics {
         private readonly IDb _db;
         private readonly IBerkas _berkas;
         private readonly IDcFtpT _dcFtpT;
-        private readonly IBranchCabang _branchCabang;
+        private readonly IBranchCabangHandler _branchCabang;
 
         public CProsesHarianNrbSup(
             ILogger logger,
             IDb db,
             IBerkas berkas,
             IDcFtpT dc_ftp_t,
-            IBranchCabang branchCabang
+            IBranchCabangHandler branchCabang
         ) : base(db, berkas) {
             _logger = logger;
             _db = db;
