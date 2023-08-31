@@ -42,6 +42,8 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private void ShowCheckProgramPanel() {
+            btnOracle.Enabled = false;
+            btnPostgre.Enabled = false;
             mainForm.Text = $"[{(_app.IsUsingPostgres ? "PG" : "ORCL")}+MSSQL] " + mainForm.Text;
 
             // Create & Show `CekProgram` Panel
