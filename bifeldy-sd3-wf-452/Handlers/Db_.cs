@@ -19,8 +19,8 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-using bifeldy_sd3_lib_452.Abstractions;
 using bifeldy_sd3_lib_452.Databases;
+using bifeldy_sd3_lib_452.Handlers;
 using bifeldy_sd3_lib_452.Models;
 
 using DcTransferFtpNew.Utilities;
@@ -34,7 +34,6 @@ namespace DcTransferFtpNew.Handlers {
         Task<string> Q_TRF_CSV__GET(string kolom, string q_filename);
         Task<string> DC_FILE_SCHEDULER_T__GET(string kolom, string file_key);
         Task<DbDataReader> GetFtpInfo(string pga_type);
-        Task<string> GetURLWebService(string webType);
         Task<string> GetDcExt();
         Task<string> GetWinFunction();
         Task<string> GetKodeDCInduk();
@@ -166,15 +165,6 @@ namespace DcTransferFtpNew.Handlers {
                 ",
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "pga_type", VALUE = pga_type }
-                }
-            );
-        }
-
-        public async Task<string> GetURLWebService(string webType) {
-            return await OraPg.ExecScalarAsync<string>(
-                $@"SELECT WEB_URL FROM DC_WEBSERVICE_T WHERE WEB_TYPE = :web_type",
-                new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "web_type", VALUE = webType }
                 }
             );
         }

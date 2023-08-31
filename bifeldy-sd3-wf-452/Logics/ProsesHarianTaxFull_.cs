@@ -273,8 +273,9 @@ namespace DcTransferFtpNew.Logics {
             }
 
             try {
-                TTFLOGService ws = new TTFLOGService();
-                ws.Url = await _db.GetURLWebService("TTFHO") ?? _config.Get<string>("WsTtfHo", _app.GetConfig("ws_ttf_ho"));
+                TTFLOGService ws = new TTFLOGService {
+                    Url = await _db.GetURLWebService("TTFHO") ?? _config.Get<string>("WsTtfHo", _app.GetConfig("ws_ttf_ho"))
+                };
 
                 DataTable dtRettok = await _db.TaxTempGetDataTable(xDate);
 

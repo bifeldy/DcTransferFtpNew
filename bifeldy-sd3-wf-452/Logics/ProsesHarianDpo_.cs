@@ -20,12 +20,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using bifeldy_sd3_lib_452.Abstractions;
+using bifeldy_sd3_lib_452.Handlers;
 using bifeldy_sd3_lib_452.Models;
 using bifeldy_sd3_lib_452.Utilities;
 
 using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Handlers;
-using DcTransferFtpNew.Models;
 
 namespace DcTransferFtpNew.Logics {
 

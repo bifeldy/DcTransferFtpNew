@@ -25,7 +25,6 @@ namespace DcTransferFtpNew.Utilities {
         int ScreenWidth { get; }
         int ScreenHeight { get; }
         void Exit();
-        string GetConfig(string key);
         string Author { get; }
         List<string> ListDcCanUse { get; }
     }
@@ -47,10 +46,6 @@ namespace DcTransferFtpNew.Utilities {
         }
 
         public void Exit() => Application.Exit();
-
-        public string GetConfig(string key) {
-            return ConfigurationManager.AppSettings[key];
-        }
 
     }
 

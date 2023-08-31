@@ -20,22 +20,18 @@ using System.Windows.Forms;
 using bifeldy_sd3_lib_452.Utilities;
 
 using DcTransferFtpNew.Abstractions;
-using DcTransferFtpNew.Handlers;
 
 namespace DcTransferFtpNew.Navigations {
 
     public sealed partial class CSettings : CNavigations {
 
-        private readonly ILogger _logger;
         private readonly IBerkas _berkas;
         private readonly IConfig _config;
 
         public CSettings(
-            ILogger logger,
             IBerkas berkas,
             IConfig config
         ) {
-            _logger = logger;
             _berkas = berkas;
             _config = config;
 

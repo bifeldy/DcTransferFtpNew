@@ -40,7 +40,6 @@ namespace DcTransferFtpNew.Logics {
         private readonly IDcFtpT _dcFtpT;
 
         public CProsesHarianAmta(
-            IApp app,
             ILogger logger,
             IDb db,
             IBerkas berkas,
