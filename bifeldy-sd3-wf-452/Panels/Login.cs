@@ -150,7 +150,12 @@ namespace DcTransferFtpNew.Panels {
 
                 if (!resultCekIpMac) {
                     ShowLoading(false);
-                    MessageBox.Show("Alamat IP / MAC Tidak Terdaftar!", "User Authentication", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(
+                        $"Alamat IP / MAC Untuk User '{_db.LoggedInUsername}' Belum Terdaftar!",
+                        "User Authentication",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
                 }
                 else {
                     ShowMainPanel();
