@@ -15,6 +15,8 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using bifeldy_sd3_lib_452.Utilities;
+
 using DcTransferFtpNew.Forms;
 using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Utilities;
@@ -23,12 +25,15 @@ namespace DcTransferFtpNew.Panels {
 
     public sealed partial class CLogin : UserControl {
 
+        private readonly IConfig _config;
+
         private readonly IApp _app;
         private readonly IDb _db;
 
         private CMainForm mainForm;
 
-        public CLogin(IApp app, IDb db) {
+        public CLogin(IConfig config, IApp app, IDb db) {
+            _config = config;
             _app = app;
             _db = db;
 
@@ -94,28 +99,63 @@ namespace DcTransferFtpNew.Panels {
             mainForm.PanelContainer.Controls.RemoveByKey("CLogin");
         }
 
-        private async void ProcessLogin() {
+        public async void ProcessLogin() {
 
             // Disable View While Loading
             ShowLoading(true);
 
-            // Check User Input
-            if (string.IsNullOrEmpty(txtUserNameNik.Text) || string.IsNullOrEmpty(txtPassword.Text)) {
-                ShowLoading(false);
-                MessageBox.Show("Username / NIK Dan Kata Sandi Wajib Diisi!", "User Authentication", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-
             // Login Check Credential
             bool resultLogin = false;
-            await Task.Run(async () => {
-                resultLogin = await _db.LoginUser(txtUserNameNik.Text, txtPassword.Text);
-            });
+
+            bool bypassLogin = _config.Get<bool>("BypassLogin", bool.Parse(_app.GetConfig("bypass_login")));
+            if (bypassLogin) {
+                txtUserNameNik.ReadOnly = true;
+                txtPassword.ReadOnly = true;
+                _db.LoggedInUsername = "ANONYMOUS";
+                txtUserNameNik.Text = "ANONYMOUS";
+                txtPassword.Text = "ANONYMOUS";
+                resultLogin = true;
+            }
+            else {
+
+                // Check User Input
+                if (string.IsNullOrEmpty(txtUserNameNik.Text) || string.IsNullOrEmpty(txtPassword.Text)) {
+                    ShowLoading(false);
+                    MessageBox.Show("Username / NIK Dan Kata Sandi Wajib Diisi!", "User Authentication", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+
+                await Task.Run(async () => {
+                    resultLogin = await _db.LoginUser(txtUserNameNik.Text, txtPassword.Text);
+                });
+            }
+
             if (!resultLogin) {
                 ShowLoading(false);
                 MessageBox.Show("Login Gagal, Kredensial Salah!", "User Authentication", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else {
-                ShowMainPanel();
+
+                // Check IP / MAC
+                bool resultCekIpMac = false;
+
+                bool bypassIpMac = _config.Get<bool>("BypassIpMac", bool.Parse(_app.GetConfig("bypass_ip_mac")));
+                if (bypassIpMac) {
+                    resultCekIpMac = true;
+                }
+                else {
+                    await Task.Run(async () => {
+                        resultCekIpMac = await _db.CheckIpMac();
+                    });
+                }
+
+                if (!resultCekIpMac) {
+                    ShowLoading(false);
+                    MessageBox.Show("Alamat IP / MAC Tidak Terdaftar!", "User Authentication", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else {
+                    ShowMainPanel();
+                }
+
             }
         }
 

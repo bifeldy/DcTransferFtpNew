@@ -15,6 +15,8 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using bifeldy_sd3_lib_452.Utilities;
+
 using DcTransferFtpNew.Forms;
 using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Utilities;
@@ -23,12 +25,17 @@ namespace DcTransferFtpNew.Panels {
 
     public sealed partial class CCekProgram : UserControl {
 
+        private readonly IUpdater _updater;
+        private readonly IConfig _config;
+
         private readonly IApp _app;
         private readonly IDb _db;
 
         private CMainForm mainForm;
 
-        public CCekProgram(IApp app, IDb db) {
+        public CCekProgram(IUpdater updater, IApp app, IDb db, IConfig config) {
+            _updater = updater;
+            _config = config;
             _app = app;
             _db = db;
 
@@ -72,8 +79,24 @@ namespace DcTransferFtpNew.Panels {
                     await Task.Run(async () => {
                         responseCekProgram = await _db.CekVersi();
                     });
-                    if (responseCekProgram == "OKE") {
+                    if (responseCekProgram.ToUpper() == "OKE") {
                         ShowLoginPanel();
+                    }
+                    else if (responseCekProgram.ToUpper().Contains("VERSI")) {
+                        loadingInformation.Text = "Memperbarui Otomatis ...";
+                        bool updated = false;
+                        await Task.Run(() => {
+                            updated = _updater.CheckUpdater();
+                        });
+                        if (!updated) {
+                            MessageBox.Show(
+                                "Gagal Update Otomatis" + Environment.NewLine + "Silahkan Hubungi IT SSD 03 Untuk Ambil Program Baru" + Environment.NewLine + Environment.NewLine + responseCekProgram,
+                                "Program Checker",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error
+                            );
+                            _app.Exit();
+                        }
                     }
                     else {
                         MessageBox.Show(responseCekProgram, "Program Checker", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -99,10 +122,15 @@ namespace DcTransferFtpNew.Panels {
 
             // Create & Show `Login` Panel
             try {
+                CLogin login = CProgram.Bifeldyz.ResolveClass<CLogin>();
                 if (!mainForm.PanelContainer.Controls.ContainsKey("CLogin")) {
                     mainForm.PanelContainer.Controls.Add(CProgram.Bifeldyz.ResolveClass<CLogin>());
                 }
                 mainForm.PanelContainer.Controls["CLogin"].BringToFront();
+                bool bypassLogin = _config.Get<bool>("BypassLogin", bool.Parse(_app.GetConfig("bypass_login")));
+                if (bypassLogin) {
+                    login.ProcessLogin();
+                }
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message, "Terjadi Kesalahan! (｡>﹏<｡)", MessageBoxButtons.OK, MessageBoxIcon.Error);
