@@ -212,7 +212,7 @@ namespace DcTransferFtpNew.Logics {
                         };
                         string responseDsiDetail = dsi_ws.Get_DSIDetail(datePeriode);
 
-                        List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObj<List<DataDSI_WS>>(responseDsiDetail);
+                        List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObject<List<DataDSI_WS>>(responseDsiDetail);
                         if (objListDataDSIWS.Count > 0) {
                             string tabel = $"DC_{dsiWsToko}";
                             DataTable dtInsert = _converter.ListToDataTable(objListDataDSIWS, tabel);
