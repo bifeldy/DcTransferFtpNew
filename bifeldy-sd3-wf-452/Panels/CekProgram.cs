@@ -72,7 +72,7 @@ namespace DcTransferFtpNew.Panels {
                 }
             });
             if (dbAvailable) {
-                if (_app.ListDcCanUse.Contains(jenisDc)) {
+                if (_app.ListDcCanUse.Count == 0 || _app.ListDcCanUse.Contains(jenisDc)) {
 
                     // Check Version
                     string responseCekProgram = null;
