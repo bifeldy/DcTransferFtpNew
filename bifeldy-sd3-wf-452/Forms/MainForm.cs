@@ -173,12 +173,14 @@ namespace DcTransferFtpNew.Forms {
         }
 
         private void StatusStripDbName_Click(object sender, EventArgs e) {
-            MessageBox.Show(
-                _db.GetAllAvailableDbConnectionsString(),
-                "Koneksi Database",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
+            if (_app.DebugMode) {
+                MessageBox.Show(
+                    _db.GetAllAvailableDbConnectionsString(),
+                    "Koneksi Database",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+            }
         }
 
     }
