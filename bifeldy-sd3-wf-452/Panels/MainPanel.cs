@@ -37,7 +37,7 @@ namespace DcTransferFtpNew.Panels {
 
         private CMainForm mainForm;
 
-        public IProgress<string> LogInfoReporter { get; set; } = null;
+        public IProgress<string> LogReporter { get; set; } = null;
 
         public CMainPanel(IApp app, ILogger logger, IDb db, IMenuNavigations menuNavigations) {
             _app = app;
@@ -58,7 +58,7 @@ namespace DcTransferFtpNew.Panels {
         private void OnInit() {
             Dock = DockStyle.Fill;
 
-            LogInfoReporter = new Progress<string>(log => {
+            LogReporter = new Progress<string>(log => {
                 textBoxLogInfo.Text = log + textBoxLogInfo.Text;
             });
         }
@@ -100,7 +100,7 @@ namespace DcTransferFtpNew.Panels {
 
             _menuNavigations.AddButtonToPanel(this);
 
-            _logger.SetReportInfo(LogInfoReporter);
+            _logger.SetLogReporter(LogReporter);
 
             chkDebugSimulasi.Checked = _app.DebugMode;
             #if !DEBUG
