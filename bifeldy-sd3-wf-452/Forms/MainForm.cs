@@ -73,7 +73,7 @@ namespace DcTransferFtpNew.Forms {
             statusStripContainer.Items["statusStripIpAddress"].Text = "- .: " + string.Join(", ", _app.GetAllIpAddress()) + " :. -";
             statusStripContainer.Items["statusStripAppVersion"].Text = $"v{_app.AppVersion}";
 
-            ShowCheckProgramPanel();
+            ShowDbSelectorPanel();
             await Task.Run((Action) ShakeForm);
         }
 
@@ -98,7 +98,7 @@ namespace DcTransferFtpNew.Forms {
             }
         }
 
-        private void ShowCheckProgramPanel() {
+        private void ShowDbSelectorPanel() {
 
             // Create And Show `DbSelector` Panel
             try {
@@ -110,6 +110,12 @@ namespace DcTransferFtpNew.Forms {
                 panelContainer.Controls["CDbSelector"].BringToFront();
                 if (_app.ListDcCanUse.Count == 1 && _app.ListDcCanUse.Contains("HO")) {
                     dbSelector.DchoOnlyBypass(this, EventArgs.Empty);
+                }
+                else {
+                    bool autoRunMode = _config.Get<bool>("AutoRunMode", bool.Parse(_app.GetConfig("auto_run_mode")));
+                    if (autoRunMode) {
+                        dbSelector.AutoRunModeDefaultPostgre(this, EventArgs.Empty);
+                    }
                 }
             }
             catch (Exception ex) {

@@ -56,7 +56,7 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private async void CheckProgram() {
-            mainForm.StatusStripContainer.Items["statusStripDbName"].Text = _db.DbName;
+            bool autoRunMode = _config.Get<bool>("AutoRunMode", bool.Parse(_app.GetConfig("auto_run_mode")));
 
             // First DB Run + Check Connection
             bool dbAvailable = false;
@@ -67,11 +67,26 @@ namespace DcTransferFtpNew.Panels {
                     jenisDc = await _db.GetJenisDc();
                     dbAvailable = true;
                 }
-                catch (Exception ex) {
-                    MessageBox.Show(ex.Message, "Program Checker", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (Exception ex1) {
+                    if (autoRunMode) {
+                        _app.IsUsingPostgres = false;
+                        try {
+                            jenisDc = await _db.GetJenisDc();
+                            dbAvailable = true;
+                        }
+                        catch (Exception ex2) {
+                            MessageBox.Show(ex2.Message, "Auto Run Checker", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    else {
+                        MessageBox.Show(ex1.Message, "Program Checker", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             });
             if (dbAvailable) {
+                mainForm.StatusStripContainer.Items["statusStripDbName"].Text = _db.DbName;
+                mainForm.Text = $"[{(_app.IsUsingPostgres ? "PG" : "ORCL")}+MSSQL] " + mainForm.Text;
+
                 if (_app.ListDcCanUse.Count == 0 || _app.ListDcCanUse.Contains(jenisDc)) {
 
                     // Check Version

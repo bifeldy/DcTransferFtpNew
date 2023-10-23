@@ -43,7 +43,6 @@ namespace DcTransferFtpNew.Panels {
         private void ShowCheckProgramPanel() {
             btnOracle.Enabled = false;
             btnPostgre.Enabled = false;
-            mainForm.Text = $"[{(_app.IsUsingPostgres ? "PG" : "ORCL")}+MSSQL] " + mainForm.Text;
 
             // Create & Show `CekProgram` Panel
             try {
@@ -69,6 +68,10 @@ namespace DcTransferFtpNew.Panels {
 
         public void DchoOnlyBypass(object sender, EventArgs e) {
             BtnOracle_Click(sender, e);
+        }
+
+        public void AutoRunModeDefaultPostgre(object sender, EventArgs e) {
+            BtnPostgre_Click(sender, e);
         }
 
     }
