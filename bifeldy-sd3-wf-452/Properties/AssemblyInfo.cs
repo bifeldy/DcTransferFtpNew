@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DcTransferFtpNew")]
 [assembly: AssemblyDescription("Create Ulang Manual Semua API Service")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("IT S/SD 03 - PT. Indomarco Prismatama")]
+[assembly: AssemblyCompany("IT SD 03 - PT. Indomarco Prismatama")]
 [assembly: AssemblyProduct("PgDcTransferFtp")]
 [assembly: AssemblyCopyright("Bifeldy © 2022")]
-[assembly: AssemblyTrademark("IT S/SD 03 - IDMR")]
+[assembly: AssemblyTrademark("IT SD 03 - IDMR")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
