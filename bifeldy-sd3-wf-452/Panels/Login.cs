@@ -111,9 +111,9 @@ namespace DcTransferFtpNew.Panels {
             if (bypassLogin) {
                 txtUserNameNik.ReadOnly = true;
                 txtPassword.ReadOnly = true;
-                _db.LoggedInUsername = "ANONYMOUS";
-                txtUserNameNik.Text = "ANONYMOUS";
-                txtPassword.Text = "ANONYMOUS";
+                _db.LoggedInUsername = _app.AppName;
+                txtUserNameNik.Text = _app.AppName;
+                txtPassword.Text = _app.AppName;
                 resultLogin = true;
             }
             else {
