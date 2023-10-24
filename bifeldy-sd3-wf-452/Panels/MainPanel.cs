@@ -33,16 +33,20 @@ namespace DcTransferFtpNew.Panels {
         private readonly IApp _app;
         private readonly ILogger _logger;
         private readonly IDb _db;
+        private readonly IConfig _config;
+        private readonly IWinReg _winreg;
         private readonly IMenuNavigations _menuNavigations;
 
         private CMainForm mainForm;
 
         public IProgress<string> LogReporter { get; set; } = null;
 
-        public CMainPanel(IApp app, ILogger logger, IDb db, IMenuNavigations menuNavigations) {
+        public CMainPanel(IApp app, ILogger logger, IDb db, IConfig config, IWinReg winreg, IMenuNavigations menuNavigations) {
             _app = app;
             _logger = logger;
             _db = db;
+            _config = config;
+            _winreg = winreg;
             _menuNavigations = menuNavigations;
 
             InitializeComponent();
@@ -97,6 +101,9 @@ namespace DcTransferFtpNew.Panels {
                 namaDc = await _db.GetNamaDc();
             });
             userInfo.Text = $".: {dcKode} - {namaDc} :: {_db.LoggedInUsername} :.";
+
+            bool windowsStartup = _config.Get<bool>("WindowsStartup", bool.Parse(_app.GetConfig("windows_startup")));
+            chkWindowsStartup.Checked = windowsStartup;
 
             _menuNavigations.AddButtonToPanel(this);
 
@@ -176,6 +183,12 @@ namespace DcTransferFtpNew.Panels {
                 logError.Show();
             }
             SetIdleBusyStatus(true);
+        }
+
+        private void chkWindowsStartup_CheckedChanged(object sender, EventArgs e) {
+            CheckBox cb = (CheckBox) sender;
+            _config.Set("WindowsStartup", cb.Checked);
+            _winreg.SetWindowsStartup(cb.Checked);
         }
 
     }

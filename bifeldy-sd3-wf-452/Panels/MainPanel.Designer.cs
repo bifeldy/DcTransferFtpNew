@@ -46,6 +46,7 @@ namespace DcTransferFtpNew.Panels {
             this.navContent = new System.Windows.Forms.Panel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.navMenu = new DcTransferFtpNew.Components.FixAutoScrollFlowLayoutPanel();
+            this.chkWindowsStartup = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.imgDomar)).BeginInit();
             this.navContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -55,7 +56,7 @@ namespace DcTransferFtpNew.Panels {
             // 
             this.chkDebugSimulasi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chkDebugSimulasi.AutoSize = true;
-            this.chkDebugSimulasi.Location = new System.Drawing.Point(577, 66);
+            this.chkDebugSimulasi.Location = new System.Drawing.Point(575, 87);
             this.chkDebugSimulasi.Name = "chkDebugSimulasi";
             this.chkDebugSimulasi.Size = new System.Drawing.Size(143, 17);
             this.chkDebugSimulasi.TabIndex = 12;
@@ -289,10 +290,23 @@ namespace DcTransferFtpNew.Panels {
             this.navMenu.Size = new System.Drawing.Size(190, 186);
             this.navMenu.TabIndex = 6;
             // 
+            // chkWindowsStartup
+            // 
+            this.chkWindowsStartup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkWindowsStartup.AutoSize = true;
+            this.chkWindowsStartup.Location = new System.Drawing.Point(575, 68);
+            this.chkWindowsStartup.Name = "chkWindowsStartup";
+            this.chkWindowsStartup.Size = new System.Drawing.Size(143, 17);
+            this.chkWindowsStartup.TabIndex = 19;
+            this.chkWindowsStartup.Text = "Run After Windows Start";
+            this.chkWindowsStartup.UseVisualStyleBackColor = true;
+            this.chkWindowsStartup.CheckedChanged += new System.EventHandler(this.chkWindowsStartup_CheckedChanged);
+            // 
             // CMainPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkWindowsStartup);
             this.Controls.Add(this.navContent);
             this.Controls.Add(this.lnkLblLogClear);
             this.Controls.Add(this.panel5);
@@ -345,6 +359,7 @@ namespace DcTransferFtpNew.Panels {
         private System.Windows.Forms.Panel navContent;
         private System.Windows.Forms.PictureBox pictureBox;
         private Components.FixAutoScrollFlowLayoutPanel navMenu;
+        private System.Windows.Forms.CheckBox chkWindowsStartup;
     }
 
 }
