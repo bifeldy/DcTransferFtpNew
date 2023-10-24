@@ -124,6 +124,12 @@ namespace DcTransferFtpNew.Panels {
             SetIdleBusyStatus(true);
         }
 
+        private void ChkWindowsStartup_CheckedChanged(object sender, EventArgs e) {
+            CheckBox cb = (CheckBox)sender;
+            _config.Set("WindowsStartup", cb.Checked);
+            _winreg.SetWindowsStartup(cb.Checked);
+        }
+
         public void SetIdleBusyStatus(bool isIdle) {
             _app.IsIdle = isIdle;
             lblStatus.Text = $"Program {(isIdle ? "Idle" : "Sibuk")} ...";
@@ -190,12 +196,6 @@ namespace DcTransferFtpNew.Panels {
                 logError.Show();
             }
             SetIdleBusyStatus(true);
-        }
-
-        private void ChkWindowsStartup_CheckedChanged(object sender, EventArgs e) {
-            CheckBox cb = (CheckBox) sender;
-            _config.Set("WindowsStartup", cb.Checked);
-            _winreg.SetWindowsStartup(cb.Checked);
         }
 
     }
