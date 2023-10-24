@@ -32,6 +32,8 @@ namespace DcTransferFtpNew.Panels {
 
         private CMainForm mainForm;
 
+        private bool isInitialized = false;
+
         public CLogin(IConfig config, IApp app, IDb db) {
             _config = config;
             _app = app;
@@ -46,9 +48,14 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private void CLogin_Load(object sender, EventArgs e) {
-            mainForm = (CMainForm) Parent.Parent;
+            if (!isInitialized) {
 
-            ((CCekProgram) mainForm.PanelContainer.Controls["CCekProgram"]).LoadingInformation.Text = "Harap Menunggu ...";
+                mainForm = (CMainForm) Parent.Parent;
+
+                ((CCekProgram) mainForm.PanelContainer.Controls["CCekProgram"]).LoadingInformation.Text = "Harap Menunggu ...";
+
+                isInitialized = true;
+            }
         }
 
         private void ShowLoading(bool isShow) {

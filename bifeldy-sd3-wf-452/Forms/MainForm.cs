@@ -36,6 +36,8 @@ namespace DcTransferFtpNew.Forms {
 
         private FormWindowState lastFormWindowState;
 
+        private bool isInitialized = false;
+
         public CMainForm(IApp app, IDb db, IConfig config) {
             _app = app;
             _db = db;
@@ -70,11 +72,16 @@ namespace DcTransferFtpNew.Forms {
         }
 
         private async void CMainForm_Load(object sender, EventArgs e) {
-            statusStripContainer.Items["statusStripIpAddress"].Text = "- .: " + string.Join(", ", _app.GetAllIpAddress()) + " :. -";
-            statusStripContainer.Items["statusStripAppVersion"].Text = $"v{_app.AppVersion}";
+            if (!isInitialized) {
 
-            ShowDbSelectorPanel();
-            await Task.Run((Action) ShakeForm);
+                statusStripContainer.Items["statusStripIpAddress"].Text = "- .: " + string.Join(", ", _app.GetAllIpAddress()) + " :. -";
+                statusStripContainer.Items["statusStripAppVersion"].Text = $"v{_app.AppVersion}";
+
+                ShowDbSelectorPanel();
+                await Task.Run((Action) ShakeForm);
+
+                isInitialized = true;
+            }
         }
 
         private void CMainForm_FormClosing(object sender, FormClosingEventArgs e) {

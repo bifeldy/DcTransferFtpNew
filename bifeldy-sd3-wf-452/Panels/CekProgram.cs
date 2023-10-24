@@ -33,6 +33,8 @@ namespace DcTransferFtpNew.Panels {
 
         private CMainForm mainForm;
 
+        private bool isInitialized = false;
+
         public CCekProgram(IUpdater updater, IApp app, IDb db, IConfig config) {
             _updater = updater;
             _config = config;
@@ -51,8 +53,14 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private void CCekProgram_Load(object sender, EventArgs e) {
-            mainForm = (CMainForm) Parent.Parent;
-            CheckProgram();
+            if (!isInitialized) {
+
+                mainForm = (CMainForm) Parent.Parent;
+
+                CheckProgram();
+
+                isInitialized = true;
+            }
         }
 
         private async void CheckProgram() {

@@ -39,6 +39,8 @@ namespace DcTransferFtpNew.Panels {
 
         private CMainForm mainForm;
 
+        private bool isInitialized = false;
+
         public IProgress<string> LogReporter { get; set; } = null;
 
         public CMainPanel(
@@ -95,37 +97,44 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private async void CMainPanel_Load(object sender, EventArgs e) {
-            mainForm = (CMainForm) Parent.Parent;
-            mainForm.FormBorderStyle = FormBorderStyle.Sizable;
-            mainForm.MaximizeBox = true;
-            mainForm.MinimizeBox = true;
+            if (!isInitialized) {
 
-            appInfo.Text = _app.AppName;
-            string dcKode = null;
-            string namaDc = null;
-            await Task.Run(async () => {
-                dcKode = await _db.GetKodeDc();
-                namaDc = await _db.GetNamaDc();
-            });
-            userInfo.Text = $".: {dcKode} - {namaDc} :: {_db.LoggedInUsername} :.";
+                mainForm = (CMainForm) Parent.Parent;
+                mainForm.FormBorderStyle = FormBorderStyle.Sizable;
+                mainForm.MaximizeBox = true;
+                mainForm.MinimizeBox = true;
 
-            bool windowsStartup = _config.Get<bool>("WindowsStartup", bool.Parse(_app.GetConfig("windows_startup")));
-            chkWindowsStartup.Checked = windowsStartup;
+                appInfo.Text = _app.AppName;
+                string dcKode = null;
+                string namaDc = null;
+                await Task.Run(async () => {
+                    dcKode = await _db.GetKodeDc();
+                    namaDc = await _db.GetNamaDc();
+                });
+                userInfo.Text = $".: {dcKode} - {namaDc} :: {_db.LoggedInUsername} :.";
 
-            _menuNavigations.AddButtonToPanel(this);
+                bool windowsStartup = _config.Get<bool>("WindowsStartup", bool.Parse(_app.GetConfig("windows_startup")));
+                chkWindowsStartup.Checked = windowsStartup;
 
-            _logger.SetLogReporter(LogReporter);
+                _menuNavigations.AddButtonToPanel(this);
 
-            chkDebugSimulasi.Checked = _app.DebugMode;
-            #if !DEBUG
-                chkDebugSimulasi.Enabled = false;
-            #endif
+                _logger.SetLogReporter(LogReporter);
 
-            SetIdleBusyStatus(true);
+                chkDebugSimulasi.Checked = _app.DebugMode;
+                #if !DEBUG
+                    chkDebugSimulasi.Enabled = false;
+                #endif
+
+                SetIdleBusyStatus(true);
+
+                isInitialized = true;
+            }
+
+            SetIdleBusyStatus(_app.IsIdle);
         }
 
         private void ChkWindowsStartup_CheckedChanged(object sender, EventArgs e) {
-            CheckBox cb = (CheckBox)sender;
+            CheckBox cb = (CheckBox) sender;
             _config.Set("WindowsStartup", cb.Checked);
             _winreg.SetWindowsStartup(cb.Checked);
         }

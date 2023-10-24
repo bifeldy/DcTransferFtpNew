@@ -25,6 +25,8 @@ namespace DcTransferFtpNew.Panels {
 
         private CMainForm mainForm;
 
+        private bool isInitialized = false;
+
         public CDbSelector(IApp app) {
             _app = app;
 
@@ -37,7 +39,12 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private void CDbSelector_Load(object sender, EventArgs e) {
-            mainForm = (CMainForm) Parent.Parent;
+            if (!isInitialized) {
+
+                mainForm = (CMainForm) Parent.Parent;
+
+                isInitialized = true;
+            }
         }
 
         private void ShowCheckProgramPanel() {
