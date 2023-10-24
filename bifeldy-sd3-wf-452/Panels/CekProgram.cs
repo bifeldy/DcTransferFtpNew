@@ -56,7 +56,7 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private async void CheckProgram() {
-            bool autoRunMode = _config.Get<bool>("AutoRunMode", bool.Parse(_app.GetConfig("auto_run_mode")));
+            bool autoDb = _config.Get<bool>("AutoDb", bool.Parse(_app.GetConfig("auto_db")));
 
             // First DB Run + Check Connection
             bool dbAvailable = false;
@@ -68,7 +68,7 @@ namespace DcTransferFtpNew.Panels {
                     dbAvailable = true;
                 }
                 catch (Exception ex1) {
-                    if (autoRunMode) {
+                    if (autoDb) {
                         _app.IsUsingPostgres = false;
                         try {
                             jenisDc = await _db.GetJenisDc();

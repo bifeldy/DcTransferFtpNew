@@ -112,8 +112,8 @@ namespace DcTransferFtpNew.Forms {
                     dbSelector.DchoOnlyBypass(this, EventArgs.Empty);
                 }
                 else {
-                    bool autoRunMode = _config.Get<bool>("AutoRunMode", bool.Parse(_app.GetConfig("auto_run_mode")));
-                    if (autoRunMode) {
+                    bool autoDb = _config.Get<bool>("AutoDb", bool.Parse(_app.GetConfig("auto_db")));
+                    if (autoDb) {
                         dbSelector.AutoRunModeDefaultPostgre(this, EventArgs.Empty);
                     }
                 }
