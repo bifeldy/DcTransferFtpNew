@@ -41,7 +41,14 @@ namespace DcTransferFtpNew.Panels {
 
         public IProgress<string> LogReporter { get; set; } = null;
 
-        public CMainPanel(IApp app, ILogger logger, IDb db, IConfig config, IWinReg winreg, IMenuNavigations menuNavigations) {
+        public CMainPanel(
+            IApp app,
+            ILogger logger,
+            IDb db,
+            IConfig config,
+            IWinReg winreg,
+            IMenuNavigations menuNavigations
+        ) {
             _app = app;
             _logger = logger;
             _db = db;
