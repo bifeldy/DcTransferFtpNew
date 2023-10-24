@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DcTransferFtpNew")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Create Ulang Manual Semua API Service")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("SD3 - PT. Indomarco Prismatama")]
 [assembly: AssemblyProduct("PgDcTransferFtp")]
-[assembly: AssemblyCopyright("Bifeldy ©  2022")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Bifeldy © 2022")]
+[assembly: AssemblyTrademark("IT SD 03 - IDMR")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
