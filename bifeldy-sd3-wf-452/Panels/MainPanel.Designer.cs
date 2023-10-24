@@ -300,7 +300,7 @@ namespace DcTransferFtpNew.Panels {
             this.chkWindowsStartup.TabIndex = 19;
             this.chkWindowsStartup.Text = "Run After Windows Start";
             this.chkWindowsStartup.UseVisualStyleBackColor = true;
-            this.chkWindowsStartup.CheckedChanged += new System.EventHandler(this.chkWindowsStartup_CheckedChanged);
+            this.chkWindowsStartup.CheckedChanged += new System.EventHandler(this.ChkWindowsStartup_CheckedChanged);
             // 
             // CMainPanel
             // 

@@ -185,7 +185,7 @@ namespace DcTransferFtpNew.Panels {
             SetIdleBusyStatus(true);
         }
 
-        private void chkWindowsStartup_CheckedChanged(object sender, EventArgs e) {
+        private void ChkWindowsStartup_CheckedChanged(object sender, EventArgs e) {
             CheckBox cb = (CheckBox) sender;
             _config.Set("WindowsStartup", cb.Checked);
             _winreg.SetWindowsStartup(cb.Checked);
