@@ -12,6 +12,7 @@
  */
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -108,9 +109,13 @@ namespace DcTransferFtpNew.Panels {
                     else if (responseCekProgram.ToUpper().Contains("VERSI")) {
                         loadingInformation.Text = "Memperbarui Otomatis ...";
                         bool updated = false;
-                        await Task.Run(() => {
-                            updated = _updater.CheckUpdater();
-                        });
+                        if (!_app.IsSkipUpdate) {
+                            string verStr = responseCekProgram.Split('=').Last().Trim().Split('v').Last();
+                            int verInt = int.Parse(verStr);
+                            await Task.Run(() => {
+                                updated = _updater.CheckUpdater(verInt);
+                            });
+                        }
                         if (!updated) {
                             MessageBox.Show(
                                 "Gagal Update Otomatis" + Environment.NewLine + "Silahkan Hubungi IT SSD 03 Untuk Ambil Program Baru" + Environment.NewLine + Environment.NewLine + responseCekProgram,
