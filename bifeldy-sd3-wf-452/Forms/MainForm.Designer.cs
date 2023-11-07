@@ -29,7 +29,9 @@ namespace DcTransferFtpNew.Forms {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CMainForm));
             this.statusStripContainer = new System.Windows.Forms.StatusStrip();
             this.statusStripDbName = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStripIpAddress = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStripAppVersion = new System.Windows.Forms.ToolStripStatusLabel();
             this.imgLogo = new System.Windows.Forms.PictureBox();
             this.sysTrayNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -49,7 +51,9 @@ namespace DcTransferFtpNew.Forms {
             // 
             this.statusStripContainer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusStripDbName,
+            this.toolStripStatusLabel1,
             this.statusStripIpAddress,
+            this.toolStripStatusLabel2,
             this.statusStripAppVersion});
             this.statusStripContainer.Location = new System.Drawing.Point(0, 339);
             this.statusStripContainer.Name = "statusStripContainer";
@@ -66,14 +70,27 @@ namespace DcTransferFtpNew.Forms {
             this.statusStripDbName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.statusStripDbName.Click += new System.EventHandler(this.StatusStripDbName_Click);
             // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(148, 17);
+            this.toolStripStatusLabel1.Spring = true;
+            this.toolStripStatusLabel1.Text = " ";
+            // 
             // statusStripIpAddress
             // 
             this.statusStripIpAddress.Name = "statusStripIpAddress";
-            this.statusStripIpAddress.Size = new System.Drawing.Size(444, 17);
+            this.statusStripIpAddress.Size = new System.Drawing.Size(148, 17);
             this.statusStripIpAddress.Spring = true;
             this.statusStripIpAddress.Text = "0.0.0.0";
             this.statusStripIpAddress.ToolTipText = "Lihat Informasi Alamat IP & MAC";
             this.statusStripIpAddress.Click += new System.EventHandler(this.StatusStripIpAddress_Click);
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(148, 17);
+            this.toolStripStatusLabel2.Spring = true;
             // 
             // statusStripAppVersion
             // 
@@ -88,9 +105,9 @@ namespace DcTransferFtpNew.Forms {
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.imgLogo.Image = ((System.Drawing.Image)(resources.GetObject("imgLogo.Image")));
-            this.imgLogo.Location = new System.Drawing.Point(150, 30);
+            this.imgLogo.Location = new System.Drawing.Point(150, 46);
             this.imgLogo.Name = "imgLogo";
-            this.imgLogo.Size = new System.Drawing.Size(300, 125);
+            this.imgLogo.Size = new System.Drawing.Size(300, 117);
             this.imgLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.imgLogo.TabIndex = 3;
             this.imgLogo.TabStop = false;
@@ -117,13 +134,13 @@ namespace DcTransferFtpNew.Forms {
             this.sysTrayToolStripMenuItemApp.Enabled = false;
             this.sysTrayToolStripMenuItemApp.Image = ((System.Drawing.Image)(resources.GetObject("sysTrayToolStripMenuItemApp.Image")));
             this.sysTrayToolStripMenuItemApp.Name = "sysTrayToolStripMenuItemApp";
-            this.sysTrayToolStripMenuItemApp.Size = new System.Drawing.Size(180, 22);
+            this.sysTrayToolStripMenuItemApp.Size = new System.Drawing.Size(159, 22);
             this.sysTrayToolStripMenuItemApp.Text = "_app.AppName";
             // 
             // sysTrayToolStripMenuItemNICs
             // 
             this.sysTrayToolStripMenuItemNICs.Name = "sysTrayToolStripMenuItemNICs";
-            this.sysTrayToolStripMenuItemNICs.Size = new System.Drawing.Size(180, 22);
+            this.sysTrayToolStripMenuItemNICs.Size = new System.Drawing.Size(159, 22);
             this.sysTrayToolStripMenuItemNICs.Text = "Show All NICs";
             this.sysTrayToolStripMenuItemNICs.Click += new System.EventHandler(this.StatusStripIpAddress_Click);
             // 
@@ -137,7 +154,7 @@ namespace DcTransferFtpNew.Forms {
             // exitApplicationToolStripMenuItem
             // 
             this.exitApplicationToolStripMenuItem.Name = "exitApplicationToolStripMenuItem";
-            this.exitApplicationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitApplicationToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.exitApplicationToolStripMenuItem.Text = "Exit Application";
             this.exitApplicationToolStripMenuItem.Click += new System.EventHandler(this.SysTray_MenuExit);
             // 
@@ -196,6 +213,8 @@ namespace DcTransferFtpNew.Forms {
         private System.Windows.Forms.Timer timerIpAddress;
         private System.Windows.Forms.Panel panelContainer;
         private System.Windows.Forms.ToolStripMenuItem sysTrayToolStripMenuItemDatabases;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 
 }

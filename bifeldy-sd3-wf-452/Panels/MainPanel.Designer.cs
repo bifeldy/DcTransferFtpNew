@@ -56,7 +56,7 @@ namespace DcTransferFtpNew.Panels {
             // 
             this.chkDebugSimulasi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chkDebugSimulasi.AutoSize = true;
-            this.chkDebugSimulasi.Location = new System.Drawing.Point(575, 87);
+            this.chkDebugSimulasi.Location = new System.Drawing.Point(576, 85);
             this.chkDebugSimulasi.Name = "chkDebugSimulasi";
             this.chkDebugSimulasi.Size = new System.Drawing.Size(143, 17);
             this.chkDebugSimulasi.TabIndex = 12;
@@ -294,7 +294,7 @@ namespace DcTransferFtpNew.Panels {
             // 
             this.chkWindowsStartup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chkWindowsStartup.AutoSize = true;
-            this.chkWindowsStartup.Location = new System.Drawing.Point(575, 68);
+            this.chkWindowsStartup.Location = new System.Drawing.Point(576, 67);
             this.chkWindowsStartup.Name = "chkWindowsStartup";
             this.chkWindowsStartup.Size = new System.Drawing.Size(143, 17);
             this.chkWindowsStartup.TabIndex = 19;
