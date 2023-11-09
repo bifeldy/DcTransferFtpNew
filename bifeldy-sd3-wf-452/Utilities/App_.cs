@@ -37,7 +37,7 @@ namespace DcTransferFtpNew.Utilities {
 
         public List<string> ListDcCanUse { get; }
 
-        public CApp() {
+        public CApp() : base() {
             ScreenWidth = Screen.PrimaryScreen.WorkingArea.Width;
             ScreenHeight = Screen.PrimaryScreen.WorkingArea.Height;
             Author = "B. Bias A. Ch. :: bias@indomaret.co.id" + Environment.NewLine + "Sulistyo C. :: chandrianto@indomaret.co.id";
