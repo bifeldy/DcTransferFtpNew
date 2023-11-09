@@ -286,7 +286,7 @@
     <None Include="Web References\localhost\Service.wsdl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <EmbeddedResource Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\bifeldy-sd3-lib-452\bifeldy-sd3-lib-452\bifeldy-sd3-lib-452.csproj">
