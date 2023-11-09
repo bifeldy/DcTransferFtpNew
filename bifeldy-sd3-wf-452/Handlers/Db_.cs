@@ -505,11 +505,11 @@ namespace DcTransferFtpNew.Handlers {
                 "CREATE_ENDORSMENT_CSV",
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "P_TGL", VALUE = P_TGL },
-                    new CDbQueryParamBind { NAME = "P_QUERY", VALUE = P_QUERY, DIRECTION = _app.IsUsingPostgres ? ParameterDirection.InputOutput : ParameterDirection.Output },
-                    new CDbQueryParamBind { NAME = "P_FILENAME", VALUE = P_FILENAME, DIRECTION = _app.IsUsingPostgres ? ParameterDirection.InputOutput : ParameterDirection.Output },
-                    new CDbQueryParamBind { NAME = "P_QUERY2", VALUE = P_QUERY2, DIRECTION = _app.IsUsingPostgres ? ParameterDirection.InputOutput : ParameterDirection.Output },
-                    new CDbQueryParamBind { NAME = "P_FILENAME2", VALUE = P_FILENAME2, DIRECTION = _app.IsUsingPostgres ? ParameterDirection.InputOutput : ParameterDirection.Output },
-                    new CDbQueryParamBind { NAME = "P_MSG", VALUE = P_MSG, DIRECTION = _app.IsUsingPostgres ? ParameterDirection.InputOutput : ParameterDirection.Output }
+                    new CDbQueryParamBind { NAME = "P_QUERY", VALUE = P_QUERY, DIRECTION = _app.IsUsingPostgres ? ParameterDirection.InputOutput : ParameterDirection.Output, SIZE = 2000 },
+                    new CDbQueryParamBind { NAME = "P_FILENAME", VALUE = P_FILENAME, DIRECTION = _app.IsUsingPostgres ? ParameterDirection.InputOutput : ParameterDirection.Output, SIZE = 2000 },
+                    new CDbQueryParamBind { NAME = "P_QUERY2", VALUE = P_QUERY2, DIRECTION = _app.IsUsingPostgres ? ParameterDirection.InputOutput : ParameterDirection.Output, SIZE = 2000 },
+                    new CDbQueryParamBind { NAME = "P_FILENAME2", VALUE = P_FILENAME2, DIRECTION = _app.IsUsingPostgres ? ParameterDirection.InputOutput : ParameterDirection.Output, SIZE = 2000 },
+                    new CDbQueryParamBind { NAME = "P_MSG", VALUE = P_MSG, DIRECTION = _app.IsUsingPostgres ? ParameterDirection.InputOutput : ParameterDirection.Output, SIZE = 2000 }
                 }
             );
         }
@@ -520,7 +520,7 @@ namespace DcTransferFtpNew.Handlers {
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "TGLAWALPAR", VALUE = TGLAWALPAR },
                     new CDbQueryParamBind { NAME = "TGLAKHIRPAR", VALUE = TGLAKHIRPAR },
-                    new CDbQueryParamBind { NAME = "V_RESULT", VALUE = V_RESULT, DIRECTION = _app.IsUsingPostgres ? ParameterDirection.InputOutput : ParameterDirection.Output }
+                    new CDbQueryParamBind { NAME = "V_RESULT", VALUE = V_RESULT, DIRECTION = _app.IsUsingPostgres ? ParameterDirection.InputOutput : ParameterDirection.Output, SIZE = 2000 }
                 }
             );
         }
