@@ -67,7 +67,9 @@ namespace DcTransferFtpNew.Logics {
                     List<DC_TABEL_V> listBranchDbInfo = await _branchCabang.GetListBranchDbInformation(kodeDCInduk);
 
                     string zipAvgCostFileName = null;
-                    List<string> csvFileKirim = new List<string>();
+
+                    List<string> csvFileKirimJarak = new List<string>();
+                    List<string> csvFileKirimExpedisi = new List<string>();
 
                     string avgCostFolder = Path.Combine(_berkas.TempFolderPath, $"BO_AVGCOST");
                     if (!Directory.Exists(avgCostFolder)) {
@@ -80,6 +82,12 @@ namespace DcTransferFtpNew.Logics {
                         Directory.CreateDirectory(jarakFolder);
                     }
                     _berkas.DeleteOldFilesInFolder(jarakFolder, 0);
+
+                    string expedisiFolder = Path.Combine(_berkas.TempFolderPath, $"BO_EXPEDISI");
+                    if (!Directory.Exists(expedisiFolder)) {
+                        Directory.CreateDirectory(expedisiFolder);
+                    }
+                    _berkas.DeleteOldFilesInFolder(expedisiFolder, 0);
 
                     // File avg cost sifatnya bulanan
                     // jadi jeda tanggal gk ngaruh karena file formanya nya YYYYMM jadi cukup 1 file dalam jeda
@@ -165,40 +173,77 @@ namespace DcTransferFtpNew.Logics {
                             }
 
                             // Hanya Dc Tertentu
-                            List<string> jarakJenisDc = new List<string> { "INDUK", "DEPO" };
                             string jenisDc = await lbdiDbOraPg.ExecScalarAsync<string>("SELECT TBL_JENIS_DC FROM DC_TABEL_DC_T");
-                            if (jarakJenisDc.Contains(jenisDc)) {
 
-                                string csvFileName = $"JARAK{lbdi.TBL_DC_KODE}{xDate:yyyyMMdd}.CSV";
+                            // Induk Saja
+                            if (jenisDc == "INDUK") {
+                                string csvFileNameJarak = $"JARAK{lbdi.TBL_DC_KODE}{xDate:yyyyMMdd}.CSV";
 
                                 List<CDbQueryParamBind> jarak = new List<CDbQueryParamBind> {
-                                    new CDbQueryParamBind { NAME = "jarak", VALUE = "JARAK" }
-                                };
+                                        new CDbQueryParamBind { NAME = "jarak", VALUE = "JARAK" }
+                                    };
 
-                                string seperator = await lbdiDbOraPg.ExecScalarAsync<string>(
+                                string seperatorJarak = await lbdiDbOraPg.ExecScalarAsync<string>(
                                     $@"SELECT q_seperator FROM Q_TRF_CSV WHERE q_filename = :jarak",
                                     jarak
                                 );
-                                string queryForCSV = await lbdiDbOraPg.ExecScalarAsync<string>(
+                                string queryForCSVJarak = await lbdiDbOraPg.ExecScalarAsync<string>(
                                     $@"SELECT q_query FROM Q_TRF_CSV WHERE q_filename = :jarak",
                                     jarak
                                 );
-                                string filename = await lbdiDbOraPg.ExecScalarAsync<string>(
+                                string filenameJarak = await lbdiDbOraPg.ExecScalarAsync<string>(
                                     $@"SELECT q_namafile FROM Q_TRF_CSV WHERE q_filename = :jarak",
                                     jarak
                                 );
 
-                                if (!string.IsNullOrEmpty(seperator) && !string.IsNullOrEmpty(queryForCSV) && !string.IsNullOrEmpty(filename)) {
+                                if (!string.IsNullOrEmpty(seperatorJarak) && !string.IsNullOrEmpty(queryForCSVJarak) && !string.IsNullOrEmpty(filenameJarak)) {
                                     try {
-                                        DataTable dtQueryRes = await lbdiDbOraPg.GetDataTableAsync(queryForCSV);
-                                        _berkas.DataTable2CSV(dtQueryRes, filename, seperator, jarakFolder);
+                                        DataTable dtQueryRes = await lbdiDbOraPg.GetDataTableAsync(queryForCSVJarak);
+                                        _berkas.DataTable2CSV(dtQueryRes, filenameJarak, seperatorJarak, jarakFolder);
                                         // _berkas.ListFileForZip.Add(filename);
                                         TargetKirim += JumlahServerKirimCsv;
 
-                                        csvFileKirim.Add(filename);
+                                        csvFileKirimJarak.Add(filenameJarak);
                                     }
                                     catch (Exception ex) {
                                         MessageBox.Show(ex.Message, $"{button.Text} :: JARAK", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    }
+                                }
+                            }
+
+                            // Lebih Dari 1 Jenis
+                            List<string> multiJenisDc = new List<string> { "INDUK", "DEPO" };
+                            if (multiJenisDc.Contains(jenisDc)) {
+                                string csvFileNameExpedisi = $"EXPEDISI{lbdi.TBL_DC_KODE}{xDate:yyyyMMdd}.CSV";
+
+                                List<CDbQueryParamBind> expedisi = new List<CDbQueryParamBind> {
+                                    new CDbQueryParamBind { NAME = "expedisi", VALUE = "TOKOEXPEDISI" }
+                                };
+
+                                string seperatorExpedisi = await lbdiDbOraPg.ExecScalarAsync<string>(
+                                    $@"SELECT q_seperator FROM Q_TRF_CSV WHERE q_filename = :expedisi",
+                                    expedisi
+                                );
+                                string queryForCSVExpedisi = await lbdiDbOraPg.ExecScalarAsync<string>(
+                                    $@"SELECT q_query FROM Q_TRF_CSV WHERE q_filename = :expedisi",
+                                    expedisi
+                                );
+                                string filenameExpedisi = await lbdiDbOraPg.ExecScalarAsync<string>(
+                                    $@"SELECT q_namafile FROM Q_TRF_CSV WHERE q_filename = :expedisi",
+                                    expedisi
+                                );
+
+                                if (!string.IsNullOrEmpty(seperatorExpedisi) && !string.IsNullOrEmpty(queryForCSVExpedisi) && !string.IsNullOrEmpty(filenameExpedisi)) {
+                                    try {
+                                        DataTable dtQueryRes = await lbdiDbOraPg.GetDataTableAsync(queryForCSVExpedisi);
+                                        _berkas.DataTable2CSV(dtQueryRes, filenameExpedisi, seperatorExpedisi, expedisiFolder);
+                                        // _berkas.ListFileForZip.Add(filename);
+                                        TargetKirim += JumlahServerKirimCsv;
+
+                                        csvFileKirimExpedisi.Add(filenameExpedisi);
+                                    }
+                                    catch (Exception ex) {
+                                        MessageBox.Show(ex.Message, $"{button.Text} :: EXPEDISI", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     }
                                 }
                             }
@@ -209,7 +254,8 @@ namespace DcTransferFtpNew.Logics {
                     TargetKirim += JumlahServerKirimZip;
 
                     BerhasilKirim += (await _dcFtpT.KirimSingleZip("MDHO", zipAvgCostFileName, reportLog: true)).Success.Count; // *.ZIP Sebanyak :: 1
-                    BerhasilKirim += (await _dcFtpT.KirimSelectedCsv("MDHO", csvFileKirim, jarakFolder, true)).Success.Count; // *.ZIP Sebanyak :: csvFileKirim
+                    BerhasilKirim += (await _dcFtpT.KirimSelectedCsv("MDHO", csvFileKirimJarak, jarakFolder, true)).Success.Count; // *.ZIP Sebanyak :: csvFileKirim
+                    BerhasilKirim += (await _dcFtpT.KirimSelectedCsv("MDHO", csvFileKirimExpedisi, expedisiFolder, true)).Success.Count; // *.ZIP Sebanyak :: csvFileKirim
 
                     _berkas.CleanUp();
                 }
