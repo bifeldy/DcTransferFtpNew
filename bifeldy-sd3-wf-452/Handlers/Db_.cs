@@ -46,6 +46,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<bool> TaxTempDeleteHdr(string startDate, string endDate);
         Task<bool> InsertNewDcTtfHdrLog(DateTime xDate);
         Task<bool> UpdateDcTtfHdrLog(string columnValue, DateTime xDate);
+        Task<bool> UpdateDcTtfTaxLog(string columnValue, DateTime xDate);
         Task<DataTable> TaxTempGetDataTable(DateTime xDate);
         Task<int> TaxTempStatusOk(DateTime xDate);
         Task<string> TaxTempRetrieveBlob(string path, string typeTrans, DataRow dataRow);
@@ -312,6 +313,22 @@ namespace DcTransferFtpNew.Handlers {
             return await OraPg.ExecQueryAsync(
                 $@"
                     UPDATE dc_ttf_hdr_log
+                    SET {columnValue}
+                    WHERE
+                        TBL_DC_KODE = :kode_dc
+                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
+                }
+            );
+        }
+
+        public async Task<bool> UpdateDcTtfTaxLog(string columnValue, DateTime xDate) {
+            return await OraPg.ExecQueryAsync(
+                $@"
+                    UPDATE dc_ttf_tax_log
                     SET {columnValue}
                     WHERE
                         TBL_DC_KODE = :kode_dc

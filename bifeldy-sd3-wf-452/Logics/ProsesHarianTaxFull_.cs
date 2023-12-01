@@ -100,7 +100,8 @@ namespace DcTransferFtpNew.Logics {
 
                         int totalRowTax = dtQueryRes.Rows.Count;
                         if (totalRowTax > 0) {
-                            await _db.UpdateDcTtfHdrLog($"status_tax = 'OK', tbl_sum_file_taxtemp = {totalRowTax}", xDate);
+                            await _db.UpdateDcTtfHdrLog($"status_tax = 'OK'", xDate);
+                            await _db.UpdateDcTtfTaxLog($"tbl_sum_file_taxtemp = {totalRowTax}, tbl_sum_file_keter = '{_app.AppName}'", xDate);
                         }
                         else {
                             await _db.UpdateDcTtfHdrLog($"status_tax = 'Data Kosong'", xDate);
