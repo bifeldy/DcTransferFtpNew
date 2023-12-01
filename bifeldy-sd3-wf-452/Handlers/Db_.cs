@@ -40,10 +40,10 @@ namespace DcTransferFtpNew.Handlers {
         Task<DataTable> GetIrpc(DateTime xDate);
         /* Proses Harian Data TaxTemp Full */
         Task<CDbExecProcResult> CALL_TRF_BAKP_EVO(string procedureName, DateTime P_TGL);
-        Task<int> TaxTempCekLog(DateTime xDate);
-        Task<string> TaxTempCekRun(DateTime xDate);
-        Task<bool> TaxTempDeleteDtl(DateTime xDate);
-        Task<bool> TaxTempDeleteHdr(DateTime xDate);
+        Task<DataTable> TaxTempCekRun(string startDate, string endDate);
+        Task<int> GetTotalLogHdr(string startDate, string endDate);
+        Task<bool> TaxTempDeleteDtl(string startDate, string endDate);
+        Task<bool> TaxTempDeleteHdr(string startDate, string endDate);
         Task<bool> InsertNewDcTtfHdrLog(DateTime xDate);
         Task<bool> UpdateDcTtfHdrLog(string columnValue, DateTime xDate);
         Task<DataTable> TaxTempGetDataTable(DateTime xDate);
@@ -220,68 +220,77 @@ namespace DcTransferFtpNew.Handlers {
             );
         }
 
-        public async Task<int> TaxTempCekLog(DateTime xDate) {
+        public async Task<DataTable> TaxTempCekRun(string startDate, string endDate) {
+            return await OraPg.GetDataTableAsync(
+                $@"
+                    SELECT
+                        {(_app.IsUsingPostgres ? "tgl_doc::DATE" : "TRUNC(tgl_doc)")} AS tgl_doc
+                    FROM
+                        DC_TTF_HDR_LOG
+                    WHERE
+                        TBL_DC_KODE = :kode_dc
+                        AND {(_app.IsUsingPostgres ? "tgl_doc::DATE" : "TRUNC(tgl_doc)")} >= TO_DATE(:tgl_awal, 'dd/MM/yyyy')
+                        AND {(_app.IsUsingPostgres ? "tgl_doc::DATE" : "TRUNC(tgl_doc)")} <= TO_DATE(:tgl_akhir, 'dd/MM/yyyy')
+                        AND {(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(STATUS_RUN, '0') <> '0'
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
+                    new CDbQueryParamBind { NAME = "tgl_awal", VALUE = startDate },
+                    new CDbQueryParamBind { NAME = "tgl_akhir", VALUE = endDate }
+                }
+            );
+        }
+
+        public async Task<int> GetTotalLogHdr(string startDate, string endDate) {
             return await OraPg.ExecScalarAsync<int>(
                 $@"
                     SELECT
-                        {(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(1, 0)
+                        count(*)
                     FROM
                         DC_TTF_HDR_LOG
                     WHERE
                         TBL_DC_KODE = :kode_dc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                        AND {(_app.IsUsingPostgres ? "tgl_doc::DATE" : "TRUNC(tgl_doc)")} >= TO_DATE(:tgl_awal, 'dd/MM/yyyy')
+                        AND {(_app.IsUsingPostgres ? "tgl_doc::DATE" : "TRUNC(tgl_doc)")} <= TO_DATE(:tgl_akhir, 'dd/MM/yyyy')
                 ",
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
+                    new CDbQueryParamBind { NAME = "tgl_awal", VALUE = startDate },
+                    new CDbQueryParamBind { NAME = "tgl_akhir", VALUE = endDate }
                 }
             );
         }
 
-        public async Task<string> TaxTempCekRun(DateTime xDate) {
-            return await OraPg.ExecScalarAsync<string>(
-                $@"
-                    SELECT
-                        {(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(STATUS_RUN, '0')
-                    FROM
-                        DC_TTF_HDR_LOG
-                    WHERE
-                        TBL_DC_KODE = :kode_dc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
-                ",
-                new List<CDbQueryParamBind> {
-                    new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
-                }
-            );
-        }
-
-        public async Task<bool> TaxTempDeleteDtl(DateTime xDate) {
+        public async Task<bool> TaxTempDeleteDtl(string startDate, string endDate) {
             return await OraPg.ExecQueryAsync(
                 $@"
                     DELETE FROM dc_ttf_dtl_log
                     WHERE
                         TBL_DC_KODE = :kode_dc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                        AND {(_app.IsUsingPostgres ? "tgl_doc::DATE" : "TRUNC(tgl_doc)")} >= TO_DATE(:tgl_awal, 'dd/MM/yyyy')
+                        AND {(_app.IsUsingPostgres ? "tgl_doc::DATE" : "TRUNC(tgl_doc)")} <= TO_DATE(:tgl_akhir, 'dd/MM/yyyy')
                 ",
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
+                    new CDbQueryParamBind { NAME = "tgl_awal", VALUE = startDate },
+                    new CDbQueryParamBind { NAME = "tgl_akhir", VALUE = endDate }
                 }
             );
         }
 
-        public async Task<bool> TaxTempDeleteHdr(DateTime xDate) {
+        public async Task<bool> TaxTempDeleteHdr(string startDate, string endDate) {
             return await OraPg.ExecQueryAsync(
                 $@"
                     DELETE FROM dc_ttf_hdr_log
                     WHERE
                         TBL_DC_KODE = :kode_dc
-                        AND TO_CHAR(tgl_doc, 'dd/MM/yyyy') = TO_CHAR(:x_date, 'dd/MM/yyyy')
+                        AND {(_app.IsUsingPostgres ? "tgl_doc::DATE" : "TRUNC(tgl_doc)")} >= TO_DATE(:tgl_awal, 'dd/MM/yyyy')
+                        AND {(_app.IsUsingPostgres ? "tgl_doc::DATE" : "TRUNC(tgl_doc)")} <= TO_DATE(:tgl_akhir, 'dd/MM/yyyy')
                 ",
                 new List<CDbQueryParamBind> {
                     new CDbQueryParamBind { NAME = "kode_dc", VALUE = await GetKodeDc() },
-                    new CDbQueryParamBind { NAME = "x_date", VALUE = xDate }
+                    new CDbQueryParamBind { NAME = "tgl_awal", VALUE = startDate },
+                    new CDbQueryParamBind { NAME = "tgl_akhir", VALUE = endDate }
                 }
             );
         }

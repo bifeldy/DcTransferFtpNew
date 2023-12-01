@@ -27,6 +27,7 @@ using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Utilities;
 using DcTransferFtpNew.Models;
+using System.Linq;
 
 namespace DcTransferFtpNew.Logics {
 
@@ -306,6 +307,42 @@ namespace DcTransferFtpNew.Logics {
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
 
+                    string _dateStart = $"{dateStart:dd/MM/yyyy}";
+                    string _dateEnd = $"{dateStart.AddDays(jumlahHari - 1):dd/MM/yyyy}";
+
+                    int totalLogHdr = await _db.GetTotalLogHdr(_dateStart, _dateEnd);
+
+                    if (totalLogHdr > 0) {
+                        string dialogTitle = "Proses Manual Full Re-create TAX-TTF";
+                        DataTable dtTglStillRun = await _db.TaxTempCekRun(_dateStart, _dateEnd);
+
+                        List<DateTime> lstTglRunning = dtTglStillRun.AsEnumerable().Select(d => d.Field<DateTime>("tgl_doc")).ToList();
+                        string strTglRunning = string.Join(", ", lstTglRunning.Select(d => $"{Environment.NewLine}{d:dd-MM-yyyy}"));
+
+                        if (!string.IsNullOrEmpty(strTglRunning)) {
+                            DialogResult dialogResult = MessageBox.Show(
+                                $"Data sudah pernah dibuat, yakin akan menghapus data lama dan membuat dari awal?",
+                                dialogTitle,
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Question,
+                                MessageBoxDefaultButton.Button2
+                            );
+                            if (dialogResult != DialogResult.Yes) {
+                                throw new Exception($"Proses manual full re-create dibatalkan.");
+                            }
+
+                            await _db.TaxTempDeleteDtl(_dateStart, _dateEnd);
+                            await _db.TaxTempDeleteHdr(_dateStart, _dateEnd);
+                        }
+                        else {
+                            throw new Exception(
+                                $"Proses otomatis sedang berjalan untuk tgl {strTglRunning}." +
+                                Environment.NewLine + Environment.NewLine +
+                                $"Silahkan coba beberapa MENIT lagi atau pilih tanggal lain."
+                            );
+                        }
+                    }
+
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
 
@@ -317,52 +354,13 @@ namespace DcTransferFtpNew.Logics {
 
                         zipFileName = $"{await _db.GetKodeDc()}TTFONLINE{xDate:MMddyyyy}.ZIP";
 
-                        int cekLog = await _db.TaxTempCekLog(xDate);
-                        if (cekLog == 0) {
-                            await FullCreate(button, xDate, TaxTempFullFolderPath);
+                        await FullCreate(button, xDate, TaxTempFullFolderPath);
 
-                            await FromZip(zipFileName, xDate, TaxTempFullFolderPath);
-                            TargetKirim += JumlahServerKirimZip;
+                        await FromZip(zipFileName, xDate, TaxTempFullFolderPath);
+                        TargetKirim += JumlahServerKirimZip;
 
-                            (int csvTerkirim, int zipTerkirim) = await FromTransfer(zipFileName, button, xDate, TaxTempFullFolderPath);
-                            BerhasilKirim += (csvTerkirim + zipTerkirim);
-                        }
-                        else {
-                            string dialogTitle = "Proses Manual Full Re-create TAX-TTF";
-                            string cekRun = await _db.TaxTempCekRun(xDate);
-
-                            if (string.IsNullOrEmpty(cekRun) || cekRun == "0") {
-                                DialogResult dialogResult = MessageBox.Show(
-                                    "Data sudah pernah dibuat, yakin akan menghapus data lama dan membuat dari awal?",
-                                    dialogTitle,
-                                    MessageBoxButtons.YesNo,
-                                    MessageBoxIcon.Question,
-                                    MessageBoxDefaultButton.Button2
-                                );
-                                if (dialogResult == DialogResult.Yes) {
-                                    await _db.TaxTempDeleteDtl(xDate);
-                                    await _db.TaxTempDeleteHdr(xDate);
-
-                                    await FullCreate(button, xDate, TaxTempFullFolderPath);
-
-                                    await FromZip(zipFileName, xDate, TaxTempFullFolderPath);
-                                    TargetKirim += JumlahServerKirimZip;
-
-                                    (int csvTerkirim, int zipTerkirim) = await FromTransfer(zipFileName, button, xDate, TaxTempFullFolderPath);
-                                    BerhasilKirim += (csvTerkirim + zipTerkirim);
-                                }
-                            }
-                            else {
-                                MessageBox.Show(
-                                    "Proses otomatis sedang berjalan, silahkan coba beberapa MENIT lagi.",
-                                    dialogTitle,
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error
-                                );
-                            }
-
-                        }
-
+                        (int csvTerkirim, int zipTerkirim) = await FromTransfer(zipFileName, button, xDate, TaxTempFullFolderPath);
+                        BerhasilKirim += (csvTerkirim + zipTerkirim);
                     }
 
                     _berkas.CleanUp();
