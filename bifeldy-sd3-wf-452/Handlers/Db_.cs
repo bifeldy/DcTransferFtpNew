@@ -64,6 +64,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<CDbExecProcResult> CALL_ICHO(string procName, DateTime dateTime, string usingBulan);
         Task<bool> BulananDeleteDcDsiWsToko(string fileTimeIdBulanGFormat);
         Task<DataTable> BulananDsiGetDataTable(int periode);
+        Task<bool> InsertNewTaxTempLog(string status);
         Task<bool> InsertNewDcAmtaLog(DateTime xDate);
         Task<bool> UpdateDcDcAmtaLog(string columnValue, DateTime xDate);
         Task<int> GetJumlahPluExpired();
@@ -572,7 +573,7 @@ namespace DcTransferFtpNew.Handlers {
                         KDDC, PERIODE, JML_HARI, PLUID, DIV, DEP,
                         KAT, TAG, KD_SUPPLIER, NM_SUPPLIER, QTY_SLD_AWL, RP_SLD_AWL,
                         QTY_SLD_AKHR, RP_SLD_AKHR, QTY_NPB, RP_NPB, DSI, UPDREC_DATE,
-                        HPP_TOKO
+                        HPP_TOKO, DSI_HPPTOKO
                     FROM
                         dc_analisa_dsi_t
                     WHERE
@@ -584,6 +585,19 @@ namespace DcTransferFtpNew.Handlers {
                 new List<CDbQueryParamBind>() {
                     new CDbQueryParamBind { NAME = "kddc", VALUE = await GetKodeDc() },
                     new CDbQueryParamBind { NAME = "periode", VALUE = periode }
+                }
+            );
+        }
+
+        public async Task<bool> InsertNewTaxTempLog(string status) {
+            return await OraPg.ExecQueryAsync(
+                $@"
+                    INSERT INTO taxtemp_log (taxtemp_tgl, status)
+                    VALUES (:taxtemp_tgl, :status)
+                ",
+                new List<CDbQueryParamBind> {
+                    new CDbQueryParamBind { NAME = "taxtemp_tgl", VALUE = DateTime.Now },
+                    new CDbQueryParamBind { NAME = "status", VALUE = status }
                 }
             );
         }

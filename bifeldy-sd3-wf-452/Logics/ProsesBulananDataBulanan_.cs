@@ -241,6 +241,7 @@ namespace DcTransferFtpNew.Logics {
                         List<DataDSI_ANALISA> lsDCAnalisa = _converter.DataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
                         string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
                         string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
+                        await _db.InsertNewTaxTempLog($"DSI_WSDC = {responseDSIHO}");
                     }
                     catch (Exception ex3) {
                         _logger.WriteError(ex3);
