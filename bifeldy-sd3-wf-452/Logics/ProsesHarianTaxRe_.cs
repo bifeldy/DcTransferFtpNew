@@ -124,8 +124,9 @@ namespace DcTransferFtpNew.Logics {
                                             try {
                                                 DataTable dtTax2RE = await _db.OraPg_GetDataTable(queryTax2RE);
 
-                                                if (dtTax2RE.Rows.Count > 0) {
-                                                    await _db.UpdateDcTtfHdrLog($"status_tax = 'OK'", xDate);
+                                                int dtTax2RECount = dtTax2RE.Rows.Count;
+                                                if (dtTax2RECount > 0) {
+                                                    await _db.UpdateDcTtfHdrLog($"status_tax = 'OK', tbl_sum_file_taxtemp = {dtTax2RECount}", xDate);
                                                 }
                                                 else {
                                                     await _db.UpdateDcTtfHdrLog($"status_tax = 'Data Kosong'", xDate);

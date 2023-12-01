@@ -98,8 +98,9 @@ namespace DcTransferFtpNew.Logics {
                     try {
                         DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV);
 
-                        if (dtQueryRes.Rows.Count > 0) {
-                            await _db.UpdateDcTtfHdrLog($"status_tax = 'OK'", xDate);
+                        int totalRowTax = dtQueryRes.Rows.Count;
+                        if (totalRowTax > 0) {
+                            await _db.UpdateDcTtfHdrLog($"status_tax = 'OK', tbl_sum_file_taxtemp = {totalRowTax}", xDate);
                         }
                         else {
                             await _db.UpdateDcTtfHdrLog($"status_tax = 'Data Kosong'", xDate);
