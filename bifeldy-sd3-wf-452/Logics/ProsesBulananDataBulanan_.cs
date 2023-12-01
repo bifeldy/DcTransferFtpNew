@@ -136,13 +136,13 @@ namespace DcTransferFtpNew.Logics {
                     await _qTrfCsv.CreateCSVFile("MATI", csvFileName);
                     TargetKirim += JumlahServerKirimCsv;
 
-                    csvFileName = $"HPPDC_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
-                    await _qTrfCsv.CreateCSVFile("HPPDC", csvFileName);
-                    TargetKirim += JumlahServerKirimCsv;
+                    string hppdc = $"HPPDC_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
+                    await _qTrfCsv.CreateCSVFile("HPPDC", hppdc, addToQueueForZip: false);
+                    TargetKirim += 1;
 
-                    csvFileName = $"LBDC_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
-                    await _qTrfCsv.CreateCSVFile("LBDC", csvFileName);
-                    TargetKirim += JumlahServerKirimCsv;
+                    string lbdc = $"LBDC_{VAR_KODE_DC}_{datePeriode:MMM-yy}.CSV";
+                    await _qTrfCsv.CreateCSVFile("LBDC", lbdc, addToQueueForZip: false);
+                    TargetKirim += 1;
 
                     // Tambahan untuk buat file untuk TAXTEMP, Penjualan, dan BPB ATK (Sulis 09/10/2018)
                     string procName2 = "CREATE_TAXTEMPBLN_EVO";
@@ -280,6 +280,7 @@ namespace DcTransferFtpNew.Logics {
                     }
                     TargetKirim += 1;
 
+                    // TAXTEMP, PJ, DCATK Di ZIP Dahulu
                     string zipFileName2 = $"{VAR_KODE_DC}_SENTRAL_{datePeriode:MMM-yy}.ZIP";
                     List<string> listFileNameToZip2 = await _qTrfCsv.GetFileNameMulti(lsCsvToZip);
                     _berkas.ZipListFileInFolder(zipFileName2, listFileNameToZip2);
@@ -294,7 +295,16 @@ namespace DcTransferFtpNew.Logics {
                     csvFileName = await _db.Q_TRF_CSV__GET("q_namafile", "JKM") ?? jkm;
                     BerhasilKirim += (await _dcFtpT.KirimSingleCsv("TTF", csvFileName)).Success.Count; // *.CSV Sebanyak :: 1
 
+                    csvFileName = await _db.Q_TRF_CSV__GET("q_namafile", "HPPDC") ?? hppdc;
+                    BerhasilKirim += (await _dcFtpT.KirimSingleCsv("TTF", csvFileName)).Success.Count; // *.CSV Sebanyak :: 1
+
+                    csvFileName = await _db.Q_TRF_CSV__GET("q_namafile", "LBDC") ?? lbdc;
+                    BerhasilKirim += (await _dcFtpT.KirimSingleCsv("TTF", csvFileName)).Success.Count; // *.CSV Sebanyak :: 1
+
+                    // MSTXHGG
                     BerhasilKirim += (await _dcFtpT.KirimSingleZip("TTF", zipFileName1)).Success.Count; // *.ZIP Sebanyak :: 1
+
+                    // TAXTEMP, PJ, DCATK
                     BerhasilKirim += (await _dcFtpT.KirimSingleZip("TTF", zipFileName2)).Success.Count; // *.ZIP Sebanyak :: 1
 
                     csvFileName = await _db.Q_TRF_CSV__GET("q_namafile", "NBRMRBREAD") ?? nbrMrBread;
