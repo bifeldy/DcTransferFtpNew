@@ -23,18 +23,18 @@ namespace DcTransferFtpNew.Models {
         public DateTime START_TAX { get; set; }
         public DateTime STOP_TAX { get; set; }
         public string STATUS_TAX { get; set; }
-        public dynamic JML_BPB_TAX { get; set; }
-        public dynamic JML_NRB_TAX { get; set; }
+        public decimal JML_BPB_TAX { get; set; }
+        public decimal JML_NRB_TAX { get; set; }
         public DateTime START_BPB { get; set; }
         public DateTime STOP_BPB { get; set; }
         public string STATUS_BPB { get; set; }
-        public dynamic JML_BPB_OK { get; set; }
-        public dynamic JML_BPB_FAIL { get; set; }
+        public decimal JML_BPB_OK { get; set; }
+        public decimal JML_BPB_FAIL { get; set; }
         public DateTime START_NRB { get; set; }
         public DateTime STOP_NRB { get; set; }
         public string STATUS_NRB { get; set; }
-        public dynamic JML_NRB_OK { get; set; }
-        public dynamic JML_NRB_FAIL { get; set; }
+        public decimal JML_NRB_OK { get; set; }
+        public decimal JML_NRB_FAIL { get; set; }
         public string FILE_ZIP { get; set; }
         public string STATUS_TRF { get; set; }
         public DateTime TGL_TRF { get; set; }

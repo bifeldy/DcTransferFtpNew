@@ -23,14 +23,14 @@ namespace DcTransferFtpNew.Models {
         public string TBL_NPWP_DC { get; set; }
         public string TBL_CABANG_KODE { get; set; }
         public string TBL_CABANG_NAMA { get; set; }
-        public dynamic TBL_DCID { get; set; }
+        public decimal TBL_DCID { get; set; }
         public string TBL_GUDANG_KODE { get; set; }
         public string TBL_GUDANG_NAMA { get; set; }
-        public dynamic TBL_GUDANGID { get; set; }
+        public decimal TBL_GUDANGID { get; set; }
         public string TBL_GUDANG_TYPE { get; set; }
         public string TBL_LOKASI_KODE { get; set; }
         public string TBL_LOKASI_NAMA { get; set; }
-        public dynamic TBL_LOKASIID { get; set; }
+        public decimal TBL_LOKASIID { get; set; }
         public string TBL_LOKASI_TYPE { get; set; }
         public DateTime TBL_UPDREC_DATE { get; set; }
     }
