@@ -70,7 +70,7 @@ namespace DcTransferFtpNew.Logics {
                 // TargetKirim += JumlahServerKirimZip;
 
                 BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; ; // *.CSV Sebanyak :: TargetKirim
-                BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpDev("REGSTO02")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauSingleZipKeFtpDev("REGSTO02")).Success.Count; // *.CSV Sebanyak :: TargetKirim
 
                 _berkas.CleanUp();
             });

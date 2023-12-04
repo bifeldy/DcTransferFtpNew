@@ -38,7 +38,7 @@ namespace DcTransferFtpNew.Handlers {
         Task<CFtpResultInfo> KirimAllZip(string pga_type, string folderPath = null, bool reportLog = false);
         Task<CFtpResultInfo> KirimSelectedCsv(string pga_type, List<string> listCsvFileName, string folderPath = null, bool reportLog = false);
         Task<CFtpResultInfo> KirimSelectedZip(string pga_type, List<string> listZipFileName, string folderPath = null, bool reportLog = false);
-        Task<CFtpResultInfo> KirimAllCsvAtauZipFtpDev(string procName, string zipFileName = null, bool reportLogHo = false, string folderPath = null);
+        Task<CFtpResultInfo> KirimAllCsvAtauSingleZipKeFtpDev(string procName, string zipFileName = null, bool reportLogHo = false, string folderPath = null);
     }
 
     public sealed class CDcFtpT : IDcFtpT {
@@ -230,7 +230,7 @@ namespace DcTransferFtpNew.Handlers {
         /// Jika `zipFileName` NULL, Maka Akan Kirim Semua Berkas .CSV
         /// </summary>
 
-        public async Task<CFtpResultInfo> KirimAllCsvAtauZipFtpDev(string processName, string zipFileName = null, bool reportLogHo = false, string folderPath = null) {
+        public async Task<CFtpResultInfo> KirimAllCsvAtauSingleZipKeFtpDev(string processName, string zipFileName = null, bool reportLogHo = false, string folderPath = null) {
             if (folderPath == null) {
                 folderPath = _berkas.TempFolderPath;
             }

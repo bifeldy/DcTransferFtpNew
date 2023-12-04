@@ -290,7 +290,7 @@ namespace DcTransferFtpNew.Logics {
                     TargetKirim += 1;
 
                     BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                    BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauZipFtpDev("Data Bulanan")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                    BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauSingleZipKeFtpDev("Data Bulanan")).Success.Count; // *.CSV Sebanyak :: TargetKirim
 
                     // CSV TTF :: JKM + HPPDC + LBDC
                     List<string> listCsvTtf = new List<string>() {
