@@ -1,0 +1,5 @@
+v100x Convert Bikin Ulang Dari Versi Oracle
+
+v1006 Ikut Oracle (4e3d7412)
+    e46b536 -> 8ae29f0d :: Kolom Baru Di Tabel => dc_analisa_dsi_t.DSI_HPPTOKO
+    1af35e02 :: tabel baru dc_ttf_tax_log
