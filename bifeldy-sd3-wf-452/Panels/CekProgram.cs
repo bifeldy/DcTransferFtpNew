@@ -93,8 +93,10 @@ namespace DcTransferFtpNew.Panels {
                 }
             });
             if (dbAvailable) {
+                string dbInfo = _db.LocalDbOnly ? "[SQLT]" : $"[{(_app.IsUsingPostgres ? "PG" : "ORCL")}+MSSQL]";
+
                 mainForm.StatusStripContainer.Items["statusStripDbName"].Text = _db.DbName;
-                mainForm.Text = $"[{(_app.IsUsingPostgres ? "PG" : "ORCL")}+MSSQL] " + mainForm.Text;
+                mainForm.Text = $"{dbInfo} {mainForm.Text}";
 
                 if (_app.ListDcCanUse.Count == 0 || _app.ListDcCanUse.Contains(jenisDc)) {
 

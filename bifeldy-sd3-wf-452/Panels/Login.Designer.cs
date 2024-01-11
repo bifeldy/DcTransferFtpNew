@@ -30,6 +30,7 @@ namespace DcTransferFtpNew.Panels {
             this.label1 = new System.Windows.Forms.Label();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.txtUserNameNik = new System.Windows.Forms.TextBox();
+            this.btnPaksaUpdate = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnLogin
@@ -39,9 +40,9 @@ namespace DcTransferFtpNew.Panels {
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLogin.Font = new System.Drawing.Font("Segoe UI", 13F);
             this.btnLogin.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnLogin.Location = new System.Drawing.Point(398, 39);
+            this.btnLogin.Location = new System.Drawing.Point(339, 39);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(104, 54);
+            this.btnLogin.Size = new System.Drawing.Size(129, 54);
             this.btnLogin.TabIndex = 17;
             this.btnLogin.Text = "Masuk";
             this.btnLogin.UseVisualStyleBackColor = true;
@@ -55,7 +56,7 @@ namespace DcTransferFtpNew.Panels {
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label2.Location = new System.Drawing.Point(138, 71);
+            this.label2.Location = new System.Drawing.Point(91, 71);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 21);
             this.label2.TabIndex = 16;
@@ -69,7 +70,7 @@ namespace DcTransferFtpNew.Panels {
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(99, 37);
+            this.label1.Location = new System.Drawing.Point(52, 37);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(120, 21);
             this.label1.TabIndex = 15;
@@ -83,7 +84,7 @@ namespace DcTransferFtpNew.Panels {
             this.txtPassword.BackColor = System.Drawing.SystemColors.Control;
             this.txtPassword.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtPassword.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.txtPassword.Location = new System.Drawing.Point(230, 73);
+            this.txtPassword.Location = new System.Drawing.Point(183, 73);
             this.txtPassword.MaxLength = 32;
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(150, 20);
@@ -100,7 +101,7 @@ namespace DcTransferFtpNew.Panels {
             this.txtUserNameNik.BackColor = System.Drawing.SystemColors.Control;
             this.txtUserNameNik.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtUserNameNik.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.txtUserNameNik.Location = new System.Drawing.Point(230, 39);
+            this.txtUserNameNik.Location = new System.Drawing.Point(183, 39);
             this.txtUserNameNik.MaxLength = 32;
             this.txtUserNameNik.Name = "txtUserNameNik";
             this.txtUserNameNik.Size = new System.Drawing.Size(150, 20);
@@ -108,10 +109,26 @@ namespace DcTransferFtpNew.Panels {
             this.txtUserNameNik.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtUserNameNik.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Txt_KeyDown);
             // 
+            // btnPaksaUpdate
+            // 
+            this.btnPaksaUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPaksaUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPaksaUpdate.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.btnPaksaUpdate.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnPaksaUpdate.Location = new System.Drawing.Point(474, 39);
+            this.btnPaksaUpdate.Name = "btnPaksaUpdate";
+            this.btnPaksaUpdate.Size = new System.Drawing.Size(69, 54);
+            this.btnPaksaUpdate.TabIndex = 18;
+            this.btnPaksaUpdate.Text = "Paksa Update";
+            this.btnPaksaUpdate.UseVisualStyleBackColor = true;
+            this.btnPaksaUpdate.Click += new System.EventHandler(this.BtnPaksaUpdate_Click);
+            // 
             // CLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnPaksaUpdate);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -132,6 +149,7 @@ namespace DcTransferFtpNew.Panels {
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.TextBox txtUserNameNik;
+        private System.Windows.Forms.Button btnPaksaUpdate;
     }
 
 }

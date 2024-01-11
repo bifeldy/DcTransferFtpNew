@@ -29,15 +29,17 @@ namespace DcTransferFtpNew.Panels {
 
         private readonly IApp _app;
         private readonly IDb _db;
+        private readonly IUpdater _updater;
 
         private CMainForm mainForm;
 
         private bool isInitialized = false;
 
-        public CLogin(IConfig config, IApp app, IDb db) {
+        public CLogin(IConfig config, IApp app, IDb db, IUpdater updater) {
             _config = config;
             _app = app;
             _db = db;
+            _updater = updater;
 
             InitializeComponent();
             OnInit();
@@ -167,7 +169,6 @@ namespace DcTransferFtpNew.Panels {
                 else {
                     ShowMainPanel();
                 }
-
             }
         }
 
@@ -187,6 +188,10 @@ namespace DcTransferFtpNew.Panels {
 
         private void Txt_KeyDown(object sender, KeyEventArgs e) {
             CheckKeyboard(sender, e);
+        }
+
+        private void BtnPaksaUpdate_Click(object sender, EventArgs e) {
+            _updater.CheckUpdater();
         }
 
     }
