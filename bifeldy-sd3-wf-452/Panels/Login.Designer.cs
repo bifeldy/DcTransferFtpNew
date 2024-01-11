@@ -40,9 +40,9 @@ namespace DcTransferFtpNew.Panels {
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLogin.Font = new System.Drawing.Font("Segoe UI", 13F);
             this.btnLogin.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnLogin.Location = new System.Drawing.Point(339, 39);
+            this.btnLogin.Location = new System.Drawing.Point(361, 39);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(129, 54);
+            this.btnLogin.Size = new System.Drawing.Size(107, 54);
             this.btnLogin.TabIndex = 17;
             this.btnLogin.Text = "Masuk";
             this.btnLogin.UseVisualStyleBackColor = true;
@@ -87,7 +87,7 @@ namespace DcTransferFtpNew.Panels {
             this.txtPassword.Location = new System.Drawing.Point(183, 73);
             this.txtPassword.MaxLength = 32;
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(150, 20);
+            this.txtPassword.Size = new System.Drawing.Size(172, 20);
             this.txtPassword.TabIndex = 14;
             this.txtPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtPassword.UseSystemPasswordChar = true;
@@ -104,7 +104,7 @@ namespace DcTransferFtpNew.Panels {
             this.txtUserNameNik.Location = new System.Drawing.Point(183, 39);
             this.txtUserNameNik.MaxLength = 32;
             this.txtUserNameNik.Name = "txtUserNameNik";
-            this.txtUserNameNik.Size = new System.Drawing.Size(150, 20);
+            this.txtUserNameNik.Size = new System.Drawing.Size(172, 20);
             this.txtUserNameNik.TabIndex = 13;
             this.txtUserNameNik.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtUserNameNik.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Txt_KeyDown);
