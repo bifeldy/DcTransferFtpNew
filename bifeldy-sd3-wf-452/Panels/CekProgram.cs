@@ -65,6 +65,18 @@ namespace DcTransferFtpNew.Panels {
         }
 
         private async void CheckProgram() {
+            if (_db.LocalDbOnly) {
+                await Task.Run(async () => {
+                    try {
+                        await _updater.UpdateSqliteDatabase();
+                    }
+                    catch (Exception ex) {
+                        MessageBox.Show(ex.Message, "Program Checker", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        _app.Exit();
+                    }
+                });
+            }
+
             bool autoDb = _config.Get<bool>("AutoDb", bool.Parse(_app.GetConfig("auto_db")));
 
             // First DB Run + Check Connection
