@@ -15,9 +15,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using bifeldy_sd3_lib_452.Extensions;
 using bifeldy_sd3_lib_452.Models;
 using bifeldy_sd3_lib_452.Utilities;
 
@@ -27,7 +29,6 @@ using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Utilities;
 using DcTransferFtpNew.Models;
-using System.Linq;
 
 namespace DcTransferFtpNew.Logics {
 
@@ -281,7 +282,7 @@ namespace DcTransferFtpNew.Logics {
 
                 DataTable dtRettok = await _db.TaxTempGetDataTable(xDate);
 
-                List<DCHO_TTF_HDR_LOG> listTTF = _converter.DataTableToList<DCHO_TTF_HDR_LOG>(dtRettok);
+                List<DCHO_TTF_HDR_LOG> listTTF = dtRettok.ToList<DCHO_TTF_HDR_LOG>();
                 string sTTF = _converter.ObjectToJson(listTTF);
                 byte[] byteOfData = _stream.GZipCompressString(sTTF);
                 string tempHasil = ws.SendLogTTF(byteOfData);

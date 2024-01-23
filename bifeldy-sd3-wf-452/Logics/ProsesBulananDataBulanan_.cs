@@ -17,6 +17,7 @@ using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using bifeldy_sd3_lib_452.Extensions;
 using bifeldy_sd3_lib_452.Models;
 using bifeldy_sd3_lib_452.Utilities;
 
@@ -215,7 +216,7 @@ namespace DcTransferFtpNew.Logics {
                         List<DataDSI_WS> objListDataDSIWS = _converter.JsonToObject<List<DataDSI_WS>>(responseDsiDetail);
                         if (objListDataDSIWS.Count > 0) {
                             string tabel = $"DC_{dsiWsToko}";
-                            DataTable dtInsert = _converter.ListToDataTable(objListDataDSIWS, tabel);
+                            DataTable dtInsert = objListDataDSIWS.ToDataTable(tabel);
                             await _db.BulananDeleteDcDsiWsToko(fileTimeIdBulanGFormat);
                             await _db.OraPg_BulkInsertInto(tabel, dtInsert);
                         }
@@ -238,7 +239,7 @@ namespace DcTransferFtpNew.Logics {
                         };
                         DataTable dtDCAnalisa = await _db.BulananDsiGetDataTable(int.Parse($"{datePeriode:yyyyMM}"));
 
-                        List<DataDSI_ANALISA> lsDCAnalisa = _converter.DataTableToList<DataDSI_ANALISA>(dtDCAnalisa);
+                        List<DataDSI_ANALISA> lsDCAnalisa = dtDCAnalisa.ToList<DataDSI_ANALISA>();
                         string dcAnalisa = _converter.ObjectToJson(lsDCAnalisa);
                         string responseDSIHO = dsi_ho.SendDSI(dcAnalisa);
                         await _db.InsertNewTaxTempLog($"DSI_WSDC = {responseDSIHO}");
