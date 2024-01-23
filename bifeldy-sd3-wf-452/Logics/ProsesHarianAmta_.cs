@@ -18,8 +18,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using FluentFTP;
-
 using bifeldy_sd3_lib_452.Models;
 using bifeldy_sd3_lib_452.Utilities;
 
@@ -336,7 +334,7 @@ namespace DcTransferFtpNew.Logics {
                     foreach (CFtpResultSendGet resAll in resAll1) {
                         string fileName = resAll.FileInformation.Name;
                         string columnDb = ftpFileKirim[fileName];
-                        bool success = resAll.FtpStatusSendGet == FtpStatus.Success;
+                        bool success = resAll.FtpStatusSendGet;
                         await _db.UpdateDcDcAmtaLog($"{columnDb} = {columnDb} || 'AMTA {(success ? "Ok" : "Gagal")}'", dateStart);
                     }
                     BerhasilKirim += ftpResultInfo1.Success.Count; // *.CSV Sebanyak :: TargetKirim
@@ -346,7 +344,7 @@ namespace DcTransferFtpNew.Logics {
                     foreach (CFtpResultSendGet resAll in resAll2) {
                         string fileName = resAll.FileInformation.Name;
                         string columnDb = ftpFileKirim[fileName];
-                        bool success = resAll.FtpStatusSendGet == FtpStatus.Success;
+                        bool success = resAll.FtpStatusSendGet;
                         await _db.UpdateDcDcAmtaLog($"{columnDb} = {columnDb} || ' - ' || 'WEBREKAP {(success ? "Ok" : "Gagal")}'", dateStart);
                     }
                     BerhasilKirim += ftpResultInfo2.Success.Count; // *.CSV Sebanyak :: TargetKirim

@@ -19,8 +19,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using FluentFTP;
-
 using LogFileHO;
 
 using bifeldy_sd3_lib_452.Models;
@@ -254,7 +252,7 @@ namespace DcTransferFtpNew.Handlers {
                     $"{remotePath}/{(_app.DebugMode ? "_SIMULASI__" : "")}{fi.Name}"
                 );
                 CFtpResultSendGet resultGet = new CFtpResultSendGet() {
-                    FtpStatusSendGet = statusTransfer ? FtpStatus.Success : FtpStatus.Failed,
+                    FtpStatusSendGet = statusTransfer,
                     FileInformation = fi
                 };
                 if (statusTransfer) {
