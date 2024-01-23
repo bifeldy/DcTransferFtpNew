@@ -1,8 +1,3 @@
 ﻿<Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
-    <Costura CreateTemporaryAssemblies='true' IgnoreSatelliteAssemblies='true'>
-        <ExcludeAssemblies>
-            Microsoft.ReportViewer.ProcessingObjectModel
-            Microsoft.ReportViewer.Common
-        </ExcludeAssemblies>
-    </Costura>
+    <Costura IgnoreSatelliteAssemblies='true' />
 </Weavers>
