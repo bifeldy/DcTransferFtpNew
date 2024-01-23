@@ -169,6 +169,7 @@
     <Compile Include="Models\DataDSI_WS.cs" />
     <Compile Include="Models\DCHO_TTF_HDR_LOG.cs" />
     <Compile Include="Models\DC_FTP_T.cs" />
+    <Compile Include="Models\KafkaFileFullPart.cs" />
     <Compile Include="Navigations\ProsesBulanan.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -215,6 +216,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Utilities\App_.cs" />
+    <Compile Include="Utilities\KafkaFile_.cs" />
     <Compile Include="Web References\DSI_WS\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

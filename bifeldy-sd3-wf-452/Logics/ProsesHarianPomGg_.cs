@@ -35,6 +35,7 @@ namespace DcTransferFtpNew.Logics {
         private readonly IBerkas _berkas;
         private readonly IDcFtpT _dcFtpT;
         private readonly IQTrfCsv _qTrfCsv;
+        private readonly IKafkaFile _kafkaFile;
 
         public CProsesHarianPomGg(
             IApp app,
@@ -42,7 +43,8 @@ namespace DcTransferFtpNew.Logics {
             IDb db,
             IBerkas berkas,
             IDcFtpT dc_ftp_t,
-            IQTrfCsv qTrfCsv
+            IQTrfCsv qTrfCsv,
+            IKafkaFile kafkaFile
         ) : base(db, berkas) {
             _app = app;
             _logger = logger;
@@ -50,6 +52,7 @@ namespace DcTransferFtpNew.Logics {
             _berkas = berkas;
             _dcFtpT = dc_ftp_t;
             _qTrfCsv = qTrfCsv;
+            _kafkaFile = kafkaFile;
         }
 
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
@@ -83,6 +86,8 @@ namespace DcTransferFtpNew.Logics {
 
                     BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; // *.CSV Sebanyak :: TargetKirim
                     BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauSingleZipKeFtpDev("POMGG", zipFileName, true)).Success.Count; // *.ZIP Sebanyak :: 1
+
+                    await _kafkaFile.KirimFile("172.31.2.122:9092", $"TEST_TRANSFER_POMGG_{await _db.GetKodeDc()}", _berkas.ZipFolderPath, zipFileName);
 
                     _berkas.CleanUp();
                 }
