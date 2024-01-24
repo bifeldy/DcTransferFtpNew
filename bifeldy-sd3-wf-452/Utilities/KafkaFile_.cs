@@ -20,11 +20,13 @@ using bifeldy_sd3_lib_452.Extensions;
 using bifeldy_sd3_lib_452.Models;
 using bifeldy_sd3_lib_452.Utilities;
 
+using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Models;
 
 namespace DcTransferFtpNew.Utilities {
 
     public interface IKafkaFile {
+        Task<(string, string)> GetHostIpPortAndTopic(string type);
         Task KirimFile(string hostPort, string topic, string folderName, string fileName, DateTime fileDate, string fileKeterangan = null);
     }
 
@@ -33,21 +35,27 @@ namespace DcTransferFtpNew.Utilities {
         private readonly IApp _app;
         private readonly IStream _stream;
         private readonly IKafka _kafka;
-        private readonly IConverter _converter;
         private readonly IChiper _chiper;
+        private readonly IDb _db;
 
-        public CKafkaFile(IApp app, IStream stream, IKafka kafka, IConverter converter, IChiper chiper) {
+        public CKafkaFile(IApp app, IStream stream, IKafka kafka, IChiper chiper, IDb db) {
             _app = app;
             _stream = stream;
             _kafka = kafka;
-            _converter = converter;
             _chiper = chiper;
+            _db = db;
+        }
+
+        public async Task<(string, string)> GetHostIpPortAndTopic(string type) {
+            string hostPort = "172.31.2.122:9092";
+            // Perlukah Pakai Baca Ke Tabel (?)
+            return (hostPort, $"{(_app.DebugMode ? "TEST_" : "")}TRANSFER_{type}_{await _db.GetKodeDc()}");
         }
 
         public async Task KirimFile(string hostPort, string topic, string folderName, string fileName, DateTime fileDate, string fileKeterangan = null) {
             string filePath = Path.Combine(folderName, fileName);
             List<KafkaMessage<string, dynamic>> km = new List<KafkaMessage<string, dynamic>>();
-            List<byte[]> lsb = _stream.ReadFileAsBinaryChunk(filePath);
+            List<byte[]> lsb = _stream.ReadFileAsBinaryChunk(filePath, (int) Math.Pow(2, 18)); // 262144 KB = 256 KiB
             string sha1 = _chiper.CalculateSHA1(filePath);
             string crc32 = _chiper.CalculateCRC32(filePath);
             for (int i = 0; i <= lsb.Count; i++) {

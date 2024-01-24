@@ -34,6 +34,7 @@ namespace DcTransferFtpNew.Logics {
         private readonly IBerkas _berkas;
         private readonly IDcFtpT _dcFtpT;
         private readonly IQTrfCsv _qTrfCsv;
+        private readonly IKafkaFile _kafkaFile;
 
         public CProsesHarianPom(
             IApp app,
@@ -41,7 +42,8 @@ namespace DcTransferFtpNew.Logics {
             IDb db,
             IBerkas berkas,
             IDcFtpT dc_ftp_t,
-            IQTrfCsv qTrfCsv
+            IQTrfCsv qTrfCsv,
+            IKafkaFile kafkaFile
         ) : base(db, berkas) {
             _app = app;
             _logger = logger;
@@ -49,6 +51,7 @@ namespace DcTransferFtpNew.Logics {
             _berkas = berkas;
             _dcFtpT = dc_ftp_t;
             _qTrfCsv = qTrfCsv;
+            _kafkaFile = kafkaFile;
         }
 
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
@@ -63,7 +66,8 @@ namespace DcTransferFtpNew.Logics {
                     string csvFileName = null;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
-                    _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
+                    string keterangan = $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)";
+                    _logger.WriteInfo(GetType().Name, keterangan);
 
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
@@ -79,12 +83,20 @@ namespace DcTransferFtpNew.Logics {
                         TargetKirim += JumlahServerKirimCsv;
                     }
 
+                    string[] targetKafkaFile = _berkas.ListFileForZip.ToArray();
+
                     string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "POM");
                     _berkas.ZipListFileInFolder(zipFileName);
                     TargetKirim += JumlahServerKirimZip;
 
                     BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; // *.CSV Sebanyak :: TargetKirim
                     BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauSingleZipKeFtpDev("POM", zipFileName, true)).Success.Count; // *.ZIP Sebanyak :: 1
+
+                    (string hostPort, string topicName) = await _kafkaFile.GetHostIpPortAndTopic("POM");
+                    foreach (string fn in targetKafkaFile) {
+                        await _kafkaFile.KirimFile(hostPort, topicName, _berkas.TempFolderPath, fn, dateStart, keterangan);
+                    }
+                    await _kafkaFile.KirimFile(hostPort, topicName, _berkas.ZipFolderPath, zipFileName, dateStart, keterangan);
 
                     _berkas.CleanUp();
                 }

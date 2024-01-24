@@ -88,7 +88,9 @@ namespace DcTransferFtpNew.Logics {
                     BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; // *.CSV Sebanyak :: TargetKirim
                     BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauSingleZipKeFtpDev("POMGG", zipFileName, true)).Success.Count; // *.ZIP Sebanyak :: 1
 
-                    await _kafkaFile.KirimFile("172.31.2.122:9092", $"TEST_TRANSFER_POMGG_{await _db.GetKodeDc()}", _berkas.ZipFolderPath, zipFileName, dateStart, keterangan);
+                    (string hostPort, string topicName) = await _kafkaFile.GetHostIpPortAndTopic("POMGG");
+                    await _kafkaFile.KirimFile(hostPort, topicName, _berkas.TempFolderPath, csvFileName, dateStart, keterangan);
+                    await _kafkaFile.KirimFile(hostPort, topicName, _berkas.ZipFolderPath, zipFileName, dateStart, keterangan);
 
                     _berkas.CleanUp();
                 }
