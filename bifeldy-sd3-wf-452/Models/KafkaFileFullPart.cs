@@ -12,6 +12,8 @@
 * 
 */
 
+using System;
+
 namespace DcTransferFtpNew.Models {
 
     public sealed class KafkaFilePart {
@@ -23,10 +25,14 @@ namespace DcTransferFtpNew.Models {
     public sealed class KafkaFileFull {
         public string file_name { get; set; }
         public decimal file_byte_size { get; set; }
+        public DateTime file_date { get; set; }
+        public string file_keterangan { get; set; }
         public string sha1_full { get; set; }
         public string crc32_full { get; set; }
         public decimal total_chunk { get; set; }
         public KafkaFilePart[] part_list { get; set; }
+        public string program_name { get; set; }
+        public string program_type { get; set; }
     }
 
 }

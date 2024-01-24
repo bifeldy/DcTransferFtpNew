@@ -68,7 +68,8 @@ namespace DcTransferFtpNew.Logics {
                     JumlahServerKirimZip = 1;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
-                    _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
+                    string keterangan = $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)";
+                    _logger.WriteInfo(GetType().Name, keterangan);
 
                     string procName = "TRF_POMGG_EVO";
                     CDbExecProcResult res = await _db.CALL_ICHO(procName, dateStart, usingBulanG);
@@ -87,7 +88,7 @@ namespace DcTransferFtpNew.Logics {
                     BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; // *.CSV Sebanyak :: TargetKirim
                     BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauSingleZipKeFtpDev("POMGG", zipFileName, true)).Success.Count; // *.ZIP Sebanyak :: 1
 
-                    await _kafkaFile.KirimFile("172.31.2.122:9092", $"TEST_TRANSFER_POMGG_{await _db.GetKodeDc()}", _berkas.ZipFolderPath, zipFileName);
+                    await _kafkaFile.KirimFile("172.31.2.122:9092", $"TEST_TRANSFER_POMGG_{await _db.GetKodeDc()}", _berkas.ZipFolderPath, zipFileName, dateStart, keterangan);
 
                     _berkas.CleanUp();
                 }

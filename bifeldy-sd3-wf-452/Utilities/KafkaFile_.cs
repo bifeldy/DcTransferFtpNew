@@ -11,6 +11,7 @@
  * 
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -24,24 +25,26 @@ using DcTransferFtpNew.Models;
 namespace DcTransferFtpNew.Utilities {
 
     public interface IKafkaFile {
-        Task KirimFile(string hostPort, string topic, string folderName, string fileName);
+        Task KirimFile(string hostPort, string topic, string folderName, string fileName, DateTime fileDate, string fileKeterangan = null);
     }
 
     public sealed class CKafkaFile : IKafkaFile {
 
+        private readonly IApp _app;
         private readonly IStream _stream;
         private readonly IKafka _kafka;
         private readonly IConverter _converter;
         private readonly IChiper _chiper;
 
-        public CKafkaFile(IStream stream, IKafka kafka, IConverter converter, IChiper chiper) {
+        public CKafkaFile(IApp app, IStream stream, IKafka kafka, IConverter converter, IChiper chiper) {
+            _app = app;
             _stream = stream;
             _kafka = kafka;
             _converter = converter;
             _chiper = chiper;
         }
 
-        public async Task KirimFile(string hostPort, string topic, string folderName, string fileName) {
+        public async Task KirimFile(string hostPort, string topic, string folderName, string fileName, DateTime fileDate, string fileKeterangan = null) {
             string filePath = Path.Combine(folderName, fileName);
             List<KafkaMessage<string, dynamic>> km = new List<KafkaMessage<string, dynamic>>();
             List<byte[]> lsb = _stream.ReadFileAsBinaryChunk(filePath);
@@ -54,9 +57,13 @@ namespace DcTransferFtpNew.Utilities {
                     KafkaFileFull kafkaFull = new KafkaFileFull {
                         file_name = fileName,
                         file_byte_size = fullSize,
+                        file_date = fileDate,
+                        file_keterangan = fileKeterangan,
                         sha1_full = sha1,
                         crc32_full = crc32,
-                        total_chunk = lsb.Count
+                        total_chunk = lsb.Count,
+                        program_name = _app.AppName,
+                        program_type = "MANUAL"
                     };
                     km.Add(new KafkaMessage<string, dynamic> {
                         Key = $"{crc32}_{i}",
