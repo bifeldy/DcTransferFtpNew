@@ -106,6 +106,7 @@
     <Compile Include="Abstractions\Navigations.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Components\DataGridViewProgress.cs" />
     <Compile Include="Components\FixAutoScrollFlowLayoutPanel.cs">
       <SubType>Component</SubType>
     </Compile>
