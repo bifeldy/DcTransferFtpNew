@@ -29,11 +29,13 @@ namespace DcTransferFtpNew.Handlers {
     public sealed class CQTrfCsv : IQTrfCsv {
 
         private readonly IDb _db;
-        private readonly IBerkas _berkas;
+        private readonly ICsv _csv;
+        private readonly IZip _zip;
 
-        public CQTrfCsv(IDb db, IBerkas berkas) {
+        public CQTrfCsv(IDb db, ICsv csv, IZip zip) {
             _db = db;
-            _berkas = berkas;
+            _csv = csv;
+            _zip = zip;
         }
 
         public async Task<bool> CreateCSVFile(string q_filename, string filename = null, string seperator = null, string outputFolderPath = null, string appendTargetName = null, bool addToQueueForZip = true, bool required = true) {
@@ -60,9 +62,9 @@ namespace DcTransferFtpNew.Handlers {
                     filename += appendTargetName;
                 }
                 DataTable dtQuery = await _db.OraPg_GetDataTable(queryForCSV);
-                res = _berkas.DataTable2CSV(dtQuery, filename, seperator, outputFolderPath);
+                res = _csv.DataTable2CSV(dtQuery, filename, seperator, outputFolderPath);
                 if (addToQueueForZip) {
-                    _berkas.ListFileForZip.Add(filename);
+                    _zip.ListFileForZip.Add(filename);
                 }
             }
             return res;

@@ -282,7 +282,7 @@ namespace DcTransferFtpNew.Navigations {
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(351, 23);
             this.label1.TabIndex = 21;
-            this.label1.Text = "Folder Lokasi Temp / CSV";
+            this.label1.Text = "Folder Lokasi CSV";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CSettings

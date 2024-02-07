@@ -12,7 +12,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -25,13 +24,19 @@ namespace DcTransferFtpNew.Navigations {
     public sealed partial class CSettings : CNavigations {
 
         private readonly IBerkas _berkas;
+        private readonly ICsv _csv;
+        private readonly IZip _zip;
         private readonly IConfig _config;
 
         public CSettings(
             IBerkas berkas,
+            ICsv csv,
+            IZip zip,
             IConfig config
         ) {
             _berkas = berkas;
+            _csv = csv;
+            _zip = zip;
             _config = config;
 
             InitializeComponent();
@@ -42,8 +47,8 @@ namespace DcTransferFtpNew.Navigations {
             Dock = DockStyle.Fill;
 
             txtBxDaysRetentionFiles.Value = _berkas.MaxOldRetentionDay;
-            txtBxOpenFolderTempCsv.Text = _berkas.TempFolderPath;
-            txtBxOpenFolderZip.Text = _berkas.ZipFolderPath;
+            txtBxOpenFolderTempCsv.Text = _csv.CsvFolderPath;
+            txtBxOpenFolderZip.Text = _zip.ZipFolderPath;
             txtBxOpenFolderBackup.Text = _berkas.BackupFolderPath;
         }
 
@@ -53,19 +58,25 @@ namespace DcTransferFtpNew.Navigations {
         }
 
         private void BtnOpenFolderTempCsv_Click(object sender, EventArgs e) {
-            Process.Start(new ProcessStartInfo { Arguments = _berkas.TempFolderPath, FileName = "explorer.exe" });
+            Process.Start(new ProcessStartInfo { Arguments = _csv.CsvFolderPath, FileName = "explorer.exe" });
         }
 
         private void BtnClearFolderTempCsv_Click(object sender, EventArgs e) {
-            _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, (int) txtBxDaysRetentionFiles.Value);
+            DialogResult dr = MessageBox.Show("Yakin Ingin Menghapus CSV ?", "Konfirmasi Hapus", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dr == DialogResult.Yes) {
+                _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, (int) txtBxDaysRetentionFiles.Value);
+            }
         }
 
         private void BtnOpenFolderZip_Click(object sender, EventArgs e) {
-            Process.Start(new ProcessStartInfo { Arguments = _berkas.ZipFolderPath, FileName = "explorer.exe" });
+            Process.Start(new ProcessStartInfo { Arguments = _zip.ZipFolderPath, FileName = "explorer.exe" });
         }
 
         private void BtnClearFolderZip_Click(object sender, EventArgs e) {
-            _berkas.DeleteOldFilesInFolder(_berkas.ZipFolderPath, (int) txtBxDaysRetentionFiles.Value);
+            DialogResult dr = MessageBox.Show("Yakin Ingin Menghapus Zip ?", "Konfirmasi Hapus", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dr == DialogResult.Yes) {
+                _berkas.DeleteOldFilesInFolder(_zip.ZipFolderPath, (int) txtBxDaysRetentionFiles.Value);
+            }
         }
 
         private void BtnOpenFolderBackup_Click(object sender, EventArgs e) {
@@ -73,7 +84,10 @@ namespace DcTransferFtpNew.Navigations {
         }
 
         private void BtnClearFolderBackup_Click(object sender, EventArgs e) {
-            _berkas.DeleteOldFilesInFolder(_berkas.BackupFolderPath, (int) txtBxDaysRetentionFiles.Value);
+            DialogResult dr = MessageBox.Show("Yakin Ingin Menghapus Backup ?", "Konfirmasi Hapus", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dr == DialogResult.Yes) {
+                _berkas.DeleteOldFilesInFolder(_berkas.BackupFolderPath, (int) txtBxDaysRetentionFiles.Value);
+            }
         }
 
     }

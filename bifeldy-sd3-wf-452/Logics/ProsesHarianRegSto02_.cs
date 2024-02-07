@@ -30,6 +30,7 @@ namespace DcTransferFtpNew.Logics {
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
+        private readonly ICsv _csv;
         private readonly IQTrfCsv _qTrfCsv;
         private readonly IDcFtpT _dcFtpT;
 
@@ -37,12 +38,15 @@ namespace DcTransferFtpNew.Logics {
             ILogger logger,
             IDb db,
             IBerkas berkas,
+            ICsv csv,
+            IZip zip,
             IQTrfCsv q_trf_csv,
             IDcFtpT dc_ftp_t
-        ) : base(db, berkas) {
+        ) : base(db, csv, zip) {
             _logger = logger;
             _db = db;
             _berkas = berkas;
+            _csv = csv;
             _qTrfCsv = q_trf_csv;
             _dcFtpT = dc_ftp_t;
         }
@@ -50,7 +54,7 @@ namespace DcTransferFtpNew.Logics {
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
-                _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+                _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
                 JumlahServerKirimCsv = 2;
 
                 int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
@@ -66,7 +70,7 @@ namespace DcTransferFtpNew.Logics {
                 TargetKirim += JumlahServerKirimCsv;
 
                 // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "REG02");
-                // _berkas.ZipListFileInFolder(zipFileName);
+                // _zip.ZipListFileInFolder(zipFileName);
                 // TargetKirim += JumlahServerKirimZip;
 
                 BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; ; // *.CSV Sebanyak :: TargetKirim

@@ -31,17 +31,21 @@ namespace DcTransferFtpNew.Logics {
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
+        private readonly ICsv _csv;
         private readonly IDcFtpT _dcFtpT;
 
         public CProsesHarianIrpc(
             ILogger logger,
             IDb db,
             IBerkas berkas,
+            ICsv csv,
+            IZip zip,
             IDcFtpT dc_ftp_t
-        ) : base(db, berkas) {
+        ) : base(db, csv, zip) {
             _logger = logger;
             _db = db;
             _berkas = berkas;
+            _csv = csv;
             _dcFtpT = dc_ftp_t;
         }
 
@@ -49,7 +53,7 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid() && IsDateRangeSameMonth() && await IsDateEndMaxYesterday()) {
-                    _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+                    _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
                     JumlahServerKirimCsv = 1;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
@@ -66,13 +70,13 @@ namespace DcTransferFtpNew.Logics {
 
                         DataTable dtQuery = await _db.GetIrpc(xDate);
                         string csvFileName = $"IRPC{await _db.GetKodeDc()}{xDate:ddMMyyyyHHmm}.CSV";
-                        _berkas.DataTable2CSV(dtQuery, csvFileName, ",");
-                        // _berkas.ListFileForZip.Add(csvFileName);
+                        _csv.DataTable2CSV(dtQuery, csvFileName, ",");
+                        // _zip.ListFileForZip.Add(csvFileName);
                         TargetKirim += JumlahServerKirimCsv;
                     }
 
                     // string zipFileName = await _db.Q_TRF_CSV__GET($"{(_app.IsUsingPostgres ? "COALESCE" : "NVL")}(q_namazip, q_namafile)", "IRPC");
-                    // _berkas.ZipListFileInFolder(zipFileName);
+                    // _zip.ZipListFileInFolder(zipFileName);
                     // TargetKirim += JumlahServerKirimZip;
 
                     BerhasilKirim += (await _dcFtpT.KirimAllCsv("IRPC", reportLog: true)).Success.Count; // *.CSV Sebanyak :: TargetKirim

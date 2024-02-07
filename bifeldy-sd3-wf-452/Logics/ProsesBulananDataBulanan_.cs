@@ -42,6 +42,8 @@ namespace DcTransferFtpNew.Logics {
         private readonly IConverter _converter;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
+        private readonly ICsv _csv;
+        private readonly IZip _zip;
         private readonly IQTrfCsv _qTrfCsv;
         private readonly IDcFtpT _dcFtpT;
 
@@ -52,15 +54,19 @@ namespace DcTransferFtpNew.Logics {
             IConverter converter,
             IDb db,
             IBerkas berkas,
+            ICsv csv,
+            IZip zip,
             IQTrfCsv q_trf_csv,
             IDcFtpT dc_ftp_t
-        ) : base(db, berkas) {
+        ) : base(db, csv, zip) {
             _config = config;
             _app = app;
             _logger = logger;
             _converter = converter;
             _db = db;
             _berkas = berkas;
+            _csv = csv;
+            _zip = zip;
             _qTrfCsv = q_trf_csv;
             _dcFtpT = dc_ftp_t;
         }
@@ -69,7 +75,7 @@ namespace DcTransferFtpNew.Logics {
             PrepareBulanan(sender, e, currentControl);
             await Task.Run(async () => {
                 if (await IsPeriodeLastMonth()) {
-                    _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+                    _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
                     JumlahServerKirimCsv = 2;
 
                     List<string> lsCsvToZip = new List<string>();
@@ -270,23 +276,23 @@ namespace DcTransferFtpNew.Logics {
                     await _qTrfCsv.CreateCSVFile("MSTXHGG", trfMstxhg, addToQueueForZip: false);
                     // TargetKirim += 1;
 
-                    _berkas.BackupAllFilesInTempFolder();
+                    _berkas.BackupAllFilesInFolder(_csv.CsvFolderPath);
 
                     // MSTXHGG Yang Dikirim ZIP Bukan CSV
                     string zipFileName1 = await _db.Q_TRF_CSV__GET("q_namafile", "MSTXHGG") ?? trfMstxhg;
                     List<string> listFileNameToZip1 = new List<string> { zipFileName1 };
-                    _berkas.ZipListFileInFolder(zipFileName1.Replace("CSV", "ZIP"), listFileNameToZip1);
+                    _zip.ZipListFileInFolder(zipFileName1.Replace("CSV", "ZIP"), _csv.CsvFolderPath, listFileNameToZip1);
                     foreach (string fileNameInZipToBeDeleted in listFileNameToZip1) {
-                        _berkas.DeleteSingleFileInFolder(fileNameInZipToBeDeleted);
+                        _berkas.DeleteSingleFileInFolder(fileNameInZipToBeDeleted, _csv.CsvFolderPath);
                     }
                     TargetKirim += 1;
 
                     // TAXTEMP, PJ, DCATK Di ZIP Dahulu
                     string zipFileName2 = $"{VAR_KODE_DC}_SENTRAL_{datePeriode:MMM-yy}.ZIP";
                     List<string> listFileNameToZip2 = await _qTrfCsv.GetFileNameMulti(lsCsvToZip);
-                    _berkas.ZipListFileInFolder(zipFileName2, listFileNameToZip2);
+                    _zip.ZipListFileInFolder(zipFileName2, _csv.CsvFolderPath, listFileNameToZip2);
                     foreach (string fileNameInZipToBeDeleted in listFileNameToZip2) {
-                        _berkas.DeleteSingleFileInFolder(fileNameInZipToBeDeleted);
+                        _berkas.DeleteSingleFileInFolder(fileNameInZipToBeDeleted, _csv.CsvFolderPath);
                     }
                     TargetKirim += 1;
 

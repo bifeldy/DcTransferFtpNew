@@ -35,6 +35,8 @@ namespace DcTransferFtpNew.Logics {
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
+        private readonly ICsv _csv;
+        private readonly IZip _zip;
         private readonly IDcFtpT _dcFtpT;
         private readonly IBranchCabangHandler _branchCabang;
 
@@ -42,12 +44,16 @@ namespace DcTransferFtpNew.Logics {
             ILogger logger,
             IDb db,
             IBerkas berkas,
+            ICsv csv,
+            IZip zip,
             IDcFtpT dc_ftp_t,
             IBranchCabangHandler branchCabang
-        ) : base(db, berkas) {
+        ) : base(db, csv, zip) {
             _logger = logger;
             _db = db;
             _berkas = berkas;
+            _csv = csv;
+            _zip = zip;
             _dcFtpT = dc_ftp_t;
             _branchCabang = branchCabang;
         }
@@ -56,7 +62,7 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid() && IsDateRangeSameMonth()) {
-                    _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+                    _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
                     JumlahServerKirimCsv = 1;
                     JumlahServerKirimZip = 1;
 
@@ -71,19 +77,19 @@ namespace DcTransferFtpNew.Logics {
                     List<string> csvFileKirimJarak = new List<string>();
                     List<string> csvFileKirimExpedisi = new List<string>();
 
-                    string avgCostFolder = Path.Combine(_berkas.TempFolderPath, $"BO_AVGCOST");
+                    string avgCostFolder = Path.Combine(_csv.CsvFolderPath, $"BO_AVGCOST");
                     if (!Directory.Exists(avgCostFolder)) {
                         Directory.CreateDirectory(avgCostFolder);
                     }
                     _berkas.DeleteOldFilesInFolder(avgCostFolder, 0);
 
-                    string jarakFolder = Path.Combine(_berkas.TempFolderPath, $"BO_JARAK");
+                    string jarakFolder = Path.Combine(_csv.CsvFolderPath, $"BO_JARAK");
                     if (!Directory.Exists(jarakFolder)) {
                         Directory.CreateDirectory(jarakFolder);
                     }
                     _berkas.DeleteOldFilesInFolder(jarakFolder, 0);
 
-                    string expedisiFolder = Path.Combine(_berkas.TempFolderPath, $"BO_EXPEDISI");
+                    string expedisiFolder = Path.Combine(_csv.CsvFolderPath, $"BO_EXPEDISI");
                     if (!Directory.Exists(expedisiFolder)) {
                         Directory.CreateDirectory(expedisiFolder);
                     }
@@ -161,8 +167,8 @@ namespace DcTransferFtpNew.Logics {
                                 else {
                                     try {
                                         DataTable dtQueryRes = await lbdiDbOraPg.GetDataTableAsync(queryForCSV);
-                                        _berkas.DataTable2CSV(dtQueryRes, filename, seperator, avgCostFolder);
-                                        // _berkas.ListFileForZip.Add(filename);
+                                        _csv.DataTable2CSV(dtQueryRes, filename, seperator, avgCostFolder);
+                                        // _zip.ListFileForZip.Add(filename);
                                     }
                                     catch (Exception ex) {
                                         MessageBox.Show(ex.Message, $"{button.Text} :: DCAVGCOST", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -199,8 +205,8 @@ namespace DcTransferFtpNew.Logics {
                                 if (!string.IsNullOrEmpty(seperatorJarak) && !string.IsNullOrEmpty(queryForCSVJarak) && !string.IsNullOrEmpty(filenameJarak)) {
                                     try {
                                         DataTable dtQueryRes = await lbdiDbOraPg.GetDataTableAsync(queryForCSVJarak);
-                                        _berkas.DataTable2CSV(dtQueryRes, filenameJarak, seperatorJarak, jarakFolder);
-                                        // _berkas.ListFileForZip.Add(filename);
+                                        _csv.DataTable2CSV(dtQueryRes, filenameJarak, seperatorJarak, jarakFolder);
+                                        // _zip.ListFileForZip.Add(filename);
                                         TargetKirim += JumlahServerKirimCsv;
 
                                         csvFileKirimJarak.Add(filenameJarak);
@@ -236,8 +242,8 @@ namespace DcTransferFtpNew.Logics {
                                 if (!string.IsNullOrEmpty(seperatorExpedisi) && !string.IsNullOrEmpty(queryForCSVExpedisi) && !string.IsNullOrEmpty(filenameExpedisi)) {
                                     try {
                                         DataTable dtQueryRes = await lbdiDbOraPg.GetDataTableAsync(queryForCSVExpedisi);
-                                        _berkas.DataTable2CSV(dtQueryRes, filenameExpedisi, seperatorExpedisi, expedisiFolder);
-                                        // _berkas.ListFileForZip.Add(filename);
+                                        _csv.DataTable2CSV(dtQueryRes, filenameExpedisi, seperatorExpedisi, expedisiFolder);
+                                        // _zip.ListFileForZip.Add(filename);
                                         TargetKirim += JumlahServerKirimCsv;
 
                                         csvFileKirimExpedisi.Add(filenameExpedisi);
@@ -250,7 +256,7 @@ namespace DcTransferFtpNew.Logics {
                         }
                     }
 
-                    _berkas.ZipAllFileInFolder(zipAvgCostFileName, avgCostFolder);
+                    _zip.ZipAllFileInFolder(zipAvgCostFileName, avgCostFolder);
                     TargetKirim += JumlahServerKirimZip;
 
                     BerhasilKirim += (await _dcFtpT.KirimSingleZip("MDHO", zipAvgCostFileName, reportLog: true)).Success.Count; // *.ZIP Sebanyak :: 1

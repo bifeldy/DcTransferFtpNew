@@ -32,7 +32,8 @@ namespace DcTransferFtpNew.Abstractions {
     public abstract class CLogics : ILogics {
 
         private readonly IDb _db;
-        private readonly IBerkas _berkas;
+        private readonly ICsv _csv;
+        private readonly IZip _zip;
 
         protected int TargetKirim = 0;
         protected int BerhasilKirim = 0;
@@ -48,9 +49,10 @@ namespace DcTransferFtpNew.Abstractions {
         protected DateTime dateEnd = DateTime.MinValue;
         protected DateTime datePeriode = DateTime.MinValue;
 
-        public CLogics(IDb db, IBerkas berkas) {
+        public CLogics(IDb db, ICsv csv, IZip zip) {
             _db = db;
-            _berkas = berkas;
+            _csv = csv;
+            _zip = zip;
         }
 
         public abstract Task Run(object sender, EventArgs e, Control currentControl);
@@ -133,15 +135,15 @@ namespace DcTransferFtpNew.Abstractions {
 
             if (msgBxIco == MessageBoxIcon.Error) {
                 DialogResult dialogResult = MessageBox.Show(
-                    $"Buka Folder Lokasi Penyimpanan ?{Environment.NewLine}{Environment.NewLine}{_berkas.TempFolderPath}{Environment.NewLine}{Environment.NewLine}{_berkas.ZipFolderPath}",
+                    $"Buka Folder Lokasi Penyimpanan ?{Environment.NewLine}{Environment.NewLine}{_csv.CsvFolderPath}{Environment.NewLine}{Environment.NewLine}{_zip.ZipFolderPath}",
                     "File Pengiriman",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question
                 );
                 if (dialogResult == DialogResult.Yes) {
                     string proc = "explorer.exe";
-                    Process.Start(new ProcessStartInfo { Arguments = _berkas.TempFolderPath, FileName = proc });
-                    Process.Start(new ProcessStartInfo { Arguments = _berkas.ZipFolderPath, FileName = proc });
+                    Process.Start(new ProcessStartInfo { Arguments = _csv.CsvFolderPath, FileName = proc });
+                    Process.Start(new ProcessStartInfo { Arguments = _zip.ZipFolderPath, FileName = proc });
                 }
             }
         }

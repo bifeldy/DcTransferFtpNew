@@ -35,6 +35,8 @@ namespace DcTransferFtpNew.Logics {
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
+        private readonly ICsv _csv;
+        private readonly IZip _zip;
         private readonly IDcFtpT _dcFtpT;
         private readonly IBranchCabangHandler _branchCabang;
 
@@ -42,12 +44,16 @@ namespace DcTransferFtpNew.Logics {
             ILogger logger,
             IDb db,
             IBerkas berkas,
+            ICsv csv,
+            IZip zip,
             IDcFtpT dc_ftp_t,
             IBranchCabangHandler branchCabang
-        ) : base(db, berkas) {
+        ) : base(db, csv, zip) {
             _logger = logger;
             _db = db;
             _berkas = berkas;
+            _csv = csv;
+            _zip = zip;
             _dcFtpT = dc_ftp_t;
             _branchCabang = branchCabang;
         }
@@ -56,7 +62,7 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid() && IsDateRangeSameMonth()) {
-                    _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+                    _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
                     _logger.WriteInfo(GetType().Name, $"{dateStart:MM/dd/yyyy} - {dateEnd:MM/dd/yyyy} ({jumlahHari} Hari)");
@@ -70,13 +76,13 @@ namespace DcTransferFtpNew.Logics {
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
 
-                        string stFolder = Path.Combine(_berkas.TempFolderPath, $"ST_{xDate:yyyy-MM-dd}");
+                        string stFolder = Path.Combine(_csv.CsvFolderPath, $"ST_{xDate:yyyy-MM-dd}");
                         if (!Directory.Exists(stFolder)) {
                             Directory.CreateDirectory(stFolder);
                         }
                         _berkas.DeleteOldFilesInFolder(stFolder, 0);
 
-                        string slFolder = Path.Combine(_berkas.TempFolderPath, $"SL_{xDate:yyyy-MM-dd}");
+                        string slFolder = Path.Combine(_csv.CsvFolderPath, $"SL_{xDate:yyyy-MM-dd}");
                         if (!Directory.Exists(slFolder)) {
                             Directory.CreateDirectory(slFolder);
                         }
@@ -144,8 +150,8 @@ namespace DcTransferFtpNew.Logics {
                             else {
                                 try {
                                     DataTable dtQueryRes = await lbdiDbOraPg.GetDataTableAsync(stMdQueryForCSV);
-                                    _berkas.DataTable2CSV(dtQueryRes, stMdFilename, stMdSeperator, stFolder);
-                                    // _berkas.ListFileForZip.Add(stMdFilename);
+                                    _csv.DataTable2CSV(dtQueryRes, stMdFilename, stMdSeperator, stFolder);
+                                    // _zip.ListFileForZip.Add(stMdFilename);
                                 }
                                 catch (Exception ex) {
                                     MessageBox.Show(ex.Message, $"{button.Text} :: ST_MD", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -174,8 +180,8 @@ namespace DcTransferFtpNew.Logics {
                             if (!string.IsNullOrEmpty(jkbSeperator) && !string.IsNullOrEmpty(jkbQueryForCSV) && !string.IsNullOrEmpty(jkbFilename)) {
                                 try {
                                     DataTable dtQueryRes = await lbdiDbOraPg.GetDataTableAsync(jkbQueryForCSV);
-                                    _berkas.DataTable2CSV(dtQueryRes, jkbFilename, jkbSeperator, stFolder);
-                                    // _berkas.ListFileForZip.Add(jkbFilename);
+                                    _csv.DataTable2CSV(dtQueryRes, jkbFilename, jkbSeperator, stFolder);
+                                    // _zip.ListFileForZip.Add(jkbFilename);
                                 }
                                 catch (Exception ex) {
                                     MessageBox.Show(ex.Message, $"{button.Text} :: JKB", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -218,8 +224,8 @@ namespace DcTransferFtpNew.Logics {
                             else {
                                 try {
                                     DataTable dtQueryRes = await lbdiDbOraPg.GetDataTableAsync(slMdQueryForCSV);
-                                    _berkas.DataTable2CSV(dtQueryRes, slMdFilename, slMdSeperator, slFolder);
-                                    // _berkas.ListFileForZip.Add(slMdFilename);
+                                    _csv.DataTable2CSV(dtQueryRes, slMdFilename, slMdSeperator, slFolder);
+                                    // _zip.ListFileForZip.Add(slMdFilename);
                                 }
                                 catch (Exception ex) {
                                     MessageBox.Show(ex.Message, $"{button.Text} :: SL_MD", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -228,11 +234,11 @@ namespace DcTransferFtpNew.Logics {
 
                         }
 
-                        _berkas.ZipAllFileInFolder(zipFileNameSt, stFolder);
+                        _zip.ZipAllFileInFolder(zipFileNameSt, stFolder);
                         TargetKirim += 2;
                         ftpFileKirimSt.Add(zipFileNameSt);
 
-                        _berkas.ZipAllFileInFolder(zipFileNameSl, slFolder);
+                        _zip.ZipAllFileInFolder(zipFileNameSl, slFolder);
                         TargetKirim += 1;
                         ftpFileKirimSl.Add(zipFileNameSl);
                     }

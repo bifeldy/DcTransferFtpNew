@@ -44,6 +44,8 @@ namespace DcTransferFtpNew.Logics {
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
+        private readonly ICsv _csv;
+        private readonly IZip _zip;
         private readonly IQTrfCsv _qTrfCsv;
         private readonly IDcFtpT _dcFtpT;
         private readonly IConverter _converter;
@@ -55,16 +57,20 @@ namespace DcTransferFtpNew.Logics {
             ILogger logger,
             IDb db,
             IBerkas berkas,
+            ICsv csv,
+            IZip zip,
             IQTrfCsv q_trf_csv,
             IDcFtpT dc_ftp_t,
             IConverter converter,
             IStream stream
-        ) : base(db, berkas) {
+        ) : base(db, csv, zip) {
             _config = config;
             _app = app;
             _logger = logger;
             _db = db;
             _berkas = berkas;
+            _csv = csv;
+            _zip = zip;
             _qTrfCsv = q_trf_csv;
             _dcFtpT = dc_ftp_t;
             _converter = converter;
@@ -108,8 +114,8 @@ namespace DcTransferFtpNew.Logics {
                             await _db.UpdateDcTtfHdrLog($"status_tax = 'Data Kosong'", xDate);
                         }
 
-                        _berkas.DataTable2CSV(dtQueryRes, filename, seperator, TaxTempFullFolderPath);
-                        // _berkas.ListFileForZip.Add(filename);
+                        _csv.DataTable2CSV(dtQueryRes, filename, seperator, TaxTempFullFolderPath);
+                        // _zip.ListFileForZip.Add(filename);
                         TargetKirim += JumlahServerKirimCsv;
                     }
                     catch (Exception e) {
@@ -166,7 +172,7 @@ namespace DcTransferFtpNew.Logics {
                             MessageBox.Show(e.Message, $"{button.Text} :: BPB", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         finally {
-                            // _berkas.ListFileForZip.Add(drTaxBPB["FILE_NAME"].ToString());
+                            // _zip.ListFileForZip.Add(drTaxBPB["FILE_NAME"].ToString());
                             TargetKirim += JumlahServerKirimCsv;
                         }
 
@@ -220,7 +226,7 @@ namespace DcTransferFtpNew.Logics {
                             MessageBox.Show(e.Message, $"{button.Text} :: NRB", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         finally {
-                            // _berkas.ListFileForZip.Add(drTaxNRB["FILE_NAME"].ToString());
+                            // _zip.ListFileForZip.Add(drTaxNRB["FILE_NAME"].ToString());
                             TargetKirim += JumlahServerKirimCsv;
                         }
 
@@ -248,7 +254,7 @@ namespace DcTransferFtpNew.Logics {
         }
 
         public async Task<int> FromZip(string zipFileName, DateTime xDate, string folderPath) {
-            int totalFileInZip = _berkas.ZipAllFileInFolder(zipFileName, folderPath);
+            int totalFileInZip = _zip.ZipAllFileInFolder(zipFileName, folderPath);
 
             await _db.UpdateDcTtfHdrLog($"FILE_ZIP = '{zipFileName}'", xDate);
 
@@ -301,7 +307,7 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid() && IsDateRangeSameMonth() && await IsDateEndMaxYesterday()) {
-                    _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+                    _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
                     JumlahServerKirimCsv = 1;
                     JumlahServerKirimZip = 1;
 
@@ -349,7 +355,7 @@ namespace DcTransferFtpNew.Logics {
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
 
-                        string TaxTempFullFolderPath = Path.Combine(_berkas.TempFolderPath, $"TAXFULL_{xDate:yyyy-MM-dd}");
+                        string TaxTempFullFolderPath = Path.Combine(_csv.CsvFolderPath, $"TAXFULL_{xDate:yyyy-MM-dd}");
                         if (!Directory.Exists(TaxTempFullFolderPath)) {
                             Directory.CreateDirectory(TaxTempFullFolderPath);
                         }

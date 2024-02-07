@@ -35,6 +35,8 @@ namespace DcTransferFtpNew.Logics {
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
+        private readonly ICsv _csv;
+        private readonly IZip _zip;
         private readonly IDcFtpT _dcFtpT;
         private readonly IBranchCabangHandler _branchCabang;
 
@@ -42,12 +44,16 @@ namespace DcTransferFtpNew.Logics {
             ILogger logger,
             IDb db,
             IBerkas berkas,
+            ICsv csv,
+            IZip zip,
             IDcFtpT dc_ftp_t,
             IBranchCabangHandler branchCabang
-        ) : base(db, berkas) {
+        ) : base(db, csv, zip) {
             _logger = logger;
             _db = db;
             _berkas = berkas;
+            _csv = csv;
+            _zip = zip;
             _dcFtpT = dc_ftp_t;
             _branchCabang = branchCabang;
         }
@@ -56,7 +62,7 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid() && IsDateRangeSameMonth() && await IsDateStartMaxYesterday() && await IsDateEndMaxYesterday()) {
-                    _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+                    _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
                     JumlahServerKirimZip = 1;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);
@@ -69,7 +75,7 @@ namespace DcTransferFtpNew.Logics {
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
 
-                        string tempFolder = Path.Combine(_berkas.TempFolderPath, $"BTB_{xDate:yyyy-MM-dd}");
+                        string tempFolder = Path.Combine(_csv.CsvFolderPath, $"BTB_{xDate:yyyy-MM-dd}");
                         if (!Directory.Exists(tempFolder)) {
                             Directory.CreateDirectory(tempFolder);
                         }
@@ -134,8 +140,8 @@ namespace DcTransferFtpNew.Logics {
                             else {
                                 try {
                                     DataTable dtQueryRes = await lbdiDbOraPg.GetDataTableAsync(queryForCSV);
-                                    _berkas.DataTable2CSV(dtQueryRes, filename, seperator, tempFolder);
-                                    _berkas.ListFileForZip.Add(filename);
+                                    _csv.DataTable2CSV(dtQueryRes, filename, seperator, tempFolder);
+                                    _zip.ListFileForZip.Add(filename);
                                 }
                                 catch (Exception ex) {
                                     MessageBox.Show(ex.Message, $"{button.Text} :: BTB", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -143,7 +149,7 @@ namespace DcTransferFtpNew.Logics {
                             }
                         }
 
-                        _berkas.ZipListFileInFolder(zipFileName, folderPath: tempFolder);
+                        _zip.ZipListFileInFolder(zipFileName, folderPath: tempFolder);
                         TargetKirim += JumlahServerKirimZip;
 
                         ftpFileKirim.Add(zipFileName);

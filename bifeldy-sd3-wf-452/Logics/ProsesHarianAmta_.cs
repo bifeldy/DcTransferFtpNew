@@ -23,7 +23,6 @@ using bifeldy_sd3_lib_452.Utilities;
 
 using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Handlers;
-using DcTransferFtpNew.Utilities;
 
 namespace DcTransferFtpNew.Logics {
 
@@ -34,17 +33,21 @@ namespace DcTransferFtpNew.Logics {
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
+        private readonly ICsv _csv;
         private readonly IDcFtpT _dcFtpT;
 
         public CProsesHarianAmta(
             ILogger logger,
             IDb db,
             IBerkas berkas,
+            ICsv csv,
+            IZip zip,
             IDcFtpT dc_ftp_t
-        ) : base(db, berkas) {
+        ) : base(db, csv, zip) {
             _logger = logger;
             _db = db;
             _berkas = berkas;
+            _csv = csv;
             _dcFtpT = dc_ftp_t;
         }
 
@@ -52,7 +55,7 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid()) {
-                    _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+                    _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
                     JumlahServerKirimCsv = 2;
 
                     // { "namafile1", "columnDb1" }, { "namafile2", "columnDb2" }, ..., { "namafile*", "columnDb*" };
@@ -89,8 +92,8 @@ namespace DcTransferFtpNew.Logics {
                         try {
                             DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV1);
 
-                            _berkas.DataTable2CSV(dtQueryRes, filename1, seperator1);
-                            // _berkas.ListFileForZip.Add(filename);
+                            _csv.DataTable2CSV(dtQueryRes, filename1, seperator1);
+                            // _zip.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
                             ftpFileKirim.Add(filename1, "STATUS_WEEKLY");
@@ -121,8 +124,8 @@ namespace DcTransferFtpNew.Logics {
                         try {
                             DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV2);
 
-                            _berkas.DataTable2CSV(dtQueryRes, filename2, seperator2);
-                            // _berkas.ListFileForZip.Add(filename);
+                            _csv.DataTable2CSV(dtQueryRes, filename2, seperator2);
+                            // _zip.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
                             ftpFileKirim.Add(filename2, "STATUS_EXCLBULFRAC");
@@ -153,8 +156,8 @@ namespace DcTransferFtpNew.Logics {
                         try {
                             DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV3);
 
-                            _berkas.DataTable2CSV(dtQueryRes, filename3, seperator3);
-                            // _berkas.ListFileForZip.Add(filename);
+                            _csv.DataTable2CSV(dtQueryRes, filename3, seperator3);
+                            // _zip.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
                             ftpFileKirim.Add(filename3, "STATUS_PLANO");
@@ -185,8 +188,8 @@ namespace DcTransferFtpNew.Logics {
                         try {
                             DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV4);
 
-                            _berkas.DataTable2CSV(dtQueryRes, filename4, seperator4);
-                            // _berkas.ListFileForZip.Add(filename);
+                            _csv.DataTable2CSV(dtQueryRes, filename4, seperator4);
+                            // _zip.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
                             ftpFileKirim.Add(filename4, "STATUS_ITEMDEPO");
@@ -217,8 +220,8 @@ namespace DcTransferFtpNew.Logics {
                         try {
                             DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV5);
 
-                            _berkas.DataTable2CSV(dtQueryRes, filename5, seperator5);
-                            // _berkas.ListFileForZip.Add(filename);
+                            _csv.DataTable2CSV(dtQueryRes, filename5, seperator5);
+                            // _zip.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
                             ftpFileKirim.Add(filename5, "STATUS_BULFRAC");
@@ -249,8 +252,8 @@ namespace DcTransferFtpNew.Logics {
                         try {
                             DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV6);
 
-                            _berkas.DataTable2CSV(dtQueryRes, filename6, seperator6);
-                            // _berkas.ListFileForZip.Add(filename);
+                            _csv.DataTable2CSV(dtQueryRes, filename6, seperator6);
+                            // _zip.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
                             ftpFileKirim.Add(filename6, "STATUS_TOKOKHUSUS");
@@ -281,8 +284,8 @@ namespace DcTransferFtpNew.Logics {
                         try {
                             DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV7);
 
-                            _berkas.DataTable2CSV(dtQueryRes, filename7, seperator7);
-                            // _berkas.ListFileForZip.Add(filename);
+                            _csv.DataTable2CSV(dtQueryRes, filename7, seperator7);
+                            // _zip.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
                             ftpFileKirim.Add(filename7, "STATUS_ST");
@@ -313,8 +316,8 @@ namespace DcTransferFtpNew.Logics {
                         try {
                             DataTable dtQueryRes = await _db.OraPg_GetDataTable(queryForCSV8);
 
-                            _berkas.DataTable2CSV(dtQueryRes, filename8, seperator8);
-                            // _berkas.ListFileForZip.Add(filename);
+                            _csv.DataTable2CSV(dtQueryRes, filename8, seperator8);
+                            // _zip.ListFileForZip.Add(filename);
                             TargetKirim += JumlahServerKirimCsv;
 
                             ftpFileKirim.Add(filename8, "STATUS_SPLITDPD");

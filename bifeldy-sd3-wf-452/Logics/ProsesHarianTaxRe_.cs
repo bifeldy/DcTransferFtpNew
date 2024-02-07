@@ -34,6 +34,7 @@ namespace DcTransferFtpNew.Logics {
         private readonly ILogger _logger;
         private readonly IDb _db;
         private readonly IBerkas _berkas;
+        private readonly ICsv _csv;
 
         private readonly IProsesHarianTaxFull _prosesHarianTaxFull;
 
@@ -42,12 +43,15 @@ namespace DcTransferFtpNew.Logics {
             ILogger logger,
             IDb db,
             IBerkas berkas,
+            ICsv csv,
+            IZip zip,
             IProsesHarianTaxFull prosesHarianTaxFull
-        ) : base(db, berkas) {
+        ) : base(db, csv, zip) {
             _app = app;
             _logger = logger;
             _db = db;
             _berkas = berkas;
+            _csv = csv;
             _prosesHarianTaxFull = prosesHarianTaxFull;
         }
 
@@ -55,7 +59,7 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid() && IsDateRangeSameMonth() && await IsDateEndMaxYesterday()) {
-                    _berkas.DeleteOldFilesInFolder(_berkas.TempFolderPath, 0);
+                    _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
                     JumlahServerKirimCsv = 1;
                     JumlahServerKirimZip = 1;
 
@@ -67,7 +71,7 @@ namespace DcTransferFtpNew.Logics {
                     for (int i = 0; i < jumlahHari; i++) {
                         DateTime xDate = dateStart.AddDays(i);
 
-                        string TaxTempReFolderPath = Path.Combine(_berkas.TempFolderPath, $"TAXRE_{xDate:yyyy-MM-dd}");
+                        string TaxTempReFolderPath = Path.Combine(_csv.CsvFolderPath, $"TAXRE_{xDate:yyyy-MM-dd}");
                         if (!Directory.Exists(TaxTempReFolderPath)) {
                             Directory.CreateDirectory(TaxTempReFolderPath);
                         }
@@ -133,8 +137,8 @@ namespace DcTransferFtpNew.Logics {
                                                     await _db.UpdateDcTtfHdrLog($"status_tax = 'Data Kosong'", xDate);
                                                 }
 
-                                                _berkas.DataTable2CSV(dtTax2RE, csvFileName, seperator, TaxTempReFolderPath);
-                                                // _berkas.ListFileForZip.Add(filename);
+                                                _csv.DataTable2CSV(dtTax2RE, csvFileName, seperator, TaxTempReFolderPath);
+                                                // _zip.ListFileForZip.Add(filename);
                                                 TargetKirim += JumlahServerKirimCsv;
                                             }
                                             catch (Exception ex) {
@@ -178,7 +182,7 @@ namespace DcTransferFtpNew.Logics {
                                                     MessageBox.Show(ex.Message, $"{button.Text} :: BPBRe", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                                 }
                                                 finally {
-                                                    // _berkas.ListFileForZip.Add(drTaxBPBRe["FILE_NAME"].ToString());
+                                                    // _zip.ListFileForZip.Add(drTaxBPBRe["FILE_NAME"].ToString());
                                                     TargetKirim += JumlahServerKirimCsv;
                                                 }
 
@@ -243,7 +247,7 @@ namespace DcTransferFtpNew.Logics {
                                                     MessageBox.Show(ex.Message, $"{button.Text} :: NRBRe", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                                 }
                                                 finally {
-                                                    // _berkas.ListFileForZip.Add(drTaxNRBRe["FILE_NAME"].ToString());
+                                                    // _zip.ListFileForZip.Add(drTaxNRBRe["FILE_NAME"].ToString());
                                                     TargetKirim += JumlahServerKirimCsv;
                                                 }
 
