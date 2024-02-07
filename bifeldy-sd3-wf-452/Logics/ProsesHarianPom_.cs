@@ -95,8 +95,8 @@ namespace DcTransferFtpNew.Logics {
                     _zip.ZipListFileInFolder(zipFileName, _csv.CsvFolderPath);
                     TargetKirim += JumlahServerKirimZip;
 
-                    // BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; // *.CSV Sebanyak :: TargetKirim
-                    // BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauSingleZipKeFtpDev("POM", zipFileName, true)).Success.Count; // *.ZIP Sebanyak :: 1
+                    BerhasilKirim += (await _dcFtpT.KirimAllCsv("LOCAL")).Success.Count; // *.CSV Sebanyak :: TargetKirim
+                    BerhasilKirim += (await _dcFtpT.KirimAllCsvAtauSingleZipKeFtpDev("POM", zipFileName, true)).Success.Count; // *.ZIP Sebanyak :: 1
 
                     (string hostPort, string topicName) = await _kafkaFile.GetHostIpPortAndTopic("POM");
                     foreach (string fn in targetKafkaFile) {
