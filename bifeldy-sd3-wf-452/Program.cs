@@ -75,7 +75,7 @@ namespace DcTransferFtpNew {
 
                     // Khusus Form Bisa Di Bikin Independen, Jadinya Gak Wajib Masuk Ke Dependency Injection (DI), Form Utama Yang Wajib DI
                     // Kalau Singleton Form Di Panggil Via Resolve DI, Saat Di Close(); Kena Dispose GC, Tidak Bisa Resolve Lagi
-                    // Isi Parameter Dengan `false` Supaya Tidak Dapat Object Baru Setiap Instance (Bukan Singleton)
+                    // Isi Parameter Dengan `false` Supaya Selalu Dapat Object Baru Setiap Instance (Bukan Singleton)
                     //
                     // Misal :: Di Buat Dan Di Panggil Dari From Lain
                     //
