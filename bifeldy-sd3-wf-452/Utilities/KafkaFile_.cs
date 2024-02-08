@@ -48,8 +48,9 @@ namespace DcTransferFtpNew.Utilities {
 
         public async Task<(string, string)> GetHostIpPortAndTopic(string type) {
             string hostPort = "172.31.2.122:9092";
+            string topic = $"{(_app.DebugMode ? "SIMULASI_" : "")}{type}_{await _db.GetKodeDc()}";
             // Perlukah Pakai Baca Ke Tabel (?)
-            return (hostPort, $"{(_app.DebugMode ? "SIMULASI_" : "")}{type}_{await _db.GetKodeDc()}");
+            return (hostPort, topic);
         }
 
         public async Task KirimFile(string hostPort, string topic, string folderName, string fileName, DateTime fileDate, string fileKeterangan = null) {
