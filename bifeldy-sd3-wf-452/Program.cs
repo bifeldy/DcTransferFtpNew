@@ -79,7 +79,7 @@ namespace DcTransferFtpNew {
                     //
                     // Misal :: Di Buat Dan Di Panggil Dari From Lain
                     //
-                    // Tanpa DI, Tidak Bisa Lanjut Pakai DI Juga Di Constructor
+                    // Tanpa DI, Tidak Bisa Lanjut Pakai DI, Constructor Bersih
                     //
                     //     CReportLaporan reportLaporan = new CReportLaporan();
                     //
