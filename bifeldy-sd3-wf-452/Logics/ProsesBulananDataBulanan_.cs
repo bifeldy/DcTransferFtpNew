@@ -75,7 +75,10 @@ namespace DcTransferFtpNew.Logics {
             PrepareBulanan(sender, e, currentControl);
             await Task.Run(async () => {
                 if (await IsPeriodeLastMonth()) {
+                    _berkas.BackupAllFilesInFolder(_csv.CsvFolderPath);
                     _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
+                    _berkas.BackupAllFilesInFolder(_zip.ZipFolderPath);
+                    _berkas.DeleteOldFilesInFolder(_zip.ZipFolderPath, 0);
                     JumlahServerKirimCsv = 2;
 
                     List<string> lsCsvToZip = new List<string>();

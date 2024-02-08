@@ -30,6 +30,7 @@ namespace DcTransferFtpNew.Logics {
         private readonly IDb _db;
         private readonly IBerkas _berkas;
         private readonly ICsv _csv;
+        private readonly IZip _zip;
         private readonly IQTrfCsv _qTrfCsv;
         private readonly IDcFtpT _dcFtpT;
 
@@ -46,6 +47,7 @@ namespace DcTransferFtpNew.Logics {
             _db = db;
             _berkas = berkas;
             _csv = csv;
+            _zip = zip;
             _qTrfCsv = q_trf_csv;
             _dcFtpT = dc_ftp_t;
         }
@@ -54,7 +56,10 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid() && IsDateRangeSameMonth() && await IsDateEndMaxYesterday()) {
+                    _berkas.BackupAllFilesInFolder(_csv.CsvFolderPath);
                     _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
+                    _berkas.BackupAllFilesInFolder(_zip.ZipFolderPath);
+                    _berkas.DeleteOldFilesInFolder(_zip.ZipFolderPath, 0);
                     JumlahServerKirimCsv = 1;
 
                     string fileTimeFingerScanFormat = $"{dateEnd:MMyyyy}";

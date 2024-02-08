@@ -62,7 +62,10 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeValid() && IsDateRangeSameMonth() && await IsDateStartMaxYesterday() && await IsDateEndMaxYesterday()) {
+                    _berkas.BackupAllFilesInFolder(_csv.CsvFolderPath);
                     _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
+                    _berkas.BackupAllFilesInFolder(_zip.ZipFolderPath);
+                    _berkas.DeleteOldFilesInFolder(_zip.ZipFolderPath, 0);
                     JumlahServerKirimZip = 1;
 
                     int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);

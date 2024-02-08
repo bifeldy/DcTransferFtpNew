@@ -31,6 +31,7 @@ namespace DcTransferFtpNew.Logics {
         private readonly IDb _db;
         private readonly IBerkas _berkas;
         private readonly ICsv _csv;
+        private readonly IZip _zip;
         private readonly IQTrfCsv _qTrfCsv;
         private readonly IDcFtpT _dcFtpT;
 
@@ -47,6 +48,7 @@ namespace DcTransferFtpNew.Logics {
             _db = db;
             _berkas = berkas;
             _csv = csv;
+            _zip = zip;
             _qTrfCsv = q_trf_csv;
             _dcFtpT = dc_ftp_t;
         }
@@ -54,7 +56,10 @@ namespace DcTransferFtpNew.Logics {
         public override async Task Run(object sender, EventArgs e, Control currentControl) {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
+                _berkas.BackupAllFilesInFolder(_csv.CsvFolderPath);
                 _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
+                _berkas.BackupAllFilesInFolder(_zip.ZipFolderPath);
+                _berkas.DeleteOldFilesInFolder(_zip.ZipFolderPath, 0);
                 JumlahServerKirimCsv = 2;
 
                 int jumlahHari = (int)((dateEnd - dateStart).TotalDays + 1);

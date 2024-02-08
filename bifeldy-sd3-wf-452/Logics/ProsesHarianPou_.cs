@@ -61,7 +61,10 @@ namespace DcTransferFtpNew.Logics {
             PrepareHarian(sender, e, currentControl);
             await Task.Run(async () => {
                 if (IsDateRangeSameDay() && await IsDateRangeToday()) {
+                    _berkas.BackupAllFilesInFolder(_csv.CsvFolderPath);
                     _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
+                    _berkas.BackupAllFilesInFolder(_zip.ZipFolderPath);
+                    _berkas.DeleteOldFilesInFolder(_zip.ZipFolderPath, 0);
                     JumlahServerKirimCsv = 1;
                     JumlahServerKirimZip = 1;
 

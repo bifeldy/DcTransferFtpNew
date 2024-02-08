@@ -69,7 +69,10 @@ namespace DcTransferFtpNew.Logics {
 
             await Task.Run(async () => {
                 if (IsDateRangeSameDay()) {
+                    _berkas.BackupAllFilesInFolder(_csv.CsvFolderPath);
                     _berkas.DeleteOldFilesInFolder(_csv.CsvFolderPath, 0);
+                    _berkas.BackupAllFilesInFolder(_zip.ZipFolderPath);
+                    _berkas.DeleteOldFilesInFolder(_zip.ZipFolderPath, 0);
                     JumlahServerKirimCsv = 1;
                     JumlahServerKirimZip = 1;
 
