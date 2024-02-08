@@ -18,13 +18,14 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Microsoft.Reporting.WinForms;
+
 using bifeldy_sd3_lib_452.Utilities;
 
 using DcTransferFtpNew.Abstractions;
 using DcTransferFtpNew.Forms;
 using DcTransferFtpNew.Handlers;
 using DcTransferFtpNew.Utilities;
-using Microsoft.Reporting.WinForms;
 
 namespace DcTransferFtpNew.Panels {
 
@@ -193,7 +194,7 @@ namespace DcTransferFtpNew.Panels {
 
         private async void BtnMiscLogErrorProses_Click(object sender, EventArgs e) {
             SetIdleBusyStatus(false);
-            CReportLaporan logError = new CReportLaporan();
+            CReportLaporan logError = CProgram.Bifeldyz.ResolveClass<CReportLaporan>();
             DataTable dt = null;
             List<ReportParameter> rps = new List<ReportParameter> {
                 new ReportParameter("parTglPrint2", $"{DateTime.Now}")
