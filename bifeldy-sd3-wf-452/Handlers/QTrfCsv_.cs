@@ -73,7 +73,10 @@ namespace DcTransferFtpNew.Handlers {
         public async Task<List<string>> GetFileNameMulti(List<string> q_filename) {
             List<string> fileNames = new List<string>();
             foreach(string q in q_filename) {
-                fileNames.Add(await _db.Q_TRF_CSV__GET("q_namafile", q));
+                string fn = await _db.Q_TRF_CSV__GET("q_namafile", q);
+                if (!string.IsNullOrEmpty(fn)) {
+                    fileNames.Add(fn);
+                }
             }
             return fileNames;
         }
